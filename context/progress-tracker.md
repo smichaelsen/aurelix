@@ -64,19 +64,27 @@ change.
   (replaced greedy `\{.*\}` regex with fenced-block +
   string-aware balanced-brace scan; iterate
   `msg.content` for first text block).
+- SaveManager hardening (2026-05-16): atomic write
+  via temp file + `DirAccess.rename` in `user://`;
+  `load_slot` refuses newer-than-build saves outright;
+  `_apply_npc_memory` rebuilds each entry from current
+  defaults and overlays saved fields, so new fields
+  added since the save get sensible defaults; unknown
+  NPC ids are dropped, not slammed into the store;
+  `_apply_npc_dossiers` filters broken entries
+  (missing id or tier); `_migrate(blob, from_version)`
+  scaffolding lands with a clear error path for
+  unregistered transitions. Phase10Test now covers
+  these four hardening cases.
 
 ## In Progress
 
-- SaveManager hardening (atomic write via temp+rename,
-  explicit per-version migration, validated
-  `_apply_npc_memory` / `_apply_npc_dossiers`).
-  Flagged in the same code review; not yet
-  implemented.
+- Nothing actively in progress; Phase 10 hardening
+  pass landed.
 
 ## Next Up
 
-1. SaveManager hardening as above.
-2. Verify all 14 success criteria via
+1. Verify all 14 success criteria via
    `PlaythroughTour.gd` headless run.
 3. Final pass on authored content gaps listed in
    `BUILD-PLAN.md` — Halden quest lines, per-NPC
@@ -91,10 +99,6 @@ change.
 
 ## Open Questions
 
-- Save schema migration: the loader currently warns
-  on version mismatch and proceeds. Decide whether
-  to refuse newer-than-build saves outright and what
-  the per-version migration shape looks like.
 - Free-text classification cost: concept says "no
   hard caps in the demo," but a curious player can
   burn budget on Toma. Decide whether to add a soft
@@ -129,6 +133,14 @@ change.
 - Save format is a single JSON file at
   `user://save_slot_1.json` with a `version` field.
   Multi-slot is out of scope for the demo.
+- Save writes are atomic: write to
+  `save_slot_1.json.tmp`, then `DirAccess.rename`
+  within `user://` (POSIX-atomic on macOS). Newer-
+  than-build saves are refused; older saves go
+  through `_migrate(blob, from_version)`. NPC memory
+  is re-defaulted from the profile and saved fields
+  are overlaid, so new fields default in.
+  (Decided 2026-05-16.)
 - Briefing reveals are gated by the NPC's dossier
   AND the per-NPC `forbidden_to_share` flag.
   Rejected reveals are silently dropped; the
@@ -151,12 +163,11 @@ change.
   committed in `ce484d3` along with the
   `anthropic_haiku.py` JSON extractor rewrite.
   Both fixes are on `origin/main`.
-- The third recommended fix from the same review
-  (SaveManager atomic write + version-aware
-  migration + validated `_apply_*`) is documented
-  in detail at the bottom of the code review but
-  was deferred when the user asked to fix only the
-  first two. Pick it up next session.
+- Phase10Test's `_test_save_hardening` block prints
+  one expected `ERROR: save is newer than build`
+  line when run headless — that's the refusal path
+  firing on purpose. The next assertion confirms
+  the refused load did not mutate in-memory state.
 - The codebase has both an in-process MockProvider
   (`game/scripts/ai/MockProvider.gd`) and a proxy
   MockProvider (`proxy/providers/mock.py`). They

@@ -42,6 +42,7 @@ func _ready() -> void:
 
 	await _test_save_blocker()
 	await _test_round_trip()
+	await _test_save_hardening()
 	await _test_fallback_provider()
 	await _test_anger_cooldown()
 	await _test_quest_paid()
@@ -132,6 +133,69 @@ func _test_round_trip() -> void:
 		"round-trip: orren memory stress (got %d)" % int(mem2.get("stress", 0)))
 
 	# Clean up save file.
+	SaveManager.delete_slot()
+
+
+# ---------------------------------------------------------------------------
+# Save hardening: atomic write, version refusal, validated apply
+# ---------------------------------------------------------------------------
+
+func _test_save_hardening() -> void:
+	# 1) Atomic write leaves no .tmp behind.
+	SaveManager.delete_slot()
+	Inventory.coins = 7
+	_expect(SaveManager.save_slot(), "hardening: save_slot returns true")
+	_expect(not FileAccess.file_exists(SaveManager.TMP_PATH),
+		"hardening: temp file does not linger after save")
+	_expect(FileAccess.file_exists(SaveManager.SAVE_PATH),
+		"hardening: save file exists at canonical path")
+
+	# 2) Newer-than-build saves are refused outright.
+	var raw := FileAccess.open(SaveManager.SAVE_PATH, FileAccess.READ).get_as_text()
+	var bumped = JSON.parse_string(raw)
+	bumped["version"] = SaveManager.VERSION + 1
+	var f := FileAccess.open(SaveManager.SAVE_PATH, FileAccess.WRITE)
+	f.store_string(JSON.stringify(bumped))
+	f.close()
+	Inventory.coins = 123
+	_expect(not SaveManager.load_slot(),
+		"hardening: load refuses save newer than build")
+	_expect(Inventory.coins == 123,
+		"hardening: refused load did not mutate in-memory state (coins=%d)"
+			% Inventory.coins)
+
+	# 3) Memory blob with a missing field gets defaulted, not crashed.
+	bumped["version"] = SaveManager.VERSION
+	bumped["npc_memory"] = {
+		"orren_drunk": {
+			# Intentionally omit patience, flags, long_term_notes, etc.
+			"recent_summary": "test summary",
+			"stress": 9,
+		},
+	}
+	f = FileAccess.open(SaveManager.SAVE_PATH, FileAccess.WRITE)
+	f.store_string(JSON.stringify(bumped))
+	f.close()
+	NpcMemoryStore.reset_all()
+	_expect(SaveManager.load_slot(),
+		"hardening: load succeeds with partial memory blob")
+	var mem := NpcMemoryStore.memory_for("orren_drunk")
+	_expect(int(mem.get("stress", -1)) == 9,
+		"hardening: saved stress preserved (got %d)" % int(mem.get("stress", -1)))
+	_expect(mem.has("patience") and mem.has("flags") and mem.has("long_term_notes"),
+		"hardening: missing fields defaulted in (keys: %s)" % str(mem.keys()))
+
+	# 4) Memory for an unknown NPC is dropped, not slammed into the store.
+	bumped["npc_memory"]["ghost_npc"] = {"stress": 1}
+	f = FileAccess.open(SaveManager.SAVE_PATH, FileAccess.WRITE)
+	f.store_string(JSON.stringify(bumped))
+	f.close()
+	NpcMemoryStore.reset_all()
+	_expect(SaveManager.load_slot(),
+		"hardening: load succeeds with unknown NPC in blob")
+	_expect(not NpcMemoryStore._by_id.has("ghost_npc"),
+		"hardening: unknown NPC dropped from memory store")
+
 	SaveManager.delete_slot()
 
 

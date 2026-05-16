@@ -18,6 +18,7 @@ extends Node
 ##
 
 const SAVE_PATH := "user://save_slot_1.json"
+const TMP_PATH  := "user://save_slot_1.json.tmp"
 const VERSION := 1
 
 
@@ -25,17 +26,29 @@ func has_save() -> bool:
 	return FileAccess.file_exists(SAVE_PATH)
 
 
+# Write to a temp file first, then atomic-rename onto the real path. A crash
+# or power loss between open() and rename() leaves the previous save intact.
 func save_slot() -> bool:
 	if not SaveBlocker.can_save():
 		push_warning("[SaveManager] save refused: %s" % SaveBlocker.reason())
 		return false
 	var blob := _serialize()
-	var f := FileAccess.open(SAVE_PATH, FileAccess.WRITE)
+	var f := FileAccess.open(TMP_PATH, FileAccess.WRITE)
 	if f == null:
-		push_error("[SaveManager] cannot open save file for write")
+		push_error("[SaveManager] cannot open temp save file for write")
 		return false
 	f.store_string(JSON.stringify(blob, "  "))
 	f.close()
+	var dir := DirAccess.open("user://")
+	if dir == null:
+		push_error("[SaveManager] cannot open user:// for rename")
+		_remove_if_exists(TMP_PATH)
+		return false
+	var err := dir.rename(TMP_PATH.get_file(), SAVE_PATH.get_file())
+	if err != OK:
+		push_error("[SaveManager] atomic rename failed: %d" % err)
+		_remove_if_exists(TMP_PATH)
+		return false
 	print("[SaveManager] wrote %s" % SAVE_PATH)
 	return true
 
@@ -51,18 +64,39 @@ func load_slot() -> bool:
 	if not (parsed is Dictionary):
 		push_error("[SaveManager] bad save file")
 		return false
-	if int(parsed.get("version", 0)) != VERSION:
-		push_warning("[SaveManager] save version mismatch (got %s, expect %d)" % [
-			parsed.get("version"), VERSION,
+	var save_version: int = int(parsed.get("version", 0))
+	if save_version > VERSION:
+		push_error("[SaveManager] save is newer than build (v%d > v%d); refusing to load" % [
+			save_version, VERSION,
 		])
+		return false
+	if save_version < VERSION:
+		parsed = _migrate(parsed, save_version)
+		if parsed.is_empty():
+			return false
 	_deserialize(parsed)
 	print("[SaveManager] loaded %s" % SAVE_PATH)
 	return true
 
 
 func delete_slot() -> void:
-	if has_save():
-		DirAccess.remove_absolute(ProjectSettings.globalize_path(SAVE_PATH))
+	_remove_if_exists(SAVE_PATH)
+	_remove_if_exists(TMP_PATH)
+
+
+# Per-version migration steps land here as the schema evolves. Each bump adds
+# one branch that transforms blob from `from_version` toward VERSION. Returns
+# {} on failure so load_slot() can bail without applying a half-migrated blob.
+func _migrate(blob: Dictionary, from_version: int) -> Dictionary:
+	push_error("[SaveManager] no migration registered: v%d -> v%d" % [
+		from_version, VERSION,
+	])
+	return {}
+
+
+func _remove_if_exists(path: String) -> void:
+	if FileAccess.file_exists(path):
+		DirAccess.remove_absolute(ProjectSettings.globalize_path(path))
 
 
 # ---------------------------------------------------------------------------
@@ -171,11 +205,55 @@ func _apply_quest_state(blob: Dictionary) -> void:
 # ---------------------------------------------------------------------------
 
 func _apply_npc_memory(blob: Dictionary) -> void:
-	NpcMemoryStore._by_id = blob.duplicate(true)
+	# Rebuild each memory entry from current defaults, then overlay saved fields.
+	# This way, fields added since the save was written get sensible defaults
+	# instead of leaving downstream code with null. Unknown NPC ids (removed
+	# between builds) are dropped, not slammed into the store.
+	var migrated: Dictionary = {}
+	for npc_id in blob.keys():
+		if not NpcProfileRegistry.has_profile(npc_id):
+			print("[SaveManager] skipping memory for unknown NPC '%s'" % npc_id)
+			continue
+		var saved: Dictionary = blob[npc_id]
+		var base: Dictionary = NpcMemoryStore._new_memory(npc_id)
+		migrated[npc_id] = {
+			"relationship_to_player": int(saved.get("relationship_to_player", base["relationship_to_player"])),
+			"stress":                 int(saved.get("stress",                 base["stress"])),
+			"patience":               int(saved.get("patience",               base["patience"])),
+			"player_tags":            Array(saved.get("player_tags",          base["player_tags"])).duplicate(),
+			"last_topic":             String(saved.get("last_topic",          base["last_topic"])),
+			"flags":                  (saved.get("flags", base["flags"]) as Dictionary).duplicate(true),
+			"recent_summary":         String(saved.get("recent_summary",      base["recent_summary"])),
+			"long_term_notes":        Array(saved.get("long_term_notes",      base["long_term_notes"])).duplicate(true),
+			"anger_cooldown_turns":   int(saved.get("anger_cooldown_turns",   base["anger_cooldown_turns"])),
+		}
+	NpcMemoryStore._by_id = migrated
 
 
 func _apply_npc_dossiers(blob: Dictionary) -> void:
-	NpcDossierStore._by_id = blob.duplicate(true)
+	# Skip unknown NPCs; drop entries missing an id or tier (broken records).
+	var migrated: Dictionary = {}
+	for npc_id in blob.keys():
+		if not NpcProfileRegistry.has_profile(npc_id):
+			print("[SaveManager] skipping dossier for unknown NPC '%s'" % npc_id)
+			continue
+		var saved_entries: Array = blob[npc_id] as Array
+		var cleaned: Array = []
+		for e in saved_entries:
+			if not (e is Dictionary):
+				continue
+			var bid: String = String(e.get("id", ""))
+			var tier: String = String(e.get("tier", ""))
+			if bid.is_empty() or tier.is_empty():
+				continue
+			cleaned.append({
+				"id":                 bid,
+				"tier":               tier,
+				"forbidden_to_share": bool(e.get("forbidden_to_share", false)),
+				"category":           String(e.get("category", "events")),
+			})
+		migrated[npc_id] = cleaned
+	NpcDossierStore._by_id = migrated
 
 
 # ---------------------------------------------------------------------------
