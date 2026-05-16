@@ -10,7 +10,7 @@ extends Node
 ## Autoload as `NpcDossierStore`.
 ##
 
-var _by_id: Dictionary = {}    # npc_id -> Array of {id, tier, forbidden_to_share, category}
+var _by_id: Dictionary = {}    # npc_id -> Array of {id, tier, forbidden_to_share, category, reveal_note, public_tell}
 
 
 func dossier_for(npc_id: String) -> Array:
@@ -75,6 +75,15 @@ func _seed(npc_id: String) -> void:
 				"tier":               e.get("tier", ""),
 				"forbidden_to_share": e.get("forbidden_to_share", false),
 				"category":           category,
+				# reveal_note: in-fiction condition the NPC uses to gate
+				# sharing. Empty when unauthored. Read by Retriever (NPC
+				# prompt) and by ResponseValidator (soft-reveal path).
+				"reveal_note":        String(e.get("reveal_note", "")),
+				# public_tell: Kael-visible body-language cue. Only the
+				# narrow public_tells_for() accessor on NpcProfileRegistry
+				# exposes this to the suggestion side; keeps the strict
+				# Kael / NPC context isolation intact.
+				"public_tell":        String(e.get("public_tell", "")),
 			})
 	_by_id[npc_id] = out
 

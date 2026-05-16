@@ -4,7 +4,7 @@
 
 | Layer         | Technology                          | Role                                                                    |
 | ------------- | ----------------------------------- | ----------------------------------------------------------------------- |
-| Engine        | Godot 4.6 (Forward+, 480×270 viewport) | Game runtime; renders, runs scripts, owns the scene tree.            |
+| Engine        | Godot 4.6 (Forward+, 960×540 viewport, 1920×1080 window) | Game runtime; renders, runs scripts, owns the scene tree.            |
 | Game scripts  | GDScript                            | All gameplay, dialogue orchestration, combat, save/load.               |
 | AI proxy      | Python 3 + FastAPI + Uvicorn (localhost:8421) | Single backend hiding the Anthropic SDK from Godot.          |
 | AI provider   | Anthropic Claude Haiku 4.5 (default cloud) or local Ollama daemon | Villager dialogue + free-text topic classification. Selected via `AURELIX_PROVIDER` (`anthropic` / `ollama` / `mock`). |
@@ -32,9 +32,13 @@
   `Retriever`.
 - `game/scripts/dialogue/` — `DialogueController`
   (autoload), `DialogueSession`, `TopicDetector`,
-  `ResponseValidator`, `NpcMemoryStore`,
+  `PressDetector` (keyword-based free-text → press
+  promotion), `ResponseValidator`, `NpcMemoryStore`,
   `AngerCooldownResolver`, `OfferItemAction`,
-  `StateModifierResolver`, `AuthoredOptionLibrary`.
+  `StateModifierResolver`, `AuthoredOptionLibrary`,
+  `PlayerSuggestionGenerator` (autoload — Kael-side
+  reply suggestions, strict context isolation from the
+  NPC pipeline).
 - `game/scripts/npc/` — `NpcDossierStore`,
   `DossierMutator`, plus authored scripted NPC behavior
   (e.g. `HaldenScript.gd`).
@@ -59,7 +63,8 @@
   preview-image generators. Not shipped, not loaded
   by the village_square scene.
 - `proxy/` — FastAPI app. `main.py` exposes
-  `/v1/generate`, `/v1/classify_topic`, `/health`.
+  `/v1/generate`, `/v1/classify_topic`,
+  `/v1/suggest_player_options`, `/health`.
   `providers/` holds `base.py` (protocol), `mock.py`,
   `anthropic_haiku.py`, `ollama.py`, and the shared
   `_json_utils.py` (fenced-block + balanced-brace JSON
@@ -113,19 +118,73 @@ The only privileged boundary is the API key, which:
 
 ## AI / Background Task Model
 
-The AI pipeline is one request per player turn.
+Two separate, context-isolated AI calls per turn. The NPC call sees only
+the NPC's private dossier and memory; the Kael-side suggestion call sees
+only public knowledge Kael holds. Mixing them in one call would let a
+forbidden briefing leak into Kael's mouth.
 
 ```
-Player input (option or free text)
+Player input (option, AI suggestion click, or free text)
   → TopicDetector (authored tag if option; LLM classify if free text)
+       Free-text classify also tags `category`:
+         in_game        → normal flow (below)
+         out_of_context → real-world / modern-tech / current-events refs
+                          the world can't answer. Engine substitutes the
+                          NPC's authored "I didn't catch that" fallback,
+                          does NOT touch patience / stress / last_turns.
+         offensive      → grave slurs / explicit content. Engine substitutes
+                          the NPC's authored offended line and triggers
+                          AngerCooldownResolver. One-shot, conversation ends.
+       Layer-2 backup: the NPC's `generate` response can also raise
+       `safety_flag = out_of_context | offensive` for inputs that slipped
+       past the cheap pre-classify (e.g. roleplay-framed jailbreaks). Same
+       short-circuit fires; the offending player line is popped from
+       last_turns so it cannot resurface in a later prompt.
+  → PressDetector (free-text + suggestion clicks only; if the text matches
+                   an authored press keyword for the most-recently-dodged
+                   topic, promote verb → "press" and attach the matching
+                   `press_angle` so CapabilityGate can fire the reveal)
   → CapabilityGate (allowed | blocked | constrained, by domain × NPC)
   → Retriever (dossier briefings matching the topic, bounded by token budget)
   → PromptBuilder (persona + state paragraph + memory summary + briefings)
-  → AiProvider (LocalProxy → FastAPI → Anthropic, OR Mock)
+  → AiProvider.generate (LocalProxy → FastAPI → Anthropic, OR Mock)
   → ResponseValidator (schema + safety + scope checks)
   → engine applies approved reveals, memory delta, faction state
   → DialogueBox renders the dialogue line
+
+Then, in parallel with the player reading the line:
+  → DialogueBox shows 3 disabled "..." placeholder rows
+  → PlayerPromptBuilder (Kael's known_facts + journal excerpts + public
+                         conversation history; NO NPC dossier or memory.
+                         When the NPC just dodged a topic, that topic id
+                         is passed as `npc_just_dodged_topic` — a publicly
+                         observable cue — so the model can include one
+                         pressing suggestion among the three)
+  → AiProvider.suggest_player_options (same provider chain)
+  → PlayerSuggestionGenerator validates (intent enum, length cap, injection
+                                          filter, dedupe by intent, cap 3)
+  → DialogueBox.apply_suggestions replaces placeholders
+
+When the player picks an AI suggestion, the box emits text_submitted, the
+same path as the free-text LineEdit. That path runs TopicDetector and then
+PressDetector, so a "you saw something" suggestion turns into a real Press
+turn (with stress + reveal semantics) the moment its text lands on an
+authored angle keyword. The detector is deliberately keyword-based and
+brittle; authors extend coverage by adding keywords to
+`press_keywords[topic][angle]: [...]` in the NPC profile.
 ```
+
+Authored options vs AI suggestions are decided per topic via
+`options_source: <topic>: authored | ai_suggested` in each NPC's option
+bank. Defaults when the bank has no entry: the `default` topic (the scripted
+opening line after `_open`) is `authored`; every other topic is
+`ai_suggested`. Banks override either direction. When a topic is
+`ai_suggested`, AI suggestions own the player's reply surface for that topic
+— authored Press options for the same topic do NOT also appear (an earlier
+"pressable Press wins" guard was removed; it silently suppressed AI
+suggestions on Orren the moment he first dodged). If the Press shortcut is
+needed on an AI-suggested topic, the fix belongs in the suggestion prompt,
+not the UI rule. Mock mode falls through to authored across the board.
 
 Failure handling:
 
@@ -190,7 +249,14 @@ while a dialogue/journal turn is in flight (via
    stores load before controllers; UI overlays
    (DebugOverlay, TitleCard) load last. Do not
    reorder without re-running `BootValidator`.
-10. **Facing is 4-cardinal; movement is 8-direction.**
+10. **Kael's reply suggestions never see NPC private state.**
+    `PlayerPromptBuilder` reads only `FactLedger`, `QuestState`,
+    `Journal._entries`, and `DialogueSession.last_turns` (the public
+    log). The NPC's profile, dossier, memory, and any briefing flagged
+    `forbidden_to_share` MUST NOT enter this call. Suggestions are
+    player utterances and never write canon: no fact grants, no
+    memory updates, no dossier mutations come out of this path.
+11. **Facing is 4-cardinal; movement is 8-direction.**
     Player facing rotates on any directional input —
     blocked moves, wall bumps, edge pushes, and
     exit/encounter triggers all update facing even

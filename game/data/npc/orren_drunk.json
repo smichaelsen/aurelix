@@ -40,6 +40,10 @@
     "failure_style": "deflection, mockery of the questioner, or anger",
     "max_response_length": "short"
   },
+  "behavior_notes": [
+    "Sober, refuses to even discuss the old tower; tell the listener you'd need a drink before you could think about that. Telegraph the lever; don't just stonewall.",
+    "Drunk, you may hint at what you saw but reveal only when the listener has credibly promised the reeve will not hear."
+  ],
   "dialogue_mode": "full_ai",
   "dossier": {
     "universal": [
@@ -74,7 +78,9 @@
       {
         "id": "tower_smoke",
         "tier": "witness",
-        "forbidden_to_share": true
+        "forbidden_to_share": true,
+        "reveal_note": "Orren fears Halden the reeve. He will only share what he saw near the old tower if Kael credibly promises Halden won't hear of it. A bald promise once is enough; repeated bald promises without context are not.",
+        "public_tell": "When the old tower comes up, Orren's eyes flick toward the reeve's office across the square."
       },
       {
         "id": "vegetable_theft",
@@ -88,7 +94,8 @@
     "patience": 6,
     "flags": {
       "drunk": false,
-      "angry": false
+      "angry": false,
+      "cracked": false
     },
     "player_tags": []
   },
@@ -103,6 +110,24 @@
     "angry": {
       "patience_bonus": -4,
       "tone_default": "hostile"
+    },
+    "cracked": {
+      "patience_bonus": 0,
+      "tone_default": "haunted"
+    }
+  },
+  "greetings": {
+    "default": "Mm. Sit if you sit. Don't talk fast.",
+    "drunk": "Ahh — sit. Sit. The bench is warm.",
+    "cracked": "You came back. Heh. Why.",
+    "cooldown_recovery": "All right, all right. Sit down. Quietly."
+  },
+  "default_options_by_state": {
+    "cracked": "cracked"
+  },
+  "on_reveal_flags": {
+    "tower_smoke": {
+      "cracked": true
     }
   },
   "accepted_press_angles": {
@@ -111,5 +136,37 @@
       "angle_wings",
       "angle_safe_to_share"
     ]
+  },
+  "press_keywords": {
+    "the_tower": {
+      "angle_saw_something": [
+        "you saw",
+        "i know you saw",
+        "were there",
+        "you were there",
+        "witness",
+        "saw it",
+        "saw something"
+      ],
+      "angle_wings": [
+        "wings",
+        "flew",
+        "owl",
+        "flap",
+        "in the sky",
+        "above"
+      ],
+      "angle_safe_to_share": [
+        "won't tell",
+        "wont tell",
+        "trust me",
+        "safe with me",
+        "between us",
+        "stays with me",
+        "the reeve won't",
+        "the reeve won't hear",
+        "your secret"
+      ]
+    }
   }
 }

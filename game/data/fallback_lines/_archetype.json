@@ -5,6 +5,8 @@
     "blacksmith": "Not my trade. Ask elsewhere.",
     "priest": "I have nothing to add to that. Be well.",
     "guard_authority": "Speak plainly, stranger.",
-    "_default": "..."
+    "_default": "...",
+    "out_of_context": "I don't follow you. What did you mean?",
+    "offensive": "That was unnecessary. Leave me alone."
   }
 }

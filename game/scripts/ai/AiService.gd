@@ -79,6 +79,25 @@ func clear_failures_for(npc_id: String) -> void:
 	_failures[npc_id] = 0
 
 
+## Generate Kael's reply suggestions for the current dialogue turn.
+##
+## Returns {"suggestions": [{intent, text}, ...]}. Empty list means the
+## caller should fall back to authored options.
+##
+## Unlike `generate`, there is no FallbackProvider for suggestions: the
+## authored option bank is itself the "fallback" surface, and is owned by
+## DialogueController (which decides whether to display authored vs. AI
+## suggestions based on the per-topic `player_options_source` flag).
+func suggest_player_options(request: Dictionary) -> Dictionary:
+	if Config.use_mock_ai:
+		return _mock.suggest_player_options(request)
+	var response: Dictionary = await _proxy.suggest_player_options(request)
+	if not response.is_empty():
+		return response
+	push_warning("[AiService] proxy suggest failed; falling back to mock")
+	return _mock.suggest_player_options(request)
+
+
 ## Classify free-text into a topic id from `known_topics`.
 func classify_topic(text: String, known_topics: Array = []) -> Dictionary:
 	if Config.use_mock_ai:

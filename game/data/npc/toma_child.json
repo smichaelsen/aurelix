@@ -41,6 +41,14 @@
     "max_response_length": "very_short"
   },
   "dialogue_mode": "full_ai",
+  "greetings": {
+    "default": "Are you a knight? You don't look like one. Wanna see my beetle?",
+    "fed": "[Crunching.] Okay friend. What do you wanna know?",
+    "cooldown_recovery": "Okay. Don't shout this time."
+  },
+  "default_options_by_state": {
+    "fed": "gossip_focused"
+  },
   "dossier": {
     "universal": [
       {
@@ -91,6 +99,7 @@
   "state_modifiers": {
     "fed": {
       "patience_bonus": 6,
+      "tone_default": "confiding",
       "willingness_modifier": {
         "gossip": "from_rumor_to_eager_rumor"
       }

@@ -12,11 +12,11 @@ ROOT    = Path(__file__).resolve().parents[1]
 ASSETS  = ROOT / 'game' / 'assets'
 PREVIEW = ROOT / 'game' / 'preview.png'
 
-TILE    = 32
+TILE    = 64
 COLS    = 15
 ROWS    = 9
-W       = COLS * TILE      # 480
-H       = ROWS * TILE      # 288 (one row taller than 270 viewport; ok for preview)
+W       = COLS * TILE      # 960
+H       = ROWS * TILE      # 576 (one row taller than 540 viewport; ok for preview)
 
 LAYOUT = [
     "GTTTTTGSSSSSGGG",

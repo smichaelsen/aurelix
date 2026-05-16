@@ -82,6 +82,16 @@
   parses model output. Fenced blocks first, then a
   string-aware balanced-brace scan. Do not relax to
   a greedy regex.
+- The Kael-side suggestion pipeline
+  (`PlayerPromptBuilder`, `PlayerSuggestionGenerator`,
+  `/v1/suggest_player_options`) must remain strictly
+  context-isolated from the NPC pipeline. Do not pass
+  the speaking NPC's profile, dossier entries, memory
+  fields, or any briefing carrying `forbidden_to_share`
+  into a suggestion request. The only NPC info this
+  side may read is the public display name and
+  archetype. Suggestions never write canon — no fact
+  grants, memory updates, or dossier mutations.
 
 ## Save and State Rules
 

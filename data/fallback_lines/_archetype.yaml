@@ -1,5 +1,13 @@
 ## Archetype-keyed last-resort fallbacks. Used when no per-NPC bank has a
 ## matching key.
+##
+## Two shapes coexist under `lines`:
+##   - archetype keys (drunk, blacksmith, ...) — flat strings, the
+##     per-archetype generic line for unknown topics.
+##   - category keys (out_of_context, offensive) — flat strings, the
+##     generic guardrail line when neither the per-NPC bank nor any other
+##     fallback has authored one. FallbackProvider._category_line looks
+##     these up by name, not by archetype.
 lines:
   drunk:           "Mm. What was that."
   village_child:   "I dunno. Want to see something cool?"
@@ -7,3 +15,5 @@ lines:
   priest:          "I have nothing to add to that. Be well."
   guard_authority: "Speak plainly, stranger."
   _default:        "..."
+  out_of_context:  "I don't follow you. What did you mean?"
+  offensive:       "That was unnecessary. Leave me alone."

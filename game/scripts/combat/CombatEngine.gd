@@ -33,12 +33,19 @@ func _init() -> void:
 
 
 ## Solo legacy start: Kael vs one enemy. If Iskar is bonded, he joins.
+##
+## Kael's stats from the caller already carry current `hp` from PartyHealth.
+## Iskar's current HP is pulled from PartyHealth here so the engine remains
+## the only consumer of the party-state autoload.
 func start(kael_stats: Dictionary, enemy_stats: Dictionary, enemy_id: String) -> void:
 	var player_party := [_battler_from(kael_stats, "kael", "player")]
 	if IskarCompanion.bonded:
 		var iskar_stats := CombatantStats.base_stats("iskar")
 		if not iskar_stats.is_empty():
-			player_party.append(_battler_from(iskar_stats, "iskar", "player"))
+			var iskar_with_hp := iskar_stats.duplicate(true)
+			iskar_with_hp["max_hp"] = int(iskar_stats["hp"])
+			iskar_with_hp["hp"]     = PartyHealth.get_iskar_hp()
+			player_party.append(_battler_from(iskar_with_hp, "iskar", "player"))
 	var enemies := [_battler_from(enemy_stats, enemy_id, "enemy")]
 	start_party(player_party, enemies)
 
@@ -86,12 +93,17 @@ func player_action(kind: String, payload: Dictionary = {}) -> void:
 # ---------------------------------------------------------------------------
 
 func _battler_from(stats: Dictionary, id: String, side: String) -> Dictionary:
+	# Carry-over: if stats carries an explicit max_hp, hp may be lower than max
+	# (Kael walked into the fight wounded). Default max_hp to hp for blocks
+	# that don't track current HP (enemies, freshly-bonded Iskar).
+	var hp_now: int = int(stats.get("hp", 10))
+	var hp_max: int = int(stats.get("max_hp", hp_now))
 	return {
 		"id":          id,
 		"side":        side,
 		"name":        stats.get("name", id.capitalize()),
-		"hp":          int(stats.get("hp", 10)),
-		"max_hp":      int(stats.get("hp", 10)),
+		"hp":          hp_now,
+		"max_hp":      hp_max,
 		"atk":         int(stats.get("atk", 1)),
 		"def":         int(stats.get("def", 0)),
 		"spd":         int(stats.get("spd", 5)),

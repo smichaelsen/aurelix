@@ -9,8 +9,8 @@ extends Node2D
 ## visually he and Iskar share the cage spawn moment.
 ##
 
-const TILE := 32
-const MOVE_DURATION := 0.12
+const TILE := 64
+const MOVE_DURATION := 0.22
 
 @onready var _sprite: Sprite2D = $Sprite
 
@@ -95,4 +95,4 @@ func _cardinal_of(delta: Vector2i) -> String:
 
 
 func _pixel_for(p: Vector2i) -> Vector2:
-	return Vector2(p.x * TILE + 4, p.y * TILE)
+	return Vector2(p.x * TILE + 8, p.y * TILE)

@@ -17,3 +17,10 @@ func generate(_request: Dictionary) -> Dictionary:
 
 func classify_topic(_text: String, _known_topics: Array) -> Dictionary:
 	return {}
+
+
+# Returns {"suggestions": [{"intent": "...", "text": "..."}, ...]}.
+# Empty dict on failure so callers can fall back. 0-3 entries; each entry's
+# intent is one of "strategic" | "tactical" | "dismissive".
+func suggest_player_options(_request: Dictionary) -> Dictionary:
+	return {}

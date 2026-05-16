@@ -3,7 +3,7 @@
     "cols": 15,
     "rows": 9
   },
-  "tile_size": 32,
+  "tile_size": 64,
   "player_start": {
     "col": 7,
     "row": 6

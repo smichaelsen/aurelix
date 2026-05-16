@@ -10,6 +10,8 @@
     "press_too_far": "I'm telling my mother!",
     "item_offered": "For me? Cool!",
     "anger_out": "I'm telling my mother!",
-    "cooldown_recovery": "Okay. Don't shout this time."
+    "cooldown_recovery": "Okay. Don't shout this time.",
+    "out_of_context": "What? You're weird.",
+    "offensive": "You're a mean person. I'm telling!"
   }
 }

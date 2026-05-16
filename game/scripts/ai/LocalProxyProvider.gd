@@ -36,6 +36,14 @@ func classify_topic(text: String, known_topics: Array) -> Dictionary:
 	return result
 
 
+func suggest_player_options(request: Dictionary) -> Dictionary:
+	var body := JSON.stringify(request)
+	var result := await _http_post("%s/v1/suggest_player_options" % host, body)
+	if result.is_empty():
+		return {}
+	return result
+
+
 func health() -> bool:
 	var result := await _http_get("%s/health" % host)
 	return result.get("ok", false) == true

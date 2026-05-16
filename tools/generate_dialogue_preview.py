@@ -13,9 +13,9 @@ ROOT    = Path(__file__).resolve().parents[1]
 ASSETS  = ROOT / 'game' / 'assets'
 PREVIEW = ROOT / 'game' / 'dialogue_preview.png'
 
-TILE = 32
-W    = 480
-H    = 270
+TILE = 64
+W    = 960
+H    = 540
 
 # layout: top 80 = world strip, bottom 190 = dialogue panel
 

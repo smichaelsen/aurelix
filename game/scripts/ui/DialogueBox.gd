@@ -11,12 +11,15 @@ signal item_offered(item_id: String)
 signal closed
 
 const MAX_OPTIONS := 4
+const SUGGESTION_PLACEHOLDER_LABEL := "..."
 
 @onready var _panel:        Panel         = $Panel
 @onready var _name_lbl:     Label         = $Panel/Name
 @onready var _tone_lbl:     Label         = $Panel/Tone
+@onready var _player_lbl:   Label         = $Panel/Player
 @onready var _dialogue:     Label         = $Panel/Dialogue
-@onready var _options:      VBoxContainer = $Panel/Options
+@onready var _stage_dir:    Label         = $Panel/StageDirection
+@onready var _options:      VBoxContainer = $Panel/OptionsScroll/Options
 @onready var _free_text:    LineEdit      = $Panel/FreeText
 @onready var _offer_btn:    Button        = $Panel/OfferButton
 @onready var _item_picker:  PanelContainer = $ItemPicker
@@ -32,7 +35,7 @@ func _ready() -> void:
 	_free_text.caret_blink_interval = 0.5
 	_free_text.focus_entered.connect(_on_free_text_focus_entered)
 
-	_offer_btn.add_theme_font_size_override("font_size", 9)
+	_offer_btn.add_theme_font_size_override("font_size", 14)
 	_offer_btn.pressed.connect(_on_offer_pressed)
 	_item_picker.picked.connect(_on_item_picked)
 	_item_picker.cancelled.connect(_close_picker)
@@ -55,7 +58,9 @@ func show_for(display_name: String, archetype: String) -> void:
 	_panel.visible = true
 	_name_lbl.text = display_name.to_upper()
 	_tone_lbl.text = "-- " + archetype.replace("_", " ")
+	_player_lbl.text = ""
 	_dialogue.text = ""
+	_stage_dir.text = ""
 	_clear_options()
 	_free_text.text = ""
 	# Focus is established by set_options once the option buttons exist
@@ -64,16 +69,97 @@ func show_for(display_name: String, archetype: String) -> void:
 
 func hide_box() -> void:
 	_panel.visible = false
+	_player_lbl.text = ""
 	_clear_options()
 
 
 func set_dialogue(text: String, tone: String) -> void:
 	_dialogue.text = text
 	_tone_lbl.text = "-- " + tone
+	# Every new NPC line clears any prior stage direction. Callers re-set
+	# it on the same turn when a dodge fires; otherwise the prior turn's
+	# tell would linger over an unrelated line.
+	_stage_dir.text = ""
 
 
+## Italicised body-language cue rendered below the NPC's dialogue line.
+## Fires on a dodge when the NPC's dossier has a `public_tell` for the
+## topic in question. Empty string clears the row.
+func set_stage_direction(text: String) -> void:
+	if text.is_empty():
+		_stage_dir.text = ""
+		return
+	_stage_dir.text = "* %s *" % text
+
+
+## The player's most recent line, rendered above the NPC dialogue in a muted
+## tone so it reads as a chat-log echo, not a second NPC voice. Persists
+## across turns until the next player commit (or dialogue close).
+func set_player_line(text: String) -> void:
+	if text.is_empty():
+		_player_lbl.text = ""
+	else:
+		_player_lbl.text = "Kael: " + text
+
+
+# Clearing options here means a player commit (option pick, free text, item
+# offer) makes the option list vanish instantly — the player can't double-pick
+# while the model is generating, and the placeholder/NPC pending line owns
+# the box.
 func set_pending() -> void:
 	_dialogue.text = "..."
+	_stage_dir.text = ""
+	_clear_options()
+
+
+## Show N disabled "..." placeholder rows so the player sees the option count
+## the suggestion call will produce while it's in flight. The free-text row
+## and Offer-item button remain interactive — players who don't want to wait
+## can go there instead. apply_suggestions() replaces these in place.
+func set_options_pending(count: int) -> void:
+	_clear_options()
+	var n: int = clampi(count, 0, MAX_OPTIONS)
+	for i in range(n):
+		var btn := _make_placeholder_button(i)
+		_options.add_child(btn)
+	# LineEdit keeps focus while suggestions load — placeholders are not
+	# focusable, so arrow-up/down between LineEdit and them is a no-op.
+	_free_text.focus_neighbor_top    = NodePath()
+	_free_text.focus_neighbor_bottom = NodePath()
+	(func():
+		if is_instance_valid(_free_text) and _free_text.is_inside_tree():
+			_free_text.grab_focus()
+	).call_deferred()
+
+
+## Replace pending placeholders with real suggestion rows. Each suggestion is
+## {intent, text}; clicking a row emits text_submitted(text), the same path
+## as the free-text LineEdit, so DialogueController routes it through
+## TopicDetector + AI turn with no special-casing.
+func apply_suggestions(suggestions: Array) -> void:
+	_clear_options()
+	var buttons: Array[Button] = []
+	for i in range(min(MAX_OPTIONS, suggestions.size())):
+		var s: Dictionary = suggestions[i]
+		var text: String = String(s.get("text", ""))
+		if text.is_empty():
+			continue
+		var btn := _make_option_button(i, text)
+		var captured := text
+		btn.pressed.connect(func(): text_submitted.emit(captured))
+		_options.add_child(btn)
+		buttons.append(btn)
+	_wire_focus_chain(buttons)
+	# Match scripted set_options: first option takes focus (amber border) so
+	# the UI is consistent across authored and AI-suggested topics. Skip the
+	# grab if the player started typing during the suggestion wait — losing
+	# their caret mid-word would be worse than the inconsistency.
+	if not buttons.is_empty() and _free_text.text.is_empty():
+		var b := buttons[0]
+		(func():
+			if is_instance_valid(b) and b.is_inside_tree():
+				b.grab_focus()
+		).call_deferred()
 
 
 func set_options(options: Array) -> void:
@@ -85,7 +171,7 @@ func set_options(options: Array) -> void:
 		btn.text = "%d. %s" % [i + 1, opt.get("label", "")]
 		btn.alignment = HORIZONTAL_ALIGNMENT_LEFT
 		btn.focus_mode = Control.FOCUS_ALL
-		btn.add_theme_font_size_override("font_size", 9)
+		btn.add_theme_font_size_override("font_size", 14)
 		btn.add_theme_color_override("font_color",         Color(0.11, 0.10, 0.12))
 		btn.add_theme_color_override("font_hover_color",   Color(0.11, 0.10, 0.12))
 		btn.add_theme_color_override("font_focus_color",   Color(0.94, 0.66, 0.28))
@@ -113,7 +199,7 @@ func set_options(options: Array) -> void:
 		btn.add_theme_stylebox_override("hover",   sb_flat)
 		btn.add_theme_stylebox_override("focus",   sb_focus)
 		btn.add_theme_stylebox_override("pressed", sb_focus)
-		btn.custom_minimum_size = Vector2(0, 14)
+		btn.custom_minimum_size = Vector2(0, 22)
 		btn.size_flags_vertical = Control.SIZE_FILL
 		btn.pressed.connect(func(): option_chosen.emit(opt))
 		_options.add_child(btn)
@@ -131,6 +217,55 @@ func set_options(options: Array) -> void:
 			if is_instance_valid(b) and b.is_inside_tree():
 				b.grab_focus()
 		).call_deferred()
+
+
+func _make_option_button(index: int, label: String) -> Button:
+	var btn := Button.new()
+	btn.text = "%d. %s" % [index + 1, label]
+	btn.alignment = HORIZONTAL_ALIGNMENT_LEFT
+	btn.focus_mode = Control.FOCUS_ALL
+	btn.add_theme_font_size_override("font_size", 14)
+	btn.add_theme_color_override("font_color",         Color(0.11, 0.10, 0.12))
+	btn.add_theme_color_override("font_hover_color",   Color(0.11, 0.10, 0.12))
+	btn.add_theme_color_override("font_focus_color",   Color(0.94, 0.66, 0.28))
+	btn.add_theme_color_override("font_pressed_color", Color(0.94, 0.66, 0.28))
+	var sb_flat := StyleBoxFlat.new()
+	sb_flat.bg_color = Color(0.878, 0.839, 0.737, 0)
+	sb_flat.content_margin_left = 4
+	sb_flat.content_margin_right = 4
+	sb_flat.content_margin_top = 1
+	sb_flat.content_margin_bottom = 1
+	var sb_focus := StyleBoxFlat.new()
+	sb_focus.bg_color = Color(0.36, 0.27, 0.13, 1)
+	sb_focus.content_margin_left = 4
+	sb_focus.content_margin_right = 4
+	sb_focus.content_margin_top = 1
+	sb_focus.content_margin_bottom = 1
+	sb_focus.border_color = Color(0.94, 0.66, 0.28, 1)
+	sb_focus.border_width_left = 1
+	sb_focus.border_width_top = 1
+	sb_focus.border_width_right = 1
+	sb_focus.border_width_bottom = 1
+	btn.add_theme_stylebox_override("normal",  sb_flat)
+	btn.add_theme_stylebox_override("hover",   sb_flat)
+	btn.add_theme_stylebox_override("focus",   sb_focus)
+	btn.add_theme_stylebox_override("pressed", sb_focus)
+	btn.custom_minimum_size = Vector2(0, 22)
+	btn.size_flags_vertical = Control.SIZE_FILL
+	return btn
+
+
+# Placeholder row shown while AI suggestions load. Visually present so the
+# player sees the option count that's coming, but disabled and not focusable
+# so it doesn't intercept input.
+func _make_placeholder_button(index: int) -> Button:
+	var btn := _make_option_button(index, SUGGESTION_PLACEHOLDER_LABEL)
+	btn.disabled = true
+	btn.focus_mode = Control.FOCUS_NONE
+	# Muted text so it reads as not-yet-ready rather than a real option.
+	btn.add_theme_color_override("font_color",          Color(0.63, 0.54, 0.42))
+	btn.add_theme_color_override("font_disabled_color", Color(0.63, 0.54, 0.42))
+	return btn
 
 
 ## Wire focus neighbors so arrow keys cycle: LineEdit <-> first option <->

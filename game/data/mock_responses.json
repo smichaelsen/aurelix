@@ -3,9 +3,9 @@
 
   "by_npc_topic_state": {
     "orren_drunk|the_tower|sober": {
-      "dialogue": "Tower? I don't know about no tower. Best leave it alone, friend.",
+      "dialogue": "Tower? Mn. I don't talk about that on a dry tongue. Come back with something to drink, or don't come back at all.",
       "tone": "evasive",
-      "memory_update": "Player asked about the old tower. Refused to engage.",
+      "memory_update": "Refused to discuss the tower while sober. Telegraphed that ale is the lever.",
       "revealed_briefing_ids": []
     },
     "orren_drunk|the_tower|drunk": {
@@ -26,11 +26,82 @@
       "memory_update": "Greeted the player. Wary.",
       "revealed_briefing_ids": []
     },
+    "orren_drunk|the_tower|cracked": {
+      "dialogue": "You heard me say it. That's all. I'm not standing in front of Halden. Find your own words.",
+      "tone": "haunted",
+      "memory_update": "Refused to repeat the tower account to the reeve in person.",
+      "revealed_briefing_ids": []
+    },
+    "orren_drunk|personal_history|cracked": {
+      "dialogue": "I'm not all right. I haven't been. But I'm lighter than I was an hour ago. Don't ask me why.",
+      "tone": "haunted",
+      "memory_update": "Admitted he was unwell. Thanked the player obliquely.",
+      "revealed_briefing_ids": []
+    },
+    "orren_drunk|gratitude|cracked": {
+      "dialogue": "Don't. Don't thank me. Go before I remember why I shouldn't have said it.",
+      "tone": "haunted",
+      "memory_update": "Brushed off the player's gratitude.",
+      "revealed_briefing_ids": [],
+      "request_end_conversation": true
+    },
 
     "toma_child|the_tower|none": {
       "dialogue": "The dragon ate a sheep at the well! I saw it! Well... my friend told me.",
       "tone": "boastful",
       "memory_update": "Repeated the well-sheep rumor with confidence.",
+      "revealed_briefing_ids": [],
+      "claims": ["dragon_rumor_well_sheep"]
+    },
+    "toma_child|the_tower|fed": {
+      "dialogue": "Okay. Real one? Mara told a man smoke was up there. I HEARD it. The sheep part is my own bit.",
+      "tone": "confiding",
+      "memory_update": "Confided he made up the sheep, but Mara's smoke rumor is real.",
+      "revealed_briefing_ids": [],
+      "claims": ["dragon_rumor_well_sheep"]
+    },
+    "toma_child|the_dragon|none": {
+      "dialogue": "It's BIG. Bigger than the chapel. Probably. With teeth like swords. My friend's brother saw it.",
+      "tone": "boastful",
+      "memory_update": "Embellished the dragon's size for the stranger.",
+      "revealed_briefing_ids": [],
+      "claims": ["dragon_rumor_well_sheep"]
+    },
+    "toma_child|the_dragon|fed": {
+      "dialogue": "[Whispering.] Don't tell Mama I said this. People are SCARED. Even the reeve. That's why he hired you.",
+      "tone": "confiding",
+      "memory_update": "Whispered that the adults are scared of the dragon.",
+      "revealed_briefing_ids": []
+    },
+    "toma_child|the_drake|none": {
+      "dialogue": "Is he YOURS?! Does he bite?! Can I — can I just LOOK at him? Please?",
+      "tone": "excited",
+      "memory_update": "Was wildly excited about Kael's drake.",
+      "revealed_briefing_ids": []
+    },
+    "toma_child|jorin_theft|fed": {
+      "dialogue": "Jorin? Pfft. He LOST it. Some stranger took the box. Not from here. Spoke funny. Mama told him 'serves you right.'",
+      "tone": "confiding",
+      "memory_update": "Told the player about Jorin losing his coin box to a stranger.",
+      "revealed_briefing_ids": [],
+      "claims": ["someone_robbed_jorin"]
+    },
+    "toma_child|jorin_theft|none": {
+      "dialogue": "Jorin's coin box?! That's a SECRET. [Pause.] ... do you have any food?",
+      "tone": "playful",
+      "memory_update": "Refused to share what he knew about Jorin until fed.",
+      "revealed_briefing_ids": []
+    },
+    "toma_child|personal_history|none": {
+      "dialogue": "I live behind the chapel. Just me and Mama now. Da's been gone two summers. Fever. Nobody could name it.",
+      "tone": "matter-of-fact",
+      "memory_update": "Told the player where he lives and that his father died.",
+      "revealed_briefing_ids": []
+    },
+    "toma_child|the_reeve|none": {
+      "dialogue": "[Whispers.] Don't tell him I talked. He's MEAN when his face goes red. He's got a thing for shouting.",
+      "tone": "wary",
+      "memory_update": "Confessed he's afraid of the reeve.",
       "revealed_briefing_ids": []
     },
     "toma_child|formal_math|none": {
@@ -45,11 +116,17 @@
       "memory_update": "Greeted the stranger.",
       "revealed_briefing_ids": []
     },
+    "toma_child|greeting|fed": {
+      "dialogue": "[Crunching.] Okay friend. What do you wanna know?",
+      "tone": "confiding",
+      "memory_update": "Opened up to the stranger after being fed.",
+      "revealed_briefing_ids": []
+    },
 
     "mara_blacksmith|the_tower|none": {
-      "dialogue": "A traveler said he saw smoke up there. I didn't press him. You shouldn't either.",
+      "dialogue": "A traveler said he saw smoke up there. I didn't press him. If you want the rest, ask Orren — but he won't say a word about it sober.",
       "tone": "practical",
-      "memory_update": "Shared the smoke-near-tower rumor a traveler told her.",
+      "memory_update": "Shared the smoke-near-tower rumor and pointed the player at Orren.",
       "revealed_briefing_ids": []
     },
     "mara_blacksmith|trade|none": {
@@ -72,9 +149,9 @@
     },
 
     "edda_priest|the_tower|none": {
-      "dialogue": "Some places are best forgotten. The chapter writes nothing of it, and that is itself an answer.",
+      "dialogue": "Some places are best forgotten. The chapter writes nothing of it. If you must know, Orren saw something — but he drowns it. A cup is the door.",
       "tone": "guarded",
-      "memory_update": "Warned the player about the tower without naming what is there.",
+      "memory_update": "Warned about the tower; pointed the player at Orren and ale as the way in.",
       "revealed_briefing_ids": []
     },
     "edda_priest|gold_eyed_one|none": {

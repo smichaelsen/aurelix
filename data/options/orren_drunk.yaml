@@ -1,3 +1,9 @@
+## options_source per-topic override. Defaults (no entry):
+##   default topic     -> authored  (scripted intro)
+##   every other topic -> ai_suggested
+## Override either direction here when needed; no entries means the new
+## default behaviour applies.
+
 options:
   default:
     - { label: "Hello, friend.",                       topic_id: greeting }
@@ -18,3 +24,21 @@ options:
     - { label: "What did you see at the tower?",       topic_id: the_tower }
     - { label: "How are you, Orren?",                  topic_id: personal_history }
     - { label: "Goodbye.",                             topic_id: __close }
+  # Post-reveal option set. Surfaced by default_options_by_state when
+  # flags.cracked is true. The player has earned the secret; this is the
+  # short coda. "Tell Halden yourself" is a refusal beat (he won't),
+  # not a quest branch — the player still carries the news.
+  cracked:
+    - { label: "Are you all right?",                   topic_id: personal_history }
+    - { label: "Tell Halden yourself.",                topic_id: the_tower }
+    - { label: "Thank you, Orren.",                    topic_id: gratitude }
+    - { label: "Goodbye.",                             topic_id: __close }
+  gratitude:
+    - { label: "Goodbye.",                             topic_id: __close }
+
+# Force the post-reveal options bank to authored — the player needs the
+# scripted three-beat closure, not AI-generated replies that might wander
+# off and re-open the topic.
+options_source:
+  cracked:    authored
+  gratitude:  authored

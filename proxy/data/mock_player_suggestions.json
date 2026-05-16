@@ -1,0 +1,56 @@
+{
+  "by_archetype_topic": {
+    "drunk|the_tower": [
+      {"intent": "strategic", "text": "What did you see at the tower, Orren?"},
+      {"intent": "tactical",  "text": "I won't tell the reeve. You can trust me."},
+      {"intent": "dismissive", "text": "Forget I asked. Goodbye."}
+    ],
+    "drunk|personal_history": [
+      {"intent": "strategic", "text": "Who were you before Marlow's Hollow?"},
+      {"intent": "tactical",  "text": "Drink's a hard road. Anything ease it?"},
+      {"intent": "dismissive", "text": "Never mind. Take care, Orren."}
+    ],
+    "blacksmith|the_tower": [
+      {"intent": "strategic", "text": "Has anyone come through asking about the tower?"},
+      {"intent": "tactical",  "text": "Got any gear that'd help up there?"},
+      {"intent": "dismissive", "text": "Just looking. Thanks, Mara."}
+    ],
+    "village_child|the_tower": [
+      {"intent": "strategic", "text": "Did the grown-ups say anything about the tower?"},
+      {"intent": "tactical",  "text": "I'd trade you something for a story."},
+      {"intent": "dismissive", "text": "Run along, then."}
+    ]
+  },
+  "fallback_by_archetype": {
+    "drunk": [
+      {"intent": "strategic", "text": "Tell me what you know."},
+      {"intent": "tactical",  "text": "Need another drink to think on it?"},
+      {"intent": "dismissive", "text": "I'll leave you to it."}
+    ],
+    "village_child": [
+      {"intent": "strategic", "text": "Have you heard the grown-ups talking?"},
+      {"intent": "tactical",  "text": "I've got something you might like."},
+      {"intent": "dismissive", "text": "Go play. Goodbye."}
+    ],
+    "blacksmith": [
+      {"intent": "strategic", "text": "What's the village been saying?"},
+      {"intent": "tactical",  "text": "Show me what you've got for sale."},
+      {"intent": "dismissive", "text": "Another time."}
+    ],
+    "priest": [
+      {"intent": "strategic", "text": "What does the chapel know of this?"},
+      {"intent": "tactical",  "text": "A prayer wouldn't go amiss."},
+      {"intent": "dismissive", "text": "Peace be with you."}
+    ],
+    "guard_authority": [
+      {"intent": "strategic", "text": "What does the reeve want of me?"},
+      {"intent": "tactical",  "text": "Is there a bounty on this?"},
+      {"intent": "dismissive", "text": "Understood. Goodbye."}
+    ],
+    "_default": [
+      {"intent": "strategic", "text": "Tell me more."},
+      {"intent": "tactical",  "text": "Why do you say that?"},
+      {"intent": "dismissive", "text": "I should be going."}
+    ]
+  }
+}

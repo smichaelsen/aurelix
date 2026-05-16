@@ -5,28 +5,28 @@
 [sub_resource type="StyleBoxFlat" id="cap"]
 bg_color = Color(0.10, 0.09, 0.10, 0.94)
 border_color = Color(0.94, 0.66, 0.28, 1)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
 
 [node name="CageOverlay" type="CanvasLayer"]
 script = ExtResource("1_cage")
 layer = 22
 
 [node name="Panel" type="Panel" parent="."]
-offset_left = 80.0
-offset_top = 116.0
-offset_right = 400.0
-offset_bottom = 144.0
+offset_left = 160
+offset_top = 232
+offset_right = 800
+offset_bottom = 288
 theme_override_styles/panel = SubResource("cap")
 
 [node name="Label" type="Label" parent="Panel"]
-offset_left = 8.0
-offset_top = 4.0
-offset_right = 312.0
-offset_bottom = 22.0
+offset_left = 16
+offset_top = 8
+offset_right = 624
+offset_bottom = 44
 theme_override_colors/font_color = Color(0.94, 0.94, 0.88, 1)
-theme_override_font_sizes/font_size = 10
+theme_override_font_sizes/font_size = 20
 horizontal_alignment = 1
 text = "..."

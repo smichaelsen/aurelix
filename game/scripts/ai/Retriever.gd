@@ -75,6 +75,10 @@ static func _slice(briefing: Dictionary, dossier_entry: Dictionary) -> Dictionar
 		"tier": briefing.get("tier", ""),
 		"body": briefing.get("body", ""),
 		"forbidden_to_share": dossier_entry.get("forbidden_to_share", false),
+		# reveal_note is authored on the dossier entry, not the briefing
+		# itself: the condition is how THIS NPC guards the secret, not
+		# the secret's content. Empty string when not authored.
+		"reveal_note": String(dossier_entry.get("reveal_note", "")),
 	}
 
 

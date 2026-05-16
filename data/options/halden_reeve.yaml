@@ -16,21 +16,21 @@ options:
     - { label: "Farewell.",                            topic_id: __close }
 
 templated_lines:
-  not_started_brief: |
+  not_started_brief: >
     Stranger. The notice on the board is mine. A dragon was sighted near
     the old tower. I want proof of where it was seen. Coin and bread for
     whoever brings it.
-  not_started_more: |
+  not_started_more: >
     Talk to Orren the drunk if you can stand him. He sleeps near the tavern.
     Mara at the smithy heard something from a traveler. The chapel may know
     more, but Sister Edda has been quiet.
-  accepted_send_off: |
+  accepted_send_off: >
     Good. The tower is two days' walk through the forest, north. Mind the
     wolves on the path, and keep your wits about you near the camp. Come
     back when you have something I can put my name to.
-  active_progress: |
+  active_progress: >
     Have you found anything?
-  active_more: |
+  active_more: >
     Three sources have spoken so far. The tower has not been quiet.
-  complete_turn_in: |
+  complete_turn_in: >
     Proof. Good. Here is your coin and bread.

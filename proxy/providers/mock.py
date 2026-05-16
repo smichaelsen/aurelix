@@ -26,12 +26,16 @@ from pathlib import Path
 from ..schema import (
     AiRequest, AiResponse,
     ClassifyTopicRequest, ClassifyTopicResponse,
+    PlayerSuggestion, PlayerSuggestionsRequest, PlayerSuggestionsResponse,
 )
 
 
 _DATA_PATH = Path(__file__).resolve().parents[1] / 'data' / 'mock_responses.json'
 _CLASSIFY_RULES_PATH = (
     Path(__file__).resolve().parents[1] / 'data' / 'mock_classify_rules.json'
+)
+_SUGGEST_PATH = (
+    Path(__file__).resolve().parents[1] / 'data' / 'mock_player_suggestions.json'
 )
 
 
@@ -43,8 +47,17 @@ def _load_classify_rules() -> dict:
     return json.loads(_CLASSIFY_RULES_PATH.read_text())
 
 
+def _load_suggestions() -> dict:
+    return json.loads(_SUGGEST_PATH.read_text())
+
+
 def _derive_state_key(state_paragraph: str, archetype: str) -> str:
     p = state_paragraph.lower()
+    # cracked wins over drunk on purpose. Post-reveal Orren is still drunk
+    # numerically (patience bonus carries) but the *response* lookup should
+    # pick up his haunted post-reveal lines, not the dodge bank.
+    if 'cracked' in p:
+        return 'cracked'
     if 'drunk' in p:
         return 'drunk'
     if 'angry' in p:
@@ -70,6 +83,7 @@ class MockProvider:
     def __init__(self) -> None:
         self._lib = _load_library()
         self._classify = _load_classify_rules()
+        self._suggest = _load_suggestions()
 
     def generate(self, req: AiRequest) -> AiResponse:
         archetype = req.npc_profile.archetype
@@ -109,6 +123,15 @@ class MockProvider:
         match_conf = float(self._classify.get('match_confidence', 0.7))
         default_topic = str(self._classify.get('default_topic_id', 'small_talk'))
         default_conf = float(self._classify.get('default_confidence', 0.3))
+        # Category rules first: offensive / out_of_context short-circuit
+        # before topic classification.
+        for rule in self._classify.get('category_rules', []):
+            category = rule['category']
+            for k in rule['keywords']:
+                if k in text:
+                    return ClassifyTopicResponse(
+                        topic_id='', confidence=match_conf, category=category,
+                    )
         for rule in self._classify['rules']:
             topic_id = rule['topic_id']
             for k in rule['keywords']:
@@ -116,6 +139,21 @@ class MockProvider:
                     if topic_id in req.known_topics or not req.known_topics:
                         return ClassifyTopicResponse(topic_id=topic_id, confidence=match_conf)
         return ClassifyTopicResponse(topic_id=default_topic, confidence=default_conf)
+
+    def suggest_player_options(
+        self, req: PlayerSuggestionsRequest
+    ) -> PlayerSuggestionsResponse:
+        archetype = req.npc_archetype or "_default"
+        topic = req.topic_addressed or ""
+        key = f"{archetype}|{topic}"
+        items = self._suggest.get("by_archetype_topic", {}).get(key)
+        if items is None:
+            items = self._suggest["fallback_by_archetype"].get(
+                archetype, self._suggest["fallback_by_archetype"]["_default"]
+            )
+        return PlayerSuggestionsResponse(
+            suggestions=[PlayerSuggestion(**item) for item in items]
+        )
 
     # ----------------------------------------------------------------------
     # Helpers
@@ -128,5 +166,8 @@ class MockProvider:
             topic_addressed=req.topic_addressed,
             memory_update=canned.get('memory_update', ''),
             revealed_briefing_ids=list(canned.get('revealed_briefing_ids', [])),
+            claims=list(canned.get('claims', [])),
             request_end_conversation=bool(canned.get('request_end_conversation', False)),
+            safety_flag=canned.get('safety_flag', ''),
+            reveal_intent=bool(canned.get('reveal_intent', False)),
         )

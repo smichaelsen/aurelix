@@ -28,6 +28,18 @@ speech:
 
 dialogue_mode: full_ai
 
+# State-aware opening, mirroring Orren's pattern. Priority resolved in
+# DialogueController._resolve_open_state: cooldown_recovery > cracked > drunk
+# > fed > default. Toma never goes drunk/cracked but the chain order is
+# uniform across NPCs.
+greetings:
+  default: "Are you a knight? You don't look like one. Wanna see my beetle?"
+  fed:     "[Crunching.] Okay friend. What do you wanna know?"
+  cooldown_recovery: "Okay. Don't shout this time."
+
+default_options_by_state:
+  fed: gossip_focused
+
 dossier:
   universal:
     - { id: kingdom_overview, tier: digest }
@@ -51,5 +63,6 @@ memory_defaults:
 state_modifiers:
   fed:
     patience_bonus: +6
+    tone_default: confiding
     willingness_modifier:
       gossip: from_rumor_to_eager_rumor

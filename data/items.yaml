@@ -37,6 +37,9 @@ items:
         flag: fed
         memory_update: "Player gave Toma an apple. He brightened."
         apology: true
+        acknowledgement:
+          dialogue: "For me?! [Cheeks bulge as he chews.] You wanna hear secrets?"
+          tone: bright
 
   # --- buyable at Mara ----------------------------------------------------
   iron_sword:
@@ -61,6 +64,9 @@ items:
         flag: fed
         memory_update: "Player gave Toma a ration. He ate it all at once."
         apology: true
+        acknowledgement:
+          dialogue: "Whoa — all of it?! [Eats most of it in one bite.] Okay. Ask me anything."
+          tone: bright
 
   bandage:
     name: "Bandage"
@@ -77,6 +83,13 @@ items:
         flag: drunk
         memory_update: "Player bought Orren another ale. He drank it fast."
         apology: true
+        # When set, the offer skips the AI turn entirely and fires this as
+        # an authored beat. Gives the player immediate visible confirmation
+        # that the lever landed (drunk flag set) without waiting for the
+        # next ask to come back in a different tone.
+        acknowledgement:
+          dialogue: "Ahh. That's — that's kind. [Drinks it slow and long.] Now what was it you wanted?"
+          tone: warming
 
   # --- findable -----------------------------------------------------------
   throwing_knives:

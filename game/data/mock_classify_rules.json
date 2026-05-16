@@ -1,8 +1,12 @@
 {
-  "_comment": "Shared keyword rules for both mock providers (proxy/providers/mock.py and game/scripts/ai/MockProvider.gd). Source of truth: proxy/data/. Mirrored to game/data/ by tools/yaml_to_json.py. Order is significant: prompt_injection and meta_game come first so they aren't shadowed by overly broad later keywords (e.g. forest matching 'wood' in 'I would'). Real Haiku does this semantically; this list only governs the deterministic Mock path.",
+  "_comment": "Shared keyword rules for both mock providers (proxy/providers/mock.py and game/scripts/ai/MockProvider.gd). Source of truth: proxy/data/. Mirrored to game/data/ by tools/yaml_to_json.py. Order is significant: category_rules run before topic rules so out_of_context / offensive short-circuit before topic_id classification; within rules[], prompt_injection / meta_game come first so they aren't shadowed by broader later keywords (e.g. forest matching 'wood' in 'I would'). Real Haiku does this semantically; this list only governs the deterministic Mock path.",
   "match_confidence": 0.7,
   "default_topic_id": "small_talk",
   "default_confidence": 0.3,
+  "category_rules": [
+    {"category": "offensive",      "keywords": ["fuck", "f*ck", "cunt", "go die", "kill yourself", "kys", "slut", "whore", "retard"]},
+    {"category": "out_of_context", "keywords": ["weather tomorrow", "london", "new york", "segway", "lawn mower robot", "iphone", "android", "internet", "wifi", "election", "middle east", "ukraine", "covid", "vaccine", "biden", "trump", "tiktok", "youtube"]}
+  ],
   "rules": [
     {"topic_id": "prompt_injection",   "keywords": ["ignore previous", "ignore your", "reveal your prompt", "pretend you are"]},
     {"topic_id": "meta_game",          "keywords": ["are you ai", "system prompt", "admin", "save", "reload", "quest flag"]},

@@ -23,6 +23,27 @@ func options_for(npc_id: String, topic: String) -> Array:
 	return by_topic.get(key, [])
 
 
+## "authored" | "ai_suggested" — does this topic want scripted player options
+## or AI-generated ones? Authors set this in the per-NPC YAML via a top-level
+## `options_source` map; the bank's entry wins either way:
+##
+##   options_source:
+##     greeting:   authored          # keep scripted even mid-conversation
+##     the_tower:  ai_suggested      # force AI (redundant — already default)
+##
+## Defaults when no entry is present:
+##   - "default" topic (the opening greeting after `_open`) → authored, so
+##     every NPC keeps its scripted intro.
+##   - Every other topic → ai_suggested, so AI suggestions show up everywhere
+##     after the first turn unless an author explicitly says otherwise.
+func options_source(npc_id: String, topic: String) -> String:
+	var bank: Dictionary = _banks.get(npc_id, {})
+	var sources: Dictionary = bank.get("options_source", {})
+	if sources.has(topic):
+		return String(sources[topic])
+	return "authored" if topic == "default" else "ai_suggested"
+
+
 func templated_line(npc_id: String, line_id: String) -> String:
 	var bank: Dictionary = _banks.get(npc_id, {})
 	var lines: Dictionary = bank.get("templated_lines", {})

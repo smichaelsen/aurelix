@@ -3,6 +3,7 @@ options:
     - { label: "Sister Edda.",                         topic_id: greeting }
     - { label: "What do you make of the tower?",       topic_id: the_tower }
     - { label: "Tell me about the Order.",             topic_id: religion }
+    - { label: "Pray for healing.",                    topic_id: greeting, action: pray_heal }
     - { label: "Goodbye.",                             topic_id: __close }
   the_tower:
     - { label: "Why warn me?",                         topic_id: the_tower }
@@ -17,4 +18,12 @@ options:
   greeting:
     - { label: "What do you make of the tower?",       topic_id: the_tower }
     - { label: "Tell me about the Order.",             topic_id: religion }
+    - { label: "Pray for healing.",                    topic_id: greeting, action: pray_heal }
     - { label: "Goodbye.",                             topic_id: __close }
+
+templated_lines:
+  pray_heal_done: >
+    Be still. ... The Light steadies your breath. Walk wisely, child.
+  pray_heal_full: >
+    You walk whole, child. The Light is patient -- save your prayers
+    for need.

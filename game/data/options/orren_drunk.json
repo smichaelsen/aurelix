@@ -73,6 +73,34 @@
         "label": "Goodbye.",
         "topic_id": "__close"
       }
+    ],
+    "cracked": [
+      {
+        "label": "Are you all right?",
+        "topic_id": "personal_history"
+      },
+      {
+        "label": "Tell Halden yourself.",
+        "topic_id": "the_tower"
+      },
+      {
+        "label": "Thank you, Orren.",
+        "topic_id": "gratitude"
+      },
+      {
+        "label": "Goodbye.",
+        "topic_id": "__close"
+      }
+    ],
+    "gratitude": [
+      {
+        "label": "Goodbye.",
+        "topic_id": "__close"
+      }
     ]
+  },
+  "options_source": {
+    "cracked": "authored",
+    "gratitude": "authored"
   }
 }

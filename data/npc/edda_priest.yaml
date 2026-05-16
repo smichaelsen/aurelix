@@ -40,6 +40,7 @@ dossier:
     - { id: toma_child,       tier: full }
   events:
     - { id: tower_smoke,      tier: rumor }
+    - { id: orren_lever,      tier: rumor }   # forward-pointer: nudges player toward Orren+ale
     - { id: vegetable_theft,  tier: rumor }
 
 memory_defaults:

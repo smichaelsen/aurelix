@@ -5,16 +5,17 @@
 Grim-fairy-tale pixel art. Warm late-medieval village
 palette: stone-grey cobble, weathered timber, lantern
 amber, mossy grass. Sprites are blocky and chunky —
-character figures are ~12 pixels tall on a 32 px tile
-grid. The viewport is a fixed 480×270 internal
-resolution scaled to 1440×810 (3×) window — every UI
-decision is sized at the 480×270 layer first. The aesthetic
+character figures are ~24 pixels tall on a 64 px tile
+grid. The viewport is a fixed 960×540 internal
+resolution scaled to 1920×1080 (2×) window — every UI
+decision is sized at the 960×540 layer first. The aesthetic
 is *believable old, slightly tired*, not pretty fantasy.
 No dark-mode/light-mode switch: the game is what it is.
 
 UI panels overlay the world; the world keeps rendering
 behind them. Panels are opaque, wood-toned, with a
-brown-black 1px border. Text is monospaced.
+2 px brown-black border. Text is rendered in Godot's
+bundled default sans (see Typography below).
 
 ## Colors
 
@@ -52,18 +53,28 @@ token in this list.
 
 ## Typography
 
-Pixel-monospace only. Mixing fonts in a pixel UI reads as
-broken.
+Godot's bundled default sans (no custom theme file).
+At the 960×540 layer, font sizes 16–20 px render
+crisp without the chunkiness that a bitmap pixel
+font produces at this scale. A Pixelify Sans TTF was
+trialled at this same scale on 2026-05-16 and
+rejected — the bundled sans read cleaner and held
+weight better at small dialogue sizes. If a custom
+font is added later, do it via
+`gui/theme/custom` in `project.godot` (not per-Label
+overrides) so the swap is one line.
 
-| Role             | Font                       | Token         | Notes                              |
-| ---------------- | -------------------------- | ------------- | ---------------------------------- |
-| Body / UI text   | Pixel monospace (Godot default `Theme` font, used by all overlays) | `--font-mono` | Dialogue, menus, journal, debug    |
-| NPC name (heading) | Same font, uppercased    | `--font-mono` | Rendered uppercase, no bold       |
-| Numeric (HP/stats) | Same font, right-aligned | `--font-mono` | Combat overlay HP readouts        |
+| Role               | Size  | Notes                              |
+| ------------------ | ----- | ---------------------------------- |
+| Body / dialogue    | 18 px | NPC line, journal entries          |
+| Option rows        | 18 px | Numbered options + Offer / LineEdit|
+| NPC name (heading) | 20 px | Uppercased, no bold                |
+| Tone / muted hints | 16 px | "-- neutral", bottom-bar hints     |
+| Debug overlay      | 16 px | Backtick-toggled key=value column  |
 
-Scale is implicit at 480×270 — the pixel font has one
-size. Larger headings are achieved by rendering at 2× scale
-in the engine, not by switching font families.
+Sizes were doubled when the viewport bumped from
+480×270 to 960×540 (was 9 / 10 / 8). Larger headings
+remain rendered at the same family — no second font.
 
 ## Border Radius
 
@@ -120,8 +131,8 @@ scenes — do not invent a new visual idiom.
 - **World scene** — full-viewport tile map, no chrome.
   Camera is fixed for the village (which fits the
   viewport); the forest scene scrolls as Kael moves.
-- **Dialogue box** — anchored bottom, ~115 px tall in
-  the 480×270 layer, full width. The world dims
+- **Dialogue box** — anchored bottom, ~340 px tall in
+  the 960×540 layer (the lower ~63%), full width. The world dims
   slightly behind it; movement input is suppressed
   while it's open.
 - **Combat overlay** — anchored bottom, slightly

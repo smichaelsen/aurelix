@@ -24,7 +24,7 @@ DATA_DIR = GAME / 'data' / 'scenes'
 SCENES.mkdir(parents=True, exist_ok=True)
 DATA_DIR.mkdir(parents=True, exist_ok=True)
 
-TILE = 32
+TILE = 64
 COLS = 15
 ROWS = 9
 
@@ -72,10 +72,14 @@ PROPS = [
 # Encounters: enemies on the map, sitting directly on the path so the
 # player must defeat them to progress. After Phase 7 Increment 2 wires
 # combat, defeating one removes the sprite + tile-blocking.
+#
+# Tuple: (col, row, sprite_offset_x, sprite_offset_y, sprite, combatant,
+#         display_name, encounter_id). Drust shares the bandit sprite on the
+# overworld but resolves to his own combatant block in combat.
 CHARACTERS = [
-    (6,  7, 4, 0, 'bandit', 'Bandit1', 'bandit_path_b'),
-    (6,  5, 4, 0, 'wolf',   'Wolf1',   'wolf_path_a'),
-    (6,  2, 4, 0, 'bandit', 'Drust',   'drust_camp'),
+    (6,  7, 4, 0, 'bandit', 'bandit', 'Bandit1', 'bandit_path_b'),
+    (6,  5, 4, 0, 'wolf',   'wolf',   'Wolf1',   'wolf_path_a'),
+    (6,  2, 4, 0, 'bandit', 'drust',  'Drust',   'drust_camp'),
 ]
 
 # World objects player can interact with on the map.
@@ -114,7 +118,7 @@ def emit_scene() -> None:
             res(tile_for(ch, r))
     for _c, _r, prop in PROPS:
         res(prop)
-    for _c, _r, _ox, _oy, sprite, _n, _id in CHARACTERS:
+    for _c, _r, _ox, _oy, sprite, _cb, _n, _id in CHARACTERS:
         res(sprite)
 
     PACKED = {
@@ -168,14 +172,14 @@ def emit_scene() -> None:
 
     lines.append('[node name="Encounters" type="Node2D" parent="."]')
     lines.append("")
-    for col, row, ox, oy, sprite, name, eid in CHARACTERS:
+    for col, row, ox, oy, sprite, combatant, name, eid in CHARACTERS:
         rid = resources[sprite]
         lines.append(f'[node name="{name}" type="Sprite2D" parent="Encounters"]')
         lines.append(f'texture = ExtResource("{rid}")')
         lines.append('centered = false')
         lines.append(f'position = Vector2({col * TILE + ox}, {row * TILE + oy})')
         lines.append(f'metadata/encounter_id = "{eid}"')
-        lines.append(f'metadata/combatant_id = "{sprite}"')
+        lines.append(f'metadata/combatant_id = "{combatant}"')
         lines.append("")
 
     px = PLAYER_START[0] * TILE + 4
@@ -204,8 +208,8 @@ def emit_grid() -> None:
         for c, ch in enumerate(line):
             tiles.append({"col": c, "row": r, "tile": tile_for(ch, r)})
     props      = [{"col": c, "row": r, "prop": p} for c, r, p in PROPS]
-    encounters = [{"id": eid, "sprite": sp, "combatant": sp, "col": c, "row": r}
-                  for c, r, _ox, _oy, sp, _n, eid in CHARACTERS]
+    encounters = [{"id": eid, "sprite": sp, "combatant": cb, "col": c, "row": r}
+                  for c, r, _ox, _oy, sp, cb, _n, eid in CHARACTERS]
     objects    = [{"id": i, "type": t, "col": c, "row": r, "label": lbl}
                   for c, r, t, i, lbl in OBJECTS]
     exits      = [{"col": c, "row": r, "direction": d, "target": t}

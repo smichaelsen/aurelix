@@ -3,7 +3,7 @@
     "topics": 20,
     "facts": 18,
     "npcs": 7,
-    "briefings": 27,
+    "briefings": 29,
     "options": 6
   },
   "topics_file": "topics.json",
@@ -91,6 +91,17 @@
         "the_drake",
         "the_dragon",
         "gossip"
+      ]
+    },
+    {
+      "id": "orren_lever",
+      "tier": "rumor",
+      "type": "event",
+      "file": "briefings/events/orren_lever.rumor.json",
+      "topic_tags": [
+        "the_tower",
+        "gossip",
+        "personal_history"
       ]
     },
     {
@@ -316,9 +327,20 @@
     },
     {
       "id": "kingdom_overview",
+      "tier": "digest",
+      "type": "world",
+      "file": "briefings/world/kingdom_overview.digest.json",
+      "topic_tags": [
+        "the_kingdom",
+        "gossip",
+        "personal_history"
+      ]
+    },
+    {
+      "id": "kingdom_overview",
       "tier": "full",
       "type": "world",
-      "file": "briefings/world/kingdom_overview.json",
+      "file": "briefings/world/kingdom_overview.full.json",
       "topic_tags": [
         "the_kingdom",
         "gossip",

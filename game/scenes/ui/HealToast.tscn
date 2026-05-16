@@ -1,0 +1,32 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/HealToast.gd" id="1_ht"]
+
+[sub_resource type="StyleBoxFlat" id="toast_style"]
+bg_color = Color(0.12, 0.10, 0.10, 0.92)
+border_color = Color(0.42, 0.78, 0.42, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+
+[node name="HealToast" type="CanvasLayer"]
+script = ExtResource("1_ht")
+layer = 26
+
+[node name="Panel" type="Panel" parent="."]
+offset_left = 280
+offset_top = 64
+offset_right = 680
+offset_bottom = 100
+theme_override_styles/panel = SubResource("toast_style")
+
+[node name="Label" type="Label" parent="Panel"]
+offset_left = 8
+offset_top = 4
+offset_right = 392
+offset_bottom = 32
+theme_override_colors/font_color = Color(0.94, 0.94, 0.88, 1)
+theme_override_font_sizes/font_size = 18
+horizontal_alignment = 1
+text = "..."

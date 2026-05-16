@@ -14,6 +14,24 @@
         "topic_id": "the_dragon"
       },
       {
+        "label": "Where's your family?",
+        "topic_id": "personal_history"
+      },
+      {
+        "label": "Bye.",
+        "topic_id": "__close"
+      }
+    ],
+    "greeting": [
+      {
+        "label": "What do you know about the tower?",
+        "topic_id": "the_tower"
+      },
+      {
+        "label": "Have you seen the dragon?",
+        "topic_id": "the_dragon"
+      },
+      {
         "label": "Bye.",
         "topic_id": "__close"
       }
@@ -46,15 +64,79 @@
         "topic_id": "__close"
       }
     ],
-    "greeting": [
+    "gossip_focused": [
       {
-        "label": "What do you know about the tower?",
+        "label": "What did you see at the tower?",
         "topic_id": "the_tower"
+      },
+      {
+        "label": "Tell me about the dragon.",
+        "topic_id": "the_dragon"
+      },
+      {
+        "label": "Who robbed Jorin?",
+        "topic_id": "jorin_theft"
+      },
+      {
+        "label": "Have you seen Iskar?",
+        "topic_id": "the_drake"
+      },
+      {
+        "label": "Bye.",
+        "topic_id": "__close"
+      }
+    ],
+    "personal_history": [
+      {
+        "label": "Where's the chapel cottage?",
+        "topic_id": "personal_history"
+      },
+      {
+        "label": "What's your stick's name?",
+        "topic_id": "personal_history"
+      },
+      {
+        "label": "Back up.",
+        "topic_id": "greeting"
+      },
+      {
+        "label": "Bye.",
+        "topic_id": "__close"
+      }
+    ],
+    "jorin_theft": [
+      {
+        "label": "Who told you that?",
+        "topic_id": "jorin_theft"
+      },
+      {
+        "label": "Anything else?",
+        "topic_id": "gossip"
+      },
+      {
+        "label": "Bye.",
+        "topic_id": "__close"
+      }
+    ],
+    "the_drake": [
+      {
+        "label": "He's friendly. Want to wave?",
+        "topic_id": "the_drake"
+      },
+      {
+        "label": "Don't tell anyone.",
+        "topic_id": "the_drake"
       },
       {
         "label": "Bye.",
         "topic_id": "__close"
       }
     ]
+  },
+  "options_source": {
+    "gossip_focused": "authored",
+    "personal_history": "authored",
+    "jorin_theft": "authored",
+    "the_drake": "authored"
   }
 }

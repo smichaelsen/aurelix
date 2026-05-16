@@ -59,7 +59,7 @@ func set_options(options: Array) -> void:
 		btn.text = "%d. %s" % [i + 1, opt.get("label", "")]
 		btn.alignment = HORIZONTAL_ALIGNMENT_LEFT
 		btn.focus_mode = Control.FOCUS_ALL
-		btn.add_theme_font_size_override("font_size", 9)
+		btn.add_theme_font_size_override("font_size", 18)
 		btn.add_theme_color_override("font_color",         Color(0.11, 0.10, 0.12))
 		btn.add_theme_color_override("font_hover_color",   Color(0.11, 0.10, 0.12))
 		btn.add_theme_color_override("font_focus_color",   Color(0.94, 0.66, 0.28))
@@ -85,7 +85,7 @@ func set_options(options: Array) -> void:
 		btn.add_theme_stylebox_override("hover",   sb_flat)
 		btn.add_theme_stylebox_override("focus",   sb_focus)
 		btn.add_theme_stylebox_override("pressed", sb_focus)
-		btn.custom_minimum_size = Vector2(0, 14)
+		btn.custom_minimum_size = Vector2(0, 28)
 		btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		btn.pressed.connect(func(): option_chosen.emit(opt))
 		_options.add_child(btn)
@@ -148,7 +148,7 @@ func _render_entries(by_cat: Dictionary) -> void:
 			continue
 		var header := Label.new()
 		header.text = CATEGORY_TITLES.get(cat, cat)
-		header.add_theme_font_size_override("font_size", 8)
+		header.add_theme_font_size_override("font_size", 16)
 		header.add_theme_color_override("font_color", Color(0.33, 0.30, 0.32))
 		_entries.add_child(header)
 		for entry in entries:
@@ -157,6 +157,6 @@ func _render_entries(by_cat: Dictionary) -> void:
 			var title: String = briefing.get("title", entry["id"])
 			var tier_marker := " (rumor)" if entry["tier"] == "rumor" else ""
 			lbl.text = "  " + title + tier_marker
-			lbl.add_theme_font_size_override("font_size", 9)
+			lbl.add_theme_font_size_override("font_size", 18)
 			lbl.add_theme_color_override("font_color", Color(0.11, 0.10, 0.12))
 			_entries.add_child(lbl)

@@ -29,7 +29,7 @@ DATA_DIR   = GAME / 'data' / 'scenes'
 SCENES.mkdir(parents=True, exist_ok=True)
 DATA_DIR.mkdir(parents=True, exist_ok=True)
 
-TILE = 32
+TILE = 64
 COLS = 15
 ROWS = 9
 

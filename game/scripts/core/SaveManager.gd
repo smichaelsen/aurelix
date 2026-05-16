@@ -7,6 +7,7 @@ extends Node
 ##   - quest state
 ##   - per-NPC memory + dossier mutations + anger cooldowns
 ##   - Iskar (bonded, affinity, tier, stance)
+##   - party current HP (Kael, Iskar)
 ##   - journal entries
 ##   - current scene + player tile
 ##
@@ -113,6 +114,7 @@ func _serialize() -> Dictionary:
 		"npc_memory":    NpcMemoryStore._by_id.duplicate(true),
 		"npc_dossiers":  NpcDossierStore._by_id.duplicate(true),
 		"iskar":         _iskar_blob(),
+		"party_health":  _party_health_blob(),
 		"journal":       _journal_blob(),
 	}
 
@@ -125,6 +127,7 @@ func _deserialize(blob: Dictionary) -> void:
 	_apply_npc_memory(blob.get("npc_memory", {}))
 	_apply_npc_dossiers(blob.get("npc_dossiers", {}))
 	_apply_iskar(blob.get("iskar", {}))
+	_apply_party_health(blob.get("party_health", {}))
 	_apply_journal(blob.get("journal", {}))
 	# Scene swap last; SceneRouter is responsible for putting the player
 	# back at the saved tile.
@@ -283,6 +286,27 @@ func _apply_iskar(blob: Dictionary) -> void:
 	IskarCompanion.affinity_points = int(blob.get("affinity", 0))
 	IskarCompanion.unlocked_tier   = int(blob.get("tier", 0))
 	IskarCompanion.stance          = String(blob.get("stance", IskarCompanion.STANCE_AGGRESSIVE))
+
+
+# ---------------------------------------------------------------------------
+# Party health
+# ---------------------------------------------------------------------------
+
+func _party_health_blob() -> Dictionary:
+	return {
+		"kael":  PartyHealth.get_kael_hp(),
+		"iskar": PartyHealth.get_iskar_hp(),
+	}
+
+
+# Older saves (pre-PartyHealth) won't carry this key; treat missing as full,
+# since the prior behaviour was full-heal between fights anyway.
+func _apply_party_health(blob: Dictionary) -> void:
+	if blob.is_empty():
+		PartyHealth.reset_to_full()
+		return
+	PartyHealth.set_kael_hp(int(blob.get("kael", PartyHealth.kael_max())))
+	PartyHealth.set_iskar_hp(int(blob.get("iskar", PartyHealth.iskar_max())))
 
 
 # ---------------------------------------------------------------------------

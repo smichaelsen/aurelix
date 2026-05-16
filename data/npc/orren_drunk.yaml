@@ -25,6 +25,16 @@ speech:
   failure_style: deflection, mockery of the questioner, or anger
   max_response_length: short
 
+## Free-form behavior rules surfaced into the system prompt. The first
+## one is the lever the player must find: sober Orren MUST telegraph
+## that ale loosens his tongue rather than lying or staying cryptic.
+## Without this rule, the LLM tends to produce generic "I don't know
+## about no tower" lines that don't differentiate sober/drunk for the
+## player's UX.
+behavior_notes:
+  - "Sober, refuses to even discuss the old tower; tell the listener you'd need a drink before you could think about that. Telegraph the lever; don't just stonewall."
+  - "Drunk, you may hint at what you saw but reveal only when the listener has credibly promised the reeve will not hear."
+
 dialogue_mode: full_ai
 
 dossier:
@@ -37,7 +47,19 @@ dossier:
     - { id: edda_priest,      tier: full }
     - { id: toma_child,       tier: full }
   events:
-    - { id: tower_smoke,      tier: witness, forbidden_to_share: true }
+    # tower_smoke: Orren is afraid of Halden the reeve. The deterministic
+    # press_keywords path (angle_safe_to_share keywords like "won't tell"
+    # / "between us") still works and is the offline / mock-mode path.
+    # The `reveal_note` opens a soft path: when the live LLM judges the
+    # in-fiction condition is met in the conversation, it may include
+    # tower_smoke in revealed_briefing_ids even without a keyword match.
+    # `public_tell` is the Kael-side observation passed to the suggestion
+    # generator — public knowledge, no dossier leak.
+    - id:    tower_smoke
+      tier:  witness
+      forbidden_to_share: true
+      reveal_note: "Orren fears Halden the reeve. He will only share what he saw near the old tower if Kael credibly promises Halden won't hear of it. A bald promise once is enough; repeated bald promises without context are not."
+      public_tell: "When the old tower comes up, Orren's eyes flick toward the reeve's office across the square."
     - { id: vegetable_theft,  tier: rumor }
 
 memory_defaults:
@@ -47,6 +69,7 @@ memory_defaults:
   flags:
     drunk: false
     angry: false
+    cracked: false               # set true when tower_smoke is revealed
   player_tags: []
 
 state_modifiers:
@@ -59,6 +82,39 @@ state_modifiers:
   angry:
     patience_bonus: -4
     tone_default: hostile
+  cracked:
+    # post-reveal: the secret is out and he's living with that.
+    # Tone overrides drunk because `cracked` is inserted into flags
+    # later than `drunk` and the resolver applies tones in
+    # insertion order. He's still drunk numerically (patience bonus
+    # carries) but the model defaults to a haunted voice.
+    patience_bonus: 0
+    tone_default: haunted
+
+## Greetings the scripted intro uses. Resolved in this order against the
+## live memory flags: cooldown_recovery (transient, one-shot, set by
+## AngerCooldownResolver when his cooldown lapses) -> cracked -> drunk
+## -> default. Falls back to the archetype line if a key is missing.
+greetings:
+  default:            "Mm. Sit if you sit. Don't talk fast."
+  drunk:              "Ahh — sit. Sit. The bench is warm."
+  cracked:            "You came back. Heh. Why."
+  cooldown_recovery:  "All right, all right. Sit down. Quietly."
+
+## Default-option topic to surface on _open, keyed by the same state
+## resolution. When cracked, the player sees the post-reveal option
+## bank (Are you all right? / Tell Halden yourself / Thank you / Goodbye)
+## instead of the original tower-pry questions.
+default_options_by_state:
+  cracked: cracked
+
+## When a reveal lands, flip these flags on. Generic mechanism: any
+## briefing id mapped here sets the listed flags via NpcMemoryStore
+## when ResponseValidator approves it. Drives the cracked-state arc
+## without hardcoding tower_smoke in the controller.
+on_reveal_flags:
+  tower_smoke:
+    cracked: true
 
 ## Authored press angles per topic. When the player presses on a topic with
 ## one of these angles AND state has flipped the topic to pressable, the
@@ -68,3 +124,36 @@ accepted_press_angles:
     - angle_saw_something
     - angle_wings
     - angle_safe_to_share
+
+## Free-text pressure heuristic. PressDetector matches lowercase keywords
+## against the player's typed (or AI-suggested) line; first matching angle
+## wins. Authoring more keywords is the only way to extend coverage — the
+## detector itself is generic. Keywords are case-insensitive substring
+## matches; keep them short and unambiguous.
+press_keywords:
+  the_tower:
+    angle_saw_something:
+      - "you saw"
+      - "i know you saw"
+      - "were there"
+      - "you were there"
+      - "witness"
+      - "saw it"
+      - "saw something"
+    angle_wings:
+      - "wings"
+      - "flew"
+      - "owl"
+      - "flap"
+      - "in the sky"
+      - "above"
+    angle_safe_to_share:
+      - "won't tell"
+      - "wont tell"
+      - "trust me"
+      - "safe with me"
+      - "between us"
+      - "stays with me"
+      - "the reeve won't"
+      - "the reeve won't hear"
+      - "your secret"

@@ -9,6 +9,8 @@
     "press_too_far": "Please. Not that.",
     "item_offered": "Thank you. I will keep it in the chapel.",
     "anger_out": "Peace go with you. Quickly.",
-    "cooldown_recovery": "I forgive. Let us begin again."
+    "cooldown_recovery": "I forgive. Let us begin again.",
+    "out_of_context": "I do not know what you mean by that. Be plain.",
+    "offensive": "The Light hears you. So do I. Leave."
   }
 }

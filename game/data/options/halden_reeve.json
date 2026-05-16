@@ -41,9 +41,9 @@
     ]
   },
   "templated_lines": {
-    "not_started_brief": "Stranger. The notice on the board is mine. A dragon was sighted near\nthe old tower. I want proof of where it was seen. Coin and bread for\nwhoever brings it.\n",
-    "not_started_more": "Talk to Orren the drunk if you can stand him. He sleeps near the tavern.\nMara at the smithy heard something from a traveler. The chapel may know\nmore, but Sister Edda has been quiet.\n",
-    "accepted_send_off": "Good. The tower is two days' walk through the forest, north. Mind the\nwolves on the path, and keep your wits about you near the camp. Come\nback when you have something I can put my name to.\n",
+    "not_started_brief": "Stranger. The notice on the board is mine. A dragon was sighted near the old tower. I want proof of where it was seen. Coin and bread for whoever brings it.\n",
+    "not_started_more": "Talk to Orren the drunk if you can stand him. He sleeps near the tavern. Mara at the smithy heard something from a traveler. The chapel may know more, but Sister Edda has been quiet.\n",
+    "accepted_send_off": "Good. The tower is two days' walk through the forest, north. Mind the wolves on the path, and keep your wits about you near the camp. Come back when you have something I can put my name to.\n",
     "active_progress": "Have you found anything?\n",
     "active_more": "Three sources have spoken so far. The tower has not been quiet.\n",
     "complete_turn_in": "Proof. Good. Here is your coin and bread.\n"

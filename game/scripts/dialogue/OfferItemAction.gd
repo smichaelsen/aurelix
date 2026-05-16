@@ -26,6 +26,10 @@ static func apply(item_id: String, npc_id: String) -> Dictionary:
 		"consumed":      true,
 		"npc_reacted":   false,
 		"topic":         "",
+		# When non-empty, the dialogue controller fires this as an authored
+		# beat (skipping the AI turn entirely) so the player sees the lever
+		# land immediately. Shape: {dialogue: String, tone: String}.
+		"acknowledgement": {},
 	}
 
 	if desc.is_empty():
@@ -35,6 +39,7 @@ static func apply(item_id: String, npc_id: String) -> Dictionary:
 	result["flag"]          = desc.get("flag", "")
 	result["memory_update"] = desc.get("memory_update", "")
 	result["consumed"]      = bool(desc.get("consume", true))
+	result["acknowledgement"] = desc.get("acknowledgement", {})
 
 	# When the offer adds a briefing to the NPC's dossier, pivot the
 	# conversation onto that briefing's topic so the AI turn (and the

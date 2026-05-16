@@ -5,8 +5,12 @@ extends Node
 ##   - listens for encounter trigger from PlayerController
 ##   - instantiates a CombatEngine, hooks its signals to the overlay
 ##   - on win: removes the encounter from the map (defeated)
-##   - on loss: restores Kael to full HP and ends combat (a tasteful
+##   - on loss: restores party to full HP and ends combat (a tasteful
 ##     stand-in for save reload until Phase 10 wires real save/load)
+##
+## HP carries over between fights: current HP for Kael + Iskar is sourced from
+## PartyHealth at fight start and written back at fight end. PartyHealth is
+## serialised by SaveManager.
 ##
 ## Autoload as `CombatController`.
 ##
@@ -52,6 +56,12 @@ func start_encounter(encounter_id: String, combatant_id: String) -> void:
 		_busy = false
 		return
 
+	# Carry-over HP. PartyHealth owns current HP; the engine receives both
+	# current (hp) and ceiling (max_hp) so heal-items can't overshoot.
+	var kael_max: int = int(kael["hp"])
+	kael["hp"] = PartyHealth.get_kael_hp()
+	kael["max_hp"] = kael_max
+
 	# Boss pre-fight line.
 	if bool(enemy.get("is_boss", false)):
 		var pre := String(enemy.get("pre_fight_line", "")).strip_edges()
@@ -73,12 +83,12 @@ func start_encounter(encounter_id: String, combatant_id: String) -> void:
 		if not iskar_stats.is_empty():
 			iskar_hud = {
 				"name":   iskar_stats.get("name", "Iskar"),
-				"hp":     iskar_stats["hp"],
-				"max_hp": iskar_stats["hp"],
+				"hp":     PartyHealth.get_iskar_hp(),
+				"max_hp": int(iskar_stats["hp"]),
 			}
 	_overlay.show_combat(
 		{"name": enemy.get("name", combatant_id), "hp": enemy["hp"], "max_hp": enemy["hp"]},
-		{"name": kael.get("name", "Kael"),         "hp": kael["hp"],  "max_hp": kael["hp"]},
+		{"name": kael.get("name", "Kael"),         "hp": kael["hp"],  "max_hp": kael["max_hp"]},
 		iskar_hud,
 	)
 	if not _overlay.action_chosen.is_connected(_on_action_chosen):
@@ -120,6 +130,7 @@ func _on_hp_changed(_battler_id: String, _hp: int, _max_hp: int) -> void:
 
 func _on_combat_ended(outcome: String) -> void:
 	print("[CombatController] combat ended: %s" % outcome)
+	_snapshot_party_hp(outcome)
 	EventBus.combat_ended.emit(outcome)
 	match outcome:
 		"won":
@@ -140,6 +151,23 @@ func _on_combat_ended(outcome: String) -> void:
 	_engine = null
 	_current_encounter_id = ""
 	_current_combatant_id = ""
+
+
+# Win/flee: snapshot the engine's final HP back to PartyHealth so damage
+# carries to the next fight. Loss: revive at full so the player isn't stuck
+# in a death loop (matches the legacy "tasteful stand-in" behaviour).
+func _snapshot_party_hp(outcome: String) -> void:
+	if outcome == "lost":
+		PartyHealth.reset_to_full()
+		return
+	if _engine == null:
+		return
+	var p: Dictionary = _engine.player()
+	if not p.is_empty():
+		PartyHealth.set_kael_hp(int(p["hp"]))
+	var i: Dictionary = _engine.iskar()
+	if not i.is_empty():
+		PartyHealth.set_iskar_hp(int(i["hp"]))
 
 
 func _grant_fact_for(encounter_id: String) -> void:

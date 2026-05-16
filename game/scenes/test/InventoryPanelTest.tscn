@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/test/InventoryPanelTest.gd" id="1_ipt"]
+
+[node name="InventoryPanelTest" type="Node"]
+script = ExtResource("1_ipt")

@@ -3,7 +3,7 @@
     "cols": 15,
     "rows": 9
   },
-  "tile_size": 32,
+  "tile_size": 64,
   "player_start": {
     "col": 6,
     "row": 8
@@ -762,7 +762,7 @@
     {
       "id": "drust_camp",
       "sprite": "bandit",
-      "combatant": "bandit",
+      "combatant": "drust",
       "col": 6,
       "row": 2
     }

@@ -10,6 +10,8 @@
     "press_too_far": "I am at my anvil. You are in my way.",
     "item_offered": "Hm. I'll take a look.",
     "anger_out": "Out. Now.",
-    "cooldown_recovery": "Apology accepted. Let's start again."
+    "cooldown_recovery": "Apology accepted. Let's start again.",
+    "out_of_context": "I don't follow. Speak plain or speak to the wind.",
+    "offensive": "Out of my forge. Don't come back today."
   }
 }

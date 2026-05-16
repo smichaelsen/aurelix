@@ -20,9 +20,11 @@ func _ready() -> void:
 	await _case_toma_math_block()
 	await _case_prompt_injection()
 	await _case_classify_topic()
+	await _case_classify_out_of_context()
+	await _case_classify_offensive()
 
 	if _failures.is_empty():
-		print("[AiServiceTest] PASS (%d checks)" % 4)
+		print("[AiServiceTest] PASS (%d checks)" % 6)
 		get_tree().quit(0)
 	else:
 		printerr("[AiServiceTest] FAIL")
@@ -96,7 +98,32 @@ func _case_classify_topic() -> void:
 	)
 	_assert(resp.get("topic_id") == "the_tower",
 		"classify_topic: expected 'the_tower', got %s" % resp.get("topic_id"))
-	print("  - classify_topic 'old tower' -> %s" % resp.get("topic_id"))
+	_assert(resp.get("category", "in_game") == "in_game",
+		"classify_topic: expected category=in_game, got %s" % resp.get("category"))
+	print("  - classify_topic 'old tower' -> %s (%s)" % [resp.get("topic_id"), resp.get("category")])
+
+
+func _case_classify_out_of_context() -> void:
+	var resp: Dictionary = await AiService.classify_topic(
+		"What's the weather tomorrow in London?",
+		["the_tower", "small_talk", "trade"],
+	)
+	_assert(resp.get("category", "") == "out_of_context",
+		"classify_out_of_context: expected category=out_of_context, got %s" % resp.get("category"))
+	print("  - classify 'weather tomorrow in London' -> category=%s" % resp.get("category"))
+
+
+func _case_classify_offensive() -> void:
+	# Use a tame offensive pattern that exists in mock_classify_rules.json
+	# (the rule list is intentionally short and obvious for the deterministic
+	# mock; real Haiku does this semantically).
+	var resp: Dictionary = await AiService.classify_topic(
+		"go die in a fire",
+		["the_tower", "small_talk", "trade"],
+	)
+	_assert(resp.get("category", "") == "offensive",
+		"classify_offensive: expected category=offensive, got %s" % resp.get("category"))
+	print("  - classify 'go die …' -> category=%s" % resp.get("category"))
 
 
 # -----------------------------------------------------------------------------

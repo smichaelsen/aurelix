@@ -37,6 +37,25 @@ func record_npc(text: String) -> void:
 	_trim()
 
 
+# Pop the trailing turn iff it is a player entry. Used by the guardrail
+# short-circuit when a generate response raises safety_flag — the player
+# line was appended before the call, and we must not let it resurface
+# in the next prompt's last_turns or memory_update derivation.
+func pop_trailing_player() -> void:
+	if last_turns.is_empty():
+		return
+	var tail: Dictionary = last_turns.back()
+	if String(tail.get("role", "")) == "player":
+		last_turns.pop_back()
+
+
+func last_npc_line() -> String:
+	for i in range(last_turns.size() - 1, -1, -1):
+		if String(last_turns[i].get("role", "")) == "npc":
+			return String(last_turns[i].get("text", ""))
+	return ""
+
+
 func _trim() -> void:
 	while last_turns.size() > 6:
 		last_turns.pop_front()

@@ -99,7 +99,12 @@ func _on_text_submitted(text: String) -> void:
 		return
 	if text.strip_edges().is_empty():
 		return
-	var topic: String = await TopicDetectorScript.detect_free_text(text)
+	# The journal query path treats Kael's own questions as in-game by
+	# definition (no NPC to be offended; no real-world context check).
+	# We still call detect_free_text for the topic_id but ignore the
+	# guardrail category.
+	var classified: Dictionary = await TopicDetectorScript.detect_free_text(text)
+	var topic: String = String(classified.get("topic_id", "small_talk"))
 	_last_topic = topic
 	_run_query(text, topic)
 

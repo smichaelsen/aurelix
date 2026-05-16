@@ -17,7 +17,7 @@ const GRID_DIR       := "res://data/scenes/"
 
 var cols: int       = 0
 var rows: int       = 0
-var tile_size: int  = 32
+var tile_size: int  = 64
 
 var current_scene_id: String = ""
 
@@ -79,7 +79,7 @@ func load_scene(scene_id: String) -> void:
 	var size: Dictionary = data.get("size", {})
 	cols      = int(size.get("cols", 0))
 	rows      = int(size.get("rows", 0))
-	tile_size = int(data.get("tile_size", 32))
+	tile_size = int(data.get("tile_size", 64))
 
 	var start: Dictionary = data.get("player_start", {})
 	player_start = Vector2i(int(start.get("col", 0)), int(start.get("row", 0)))

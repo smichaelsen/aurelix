@@ -14,6 +14,7 @@ signal boot_validated(ok: bool, error_count: int)
 # --- Player / world (phase 3+) --------------------------------------------
 signal player_moved(col: int, row: int)
 signal player_facing_changed(facing: String)
+signal player_step_changed(stepping: bool)
 signal npc_facing_changed(npc_id: String, facing: String)
 signal iskar_facing_changed(facing: String)
 signal interaction_available(target_id: String, target_type: String, label: String)
@@ -36,11 +37,13 @@ signal quest_paid(quest_id: String)
 signal item_added(item_id: String)
 signal item_removed(item_id: String)
 signal item_offered(npc_id: String, item_id: String)
+signal party_heal_applied(who: String, item_id: String, amount: int, hp: int, max_hp: int)
 
 # --- Combat (phase 7+) ----------------------------------------------------
 signal combat_started(encounter_id: String)
 signal combat_ended(outcome: String)
 signal enemy_defeated(enemy_id: String)
+signal party_hp_changed(who: String, hp: int, max_hp: int)
 
 # --- Companion (phase 7+) -------------------------------------------------
 signal iskar_bonded

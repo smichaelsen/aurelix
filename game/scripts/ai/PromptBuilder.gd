@@ -59,4 +59,5 @@ static func _compact_profile(profile: Dictionary) -> Dictionary:
 		"speech_style":        speech.get("style", ""),
 		"failure_style":       speech.get("failure_style", ""),
 		"max_response_length": speech.get("max_response_length", "short"),
+		"behavior_notes":      profile.get("behavior_notes", []),
 	}

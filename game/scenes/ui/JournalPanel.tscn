@@ -5,114 +5,114 @@
 [sub_resource type="StyleBoxFlat" id="panel_style"]
 bg_color = Color(0.878, 0.839, 0.737, 1)
 border_color = Color(0.211, 0.149, 0.118, 1)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
 
 [sub_resource type="StyleBoxFlat" id="line_edit_style"]
 bg_color = Color(0.16, 0.13, 0.13, 1)
 border_color = Color(0.94, 0.66, 0.28, 1)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-content_margin_left = 4.0
-content_margin_top = 2.0
-content_margin_right = 4.0
-content_margin_bottom = 2.0
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+content_margin_left = 8
+content_margin_top = 4
+content_margin_right = 8
+content_margin_bottom = 4
 
 [node name="JournalPanel" type="CanvasLayer"]
 script = ExtResource("1_jp")
 layer = 45
 
 [node name="Panel" type="Panel" parent="."]
-offset_left = 0.0
-offset_top = 0.0
-offset_right = 480.0
-offset_bottom = 270.0
+offset_left = 0
+offset_top = 0
+offset_right = 960
+offset_bottom = 540
 theme_override_styles/panel = SubResource("panel_style")
 
 [node name="Title" type="Label" parent="Panel"]
-offset_left = 8.0
-offset_top = 4.0
-offset_right = 200.0
-offset_bottom = 16.0
+offset_left = 16
+offset_top = 8
+offset_right = 400
+offset_bottom = 32
 theme_override_colors/font_color = Color(0.11, 0.10, 0.12, 1)
-theme_override_font_sizes/font_size = 11
+theme_override_font_sizes/font_size = 22
 text = "JOURNAL"
 
 [node name="Hint" type="Label" parent="Panel"]
-offset_left = 360.0
-offset_top = 4.0
-offset_right = 472.0
-offset_bottom = 16.0
+offset_left = 720
+offset_top = 8
+offset_right = 944
+offset_bottom = 32
 theme_override_colors/font_color = Color(0.33, 0.30, 0.32, 1)
-theme_override_font_sizes/font_size = 8
+theme_override_font_sizes/font_size = 16
 horizontal_alignment = 2
 text = "J or Esc to close"
 
 [node name="Left" type="ScrollContainer" parent="Panel"]
-offset_left = 4.0
-offset_top = 20.0
-offset_right = 232.0
-offset_bottom = 184.0
+offset_left = 8
+offset_top = 40
+offset_right = 464
+offset_bottom = 368
 clip_contents = true
 horizontal_scroll_mode = 0
 
 [node name="Margin" type="MarginContainer" parent="Panel/Left"]
-theme_override_constants/margin_left = 6
-theme_override_constants/margin_top = 4
-theme_override_constants/margin_right = 6
-theme_override_constants/margin_bottom = 4
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 8
 
 [node name="Entries" type="VBoxContainer" parent="Panel/Left/Margin"]
 size_flags_horizontal = 3
-theme_override_constants/separation = 1
+theme_override_constants/separation = 2
 
 [node name="Right" type="Control" parent="Panel"]
-offset_left = 236.0
-offset_top = 20.0
-offset_right = 476.0
-offset_bottom = 184.0
+offset_left = 472
+offset_top = 40
+offset_right = 952
+offset_bottom = 368
 
 [node name="Margin" type="MarginContainer" parent="Panel/Right"]
-offset_right = 240.0
-offset_bottom = 164.0
-theme_override_constants/margin_left = 6
-theme_override_constants/margin_top = 4
-theme_override_constants/margin_right = 6
-theme_override_constants/margin_bottom = 4
+offset_right = 480
+offset_bottom = 328
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 8
 
 [node name="Answer" type="Label" parent="Panel/Right/Margin"]
 theme_override_colors/font_color = Color(0.11, 0.10, 0.12, 1)
-theme_override_font_sizes/font_size = 9
+theme_override_font_sizes/font_size = 18
 autowrap_mode = 2
 vertical_alignment = 0
 text = ""
 
 [node name="Bottom" type="Control" parent="Panel"]
-offset_left = 4.0
-offset_top = 190.0
-offset_right = 476.0
-offset_bottom = 264.0
+offset_left = 8
+offset_top = 380
+offset_right = 952
+offset_bottom = 528
 
 [node name="Options" type="VBoxContainer" parent="Panel/Bottom"]
-offset_left = 4.0
-offset_top = 0.0
-offset_right = 472.0
-offset_bottom = 54.0
-theme_override_constants/separation = 1
+offset_left = 8
+offset_top = 0
+offset_right = 944
+offset_bottom = 108
+theme_override_constants/separation = 2
 
 [node name="FreeText" type="LineEdit" parent="Panel/Bottom"]
-offset_left = 4.0
-offset_top = 56.0
-offset_right = 472.0
-offset_bottom = 72.0
+offset_left = 8
+offset_top = 112
+offset_right = 944
+offset_bottom = 144
 theme_override_colors/font_color = Color(0.94, 0.94, 0.88, 1)
 theme_override_colors/font_placeholder_color = Color(0.6, 0.55, 0.5, 1)
 theme_override_colors/caret_color = Color(0.94, 0.66, 0.28, 1)
-theme_override_font_sizes/font_size = 9
+theme_override_font_sizes/font_size = 18
 theme_override_styles/normal = SubResource("line_edit_style")
 theme_override_styles/focus = SubResource("line_edit_style")
 placeholder_text = "Ask the journal..."

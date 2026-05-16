@@ -9,18 +9,22 @@ extends "res://scripts/ai/AiProvider.gd"
 
 const MOCK_RESPONSES_PATH := "res://data/mock_responses.json"
 const MOCK_CLASSIFY_PATH  := "res://data/mock_classify_rules.json"
+const MOCK_SUGGEST_PATH   := "res://data/mock_player_suggestions.json"
 
 
 var _library: Dictionary = {}
 var _classify_rules: Array = []
+var _classify_category_rules: Array = []
 var _classify_match_confidence: float = 0.7
 var _classify_default_topic: String = "small_talk"
 var _classify_default_confidence: float = 0.3
+var _suggestions: Dictionary = {}
 
 
 func _ready() -> void:
 	_load_library()
 	_load_classify_rules()
+	_load_suggestions()
 
 
 func _load_library() -> void:
@@ -50,9 +54,10 @@ func _load_classify_rules() -> void:
 	if not (parsed is Dictionary):
 		push_error("[MockProvider] bad classify JSON")
 		return
-	_classify_rules            = parsed.get("rules", [])
-	_classify_match_confidence = float(parsed.get("match_confidence", 0.7))
-	_classify_default_topic    = String(parsed.get("default_topic_id", "small_talk"))
+	_classify_rules              = parsed.get("rules", [])
+	_classify_category_rules     = parsed.get("category_rules", [])
+	_classify_match_confidence   = float(parsed.get("match_confidence", 0.7))
+	_classify_default_topic      = String(parsed.get("default_topic_id", "small_talk"))
 	_classify_default_confidence = float(parsed.get("default_confidence", 0.3))
 
 
@@ -90,18 +95,81 @@ func generate(request: Dictionary) -> Dictionary:
 	return _build(request, canned)
 
 
+func _load_suggestions() -> void:
+	if not FileAccess.file_exists(MOCK_SUGGEST_PATH):
+		push_error("[MockProvider] mock_player_suggestions.json not found")
+		return
+	var f := FileAccess.open(MOCK_SUGGEST_PATH, FileAccess.READ)
+	if f == null:
+		push_error("[MockProvider] cannot open mock_player_suggestions.json")
+		return
+	var parsed = JSON.parse_string(f.get_as_text())
+	if not (parsed is Dictionary):
+		push_error("[MockProvider] bad suggest JSON")
+		return
+	_suggestions = parsed
+
+
+func suggest_player_options(request: Dictionary) -> Dictionary:
+	if _suggestions.is_empty():
+		_load_suggestions()
+	var archetype: String = String(request.get("npc_archetype", ""))
+	if archetype.is_empty():
+		archetype = "_default"
+	var topic: String = String(request.get("topic_addressed", ""))
+	var by_key: Dictionary = _suggestions.get("by_archetype_topic", {})
+	var fallbacks: Dictionary = _suggestions.get("fallback_by_archetype", {})
+	var key := "%s|%s" % [archetype, topic]
+	var items: Array
+	if by_key.has(key):
+		items = by_key[key]
+	elif fallbacks.has(archetype):
+		items = fallbacks[archetype]
+	else:
+		items = fallbacks.get("_default", [])
+	var out: Array = []
+	for item in items:
+		if item is Dictionary:
+			out.append({
+				"intent": String(item.get("intent", "tactical")),
+				"text":   String(item.get("text", "")),
+			})
+	return {"suggestions": out}
+
+
 func classify_topic(text: String, known_topics: Array) -> Dictionary:
 	if _classify_rules.is_empty():
 		_load_classify_rules()
 	var lower := text.to_lower()
-	for rule in _classify_rules:
-		var topic_id: String = String(rule.get("topic_id", ""))
+	# Category rules fire first: offensive / out_of_context short-circuit
+	# before any topic_id classification so the game-side mock matches the
+	# proxy-side MockProvider byte-for-byte.
+	for rule in _classify_category_rules:
+		var category: String = String(rule.get("category", ""))
 		var kws: Array = rule.get("keywords", [])
 		for k in kws:
 			if String(k) in lower:
+				return {
+					"topic_id":   "",
+					"confidence": _classify_match_confidence,
+					"category":   category,
+				}
+	for rule in _classify_rules:
+		var topic_id: String = String(rule.get("topic_id", ""))
+		var kws2: Array = rule.get("keywords", [])
+		for k in kws2:
+			if String(k) in lower:
 				if known_topics.is_empty() or topic_id in known_topics:
-					return {"topic_id": topic_id, "confidence": _classify_match_confidence}
-	return {"topic_id": _classify_default_topic, "confidence": _classify_default_confidence}
+					return {
+						"topic_id":   topic_id,
+						"confidence": _classify_match_confidence,
+						"category":   "in_game",
+					}
+	return {
+		"topic_id":   _classify_default_topic,
+		"confidence": _classify_default_confidence,
+		"category":   "in_game",
+	}
 
 
 # --------------------------------------------------------------------------
@@ -110,6 +178,11 @@ func classify_topic(text: String, known_topics: Array) -> Dictionary:
 
 func _derive_state_key(state_paragraph: String, archetype: String) -> String:
 	var p := state_paragraph.to_lower()
+	# cracked wins over drunk on purpose. Post-reveal Orren is still drunk
+	# numerically (patience bonus carries) but the *response* lookup should
+	# pick up his haunted post-reveal lines, not the dodge bank.
+	if "cracked" in p:
+		return "cracked"
 	if "drunk" in p:
 		return "drunk"
 	if "angry" in p:
@@ -128,5 +201,8 @@ func _build(request: Dictionary, canned: Dictionary) -> Dictionary:
 		"topic_addressed":        request.get("topic_addressed", ""),
 		"memory_update":          canned.get("memory_update", ""),
 		"revealed_briefing_ids":  canned.get("revealed_briefing_ids", []),
+		"claims":                 canned.get("claims", []),
 		"request_end_conversation": canned.get("request_end_conversation", false),
+		"safety_flag":            canned.get("safety_flag", ""),
+		"reveal_intent":          canned.get("reveal_intent", false),
 	}

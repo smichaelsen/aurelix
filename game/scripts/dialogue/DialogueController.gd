@@ -20,6 +20,7 @@ extends Node
 
 const DIALOGUE_BOX_SCENE       := preload("res://scenes/ui/DialogueBox.tscn")
 const TopicDetectorScript      = preload("res://scripts/dialogue/TopicDetector.gd")
+const PressDetectorScript      = preload("res://scripts/dialogue/PressDetector.gd")
 const ResponseValidatorScript  = preload("res://scripts/dialogue/ResponseValidator.gd")
 const PromptBuilderScript      = preload("res://scripts/ai/PromptBuilder.gd")
 const CapabilityGateScript     = preload("res://scripts/ai/CapabilityGate.gd")
@@ -64,9 +65,14 @@ var _busy: bool = false
 # invalidate their own watchdog without needing to cancel a timer.
 var _busy_gen: int = 0
 
+# Token from PlayerSuggestionGenerator for the in-flight suggestion call.
+# Compared on signal arrival to drop stale results (player picked or moved on).
+var _suggestion_token: int = -1
+
 
 func _ready() -> void:
 	EventBus.dialogue_requested.connect(_on_dialogue_requested)
+	PlayerSuggestionGenerator.suggestions_ready.connect(_on_suggestions_ready)
 
 
 func is_open() -> bool:
@@ -133,14 +139,27 @@ func _open(npc_id: String) -> void:
 		_render_templated(HaldenScript.start_turn())
 		return
 
-	_box.set_dialogue(_archetype_greeting(profile), "neutral")
-	_set_options(npc_id, "default")
+	# State-aware opening: pick the greeting line, the opening options
+	# topic, and the tone from the same `state` key (cooldown_recovery
+	# is one-shot; cracked/drunk/default persist).
+	var state := _resolve_open_state(npc_id, profile)
+	var greeting := _opening_greeting(profile, archetype, state)
+	var tone := _opening_tone(profile, state)
+	_box.set_dialogue(greeting, tone)
+	# Greeting / scripted intro uses authored options by default. The bank
+	# can still mark "default" as ai_suggested to override. When state
+	# resolution picks a non-default topic (e.g. "cracked"), that topic's
+	# options_source wins — we deliberately default cracked/gratitude to
+	# authored in Orren's bank so the post-reveal coda is fully scripted.
+	_set_options(npc_id, _opening_topic(profile, state))
 
 
 func _on_box_closed() -> void:
 	if _session != null:
 		EventBus.dialogue_closed.emit()
 	_session = null
+	PlayerSuggestionGenerator.cancel()
+	_suggestion_token = -1
 	if _box != null:
 		_box.hide_box()
 
@@ -180,6 +199,10 @@ func _cardinal(delta: Vector2i) -> String:
 func _on_option_chosen(option: Dictionary) -> void:
 	if _session == null or _busy:
 		return
+	# Any pick cancels an in-flight suggestion call — the conversation has
+	# moved on before the model could finish.
+	PlayerSuggestionGenerator.cancel()
+	_suggestion_token = -1
 	var topic: String = option.get("topic_id", "small_talk")
 	var verb: String = option.get("verb", "ask")
 	var action: String = option.get("action", "")
@@ -189,7 +212,10 @@ func _on_option_chosen(option: Dictionary) -> void:
 		_on_box_closed()
 		return
 
+	var option_label: String = option.get("label", "")
+
 	if _session.npc_id == HaldenScript.HALDEN_ID:
+		_box.set_player_line(option_label)
 		var turn := HaldenScript.apply_option(option)
 		if turn.is_empty():
 			_on_box_closed()
@@ -202,44 +228,142 @@ func _on_option_chosen(option: Dictionary) -> void:
 		_on_box_closed()
 		return
 
-	var label: String = option.get("label", "")
-	_session.record_player(label)
+	if action == "pray_heal":
+		_box.set_player_line(option_label)
+		_apply_pray_heal()
+		return
+
+	_box.set_player_line(option_label)
+	_session.record_player(option_label)
 	_session.last_topic = topic
-	await _run_ai_turn(label, verb, topic, press_angle)
+	await _run_ai_turn(option_label, verb, topic, press_angle)
 
 
 func _on_item_offered(item_id: String) -> void:
 	if _session == null or _busy:
 		return
+	PlayerSuggestionGenerator.cancel()
+	_suggestion_token = -1
 	if _session.npc_id == HaldenScript.HALDEN_ID:
 		_box.set_dialogue("I'm not for sale, stranger.", "official")
 		return
 	# Apply the lever first; this may flip a flag on the NPC's memory.
 	var result := OfferItemScript.apply(item_id, _session.npc_id)
 	# Use a synthesised player_input describing the offer.
-	_session.record_player(result.get("player_input", "*offers an item*"))
+	var offer_input: String = result.get("player_input", "*offers an item*")
+	_box.set_player_line(offer_input)
+	_session.record_player(offer_input)
 	# If the offer added a briefing to the NPC's dossier, pivot the
 	# topic to that briefing so the response can speak to it.
 	var topic: String = result.get("topic", "")
 	if topic.is_empty():
 		topic = _session.last_topic if not _session.last_topic.is_empty() else "default"
 	_session.last_topic = topic
-	await _run_ai_turn(result.get("player_input", "*offers an item*"), "offer_item", topic, "")
+
+	# Authored acknowledgement short-circuits the AI turn: gives the player
+	# instant visible confirmation that the lever landed (e.g. drunk flag
+	# set on Orren) instead of waiting for the next ask to land in a new
+	# tone. The flag itself was already flipped by OfferItemAction.apply,
+	# so subsequent turns see the new state.
+	var ack: Dictionary = result.get("acknowledgement", {})
+	if not ack.is_empty():
+		var line: String = String(ack.get("dialogue", ""))
+		var tone: String = String(ack.get("tone", "neutral"))
+		_session.record_npc(line)
+		_box.set_dialogue(line, tone)
+		_set_options(_session.npc_id, topic)
+		return
+
+	await _run_ai_turn(offer_input, "offer_item", topic, "")
 
 
 func _on_text_submitted(text: String) -> void:
 	if _session == null or _busy:
 		return
+	PlayerSuggestionGenerator.cancel()
+	_suggestion_token = -1
 	if text.strip_edges().is_empty():
 		return
 	if _session.npc_id == HaldenScript.HALDEN_ID:
 		_box.set_dialogue("Speak plainly, stranger.", "official")
 		return
-	var topic: String = await TopicDetectorScript.detect_free_text(text)
+	# Echo the player's line instantly so the panel reflects the commit while
+	# the classifier + AI turn run. Without this, "Kael: <text>" only lands
+	# after detect_free_text returns (~1s on a network call).
+	_box.set_player_line(text)
+	_box.set_pending()
+	var classified: Dictionary = await TopicDetectorScript.detect_free_text(text)
+	var topic: String = String(classified.get("topic_id", "small_talk"))
+	var category: String = String(classified.get("category", "in_game"))
+
+	# Layer-1 guardrails: short-circuit before the generate call. Authored
+	# options never reach this branch (they carry a fixed topic), so only
+	# free text can trip these. `out_of_context` is a no-op turn (no state
+	# change, no last_turns entry — the model never sees the player typed
+	# something the world can't answer). `offensive` triggers the same
+	# anger-out flow as stress_at_limit.
+	if category == "out_of_context":
+		print("[DialogueController] free text classified out_of_context — short-circuit")
+		_handle_out_of_context()
+		return
+	if category == "offensive":
+		print("[DialogueController] free text classified offensive — anger out")
+		_handle_offensive()
+		return
+
+	# Press detection: if the NPC has dodged a topic and this line presses
+	# on it, route as verb=press with the matching angle. Prefer the dodged
+	# topic over the classifier's verdict — "I won't tell anyone" is a
+	# pressure on whatever the NPC just evaded, not on its small-talk class.
+	var press_topic: String = topic
+	if not _session.last_topic.is_empty() and _session.is_pressable(_session.last_topic):
+		press_topic = _session.last_topic
+	var press := PressDetectorScript.detect(_session.npc_id, press_topic, text)
+	var verb := "ask"
+	var press_angle := ""
+	if press.get("is_press", false):
+		verb = "press"
+		press_angle = String(press.get("angle", ""))
+		topic = press_topic
+		print("[DialogueController] free text detected as press: angle=%s topic=%s" % [press_angle, topic])
 	_session.record_player(text)
 	_session.last_topic = topic
 	print("[DialogueController] free text classified -> %s" % topic)
-	await _run_ai_turn(text, "ask", topic, "")
+	await _run_ai_turn(text, verb, topic, press_angle)
+
+
+# ---------------------------------------------------------------------------
+# Guardrail short-circuits
+# ---------------------------------------------------------------------------
+
+# out_of_context: input that cannot be answered in-world (modern tech,
+# real-world places). The NPC's prose response would either be confused
+# improvisation or a refusal — both worse than a clean authored "didn't
+# catch that." Deliberately a no-op turn: no state mutation, no entry in
+# `last_turns`, no patience/stress decrement. The player line was already
+# echoed to the UI by `_box.set_player_line(text)`; we do not call
+# `_session.record_player` so the next turn's model context is clean.
+func _handle_out_of_context() -> void:
+	var profile := NpcProfileRegistry.get_profile(_session.npc_id)
+	var resp := FallbackProvider.out_of_context_response(_session.npc_id, profile)
+	_box.set_dialogue(resp.get("dialogue", "..."), resp.get("tone", "neutral"))
+	# Keep the existing options active — the player simply tries again.
+	_set_options(_session.npc_id, _session.last_topic if not _session.last_topic.is_empty() else "default")
+
+
+# offensive: grave slurs / explicit content. Mirrors the stress_at_limit
+# anger-out flow — one shot, conversation ends, AngerCooldownResolver
+# locks the NPC for a few interactions. We deliberately do NOT record
+# the player line in last_turns or memory_update so the slur cannot
+# resurface in a later prompt via recent_summary or turn history.
+func _handle_offensive() -> void:
+	var profile := NpcProfileRegistry.get_profile(_session.npc_id)
+	var resp := FallbackProvider.offensive_response(_session.npc_id, profile)
+	AngerCooldownResolver.set_anger_cooldown(_session.npc_id)
+	_box.set_dialogue(resp.get("dialogue", "..."), resp.get("tone", "hostile"))
+	_box.set_options([])
+	await get_tree().create_timer(2.0).timeout
+	_on_box_closed()
 
 
 # ---------------------------------------------------------------------------
@@ -307,7 +431,49 @@ func _run_ai_turn_body(player_input: String, verb: String, topic: String, press_
 	)
 	var raw: Dictionary = await AiService.generate(request)
 
-	var v: Dictionary = ResponseValidatorScript.validate(raw, _session.npc_id, gate.get("reveal_ready", false))
+	# Player can close the dialog (ESC -> _on_box_closed -> _session=null)
+	# while the proxy call is in flight. If they did, drop the response —
+	# the session it belonged to is gone, and accessing _session.npc_id
+	# below would crash.
+	if _session == null:
+		print("[DialogueController] generate completed but session closed; dropping response")
+		return
+
+	# Layer-2 guardrail: the model can raise a safety_flag when it judges
+	# the player input out-of-context / offensive even though the cheap
+	# classify pass let it through. Substitute a scripted line in both
+	# cases; for "offensive" also anger out, mirroring Layer 1. The player
+	# line was already appended to `last_turns` by the option/free-text
+	# handler, so we pop it back off — the model's next prompt must not
+	# see the offending input either.
+	var safety_flag: String = String(raw.get("safety_flag", ""))
+	if safety_flag == "out_of_context":
+		print("[DialogueController] generate raised safety_flag=out_of_context — short-circuit")
+		_session.pop_trailing_player()
+		var profile_oc := NpcProfileRegistry.get_profile(_session.npc_id)
+		var resp_oc := FallbackProvider.out_of_context_response(_session.npc_id, profile_oc)
+		_box.set_dialogue(resp_oc.get("dialogue", "..."), resp_oc.get("tone", "neutral"))
+		_set_options(_session.npc_id, _session.last_topic if not _session.last_topic.is_empty() else "default")
+		return
+	if safety_flag == "offensive":
+		print("[DialogueController] generate raised safety_flag=offensive — anger out")
+		_session.pop_trailing_player()
+		var profile_off := NpcProfileRegistry.get_profile(_session.npc_id)
+		var resp_off := FallbackProvider.offensive_response(_session.npc_id, profile_off)
+		AngerCooldownResolver.set_anger_cooldown(_session.npc_id)
+		_box.set_dialogue(resp_off.get("dialogue", "..."), resp_off.get("tone", "hostile"))
+		_box.set_options([])
+		_end_busy_turn()
+		await get_tree().create_timer(2.0).timeout
+		_on_box_closed()
+		return
+
+	var v: Dictionary = ResponseValidatorScript.validate(
+		raw,
+		_session.npc_id,
+		gate.get("reveal_ready", false),
+		String(gate.get("decision", "allowed")),
+	)
 	var response: Dictionary = v["response"]
 	var issues: Array = v["issues"]
 	var granted: Array = v["granted_facts"]
@@ -315,6 +481,21 @@ func _run_ai_turn_body(player_input: String, verb: String, topic: String, press_
 		print("[DialogueController] validation: ", issues)
 	if not granted.is_empty():
 		print("[DialogueController] facts granted via reveal: %s" % granted)
+
+	# Apply per-NPC reveal-driven flags. Generic mechanism: the profile may
+	# map a briefing id to a flag set; when that reveal is approved by the
+	# validator, the listed flags flip on. Drives the cracked-state arc on
+	# Orren after tower_smoke lands, without hardcoding the briefing id
+	# anywhere in the controller.
+	var on_reveal_flags: Dictionary = profile.get("on_reveal_flags", {})
+	if not on_reveal_flags.is_empty():
+		for bid in response.get("revealed_briefing_ids", []):
+			var to_set: Dictionary = on_reveal_flags.get(bid, {})
+			for fk in to_set.keys():
+				NpcMemoryStore.set_flag(_session.npc_id, fk, to_set[fk])
+				print("[DialogueController] reveal '%s' set flag %s.%s=%s" % [
+					bid, _session.npc_id, fk, to_set[fk]
+				])
 
 	# Memory updates.
 	_session.record_npc(response.get("dialogue", ""))
@@ -332,7 +513,22 @@ func _run_ai_turn_body(player_input: String, verb: String, topic: String, press_
 
 	# Render + refresh options (surface Press entries when applicable).
 	_box.set_dialogue(response.get("dialogue", "..."), response.get("tone", resolved.get("tone_default", "neutral")))
-	_set_options(_session.npc_id, topic)
+	# On a gate-driven dodge, surface the NPC's public_tell for this topic
+	# as italic stage direction below the dialogue. Same data the
+	# suggestion model gets (`PlayerPromptBuilder.public_tells`) but
+	# rendered for the player so the lever isn't invisible. Only fires
+	# when the gate reason indicates a dodge — not on ordinary blocks.
+	var dodge_reasons := ["forbidden_topic", "press_unlocked_no_match"]
+	if reason in dodge_reasons:
+		var tells: Array = NpcProfileRegistry.public_tells_for(_session.npc_id, topic)
+		if not tells.is_empty():
+			_box.set_stage_direction(String(tells[0]))
+	# Re-resolve state after the turn — a reveal in this turn may have just
+	# flipped a flag (e.g. cracked). When the profile maps that state to a
+	# locked options topic, surface those options instead of the turn's
+	# topic so the player can't re-press a topic the NPC has just opened on.
+	var post_state := _resolve_open_state(_session.npc_id, profile, false)
+	_set_options(_session.npc_id, _post_turn_topic(profile, topic, post_state))
 
 	# Publish turn info for the debug overlay.
 	EventBus.debug_turn_recorded.emit({
@@ -383,11 +579,47 @@ func _render_templated(turn: Dictionary) -> void:
 	_box.set_options(turn.get("options", []))
 
 
+# Edda's pray-for-healing action: authored response only, no AI turn. Lines
+# live in her bank's templated_lines so the priest's voice stays scripted.
+# The dialogue stays open so the player can keep talking afterward.
+func _apply_pray_heal() -> void:
+	var npc_id: String = _session.npc_id
+	var line_id: String = "pray_heal_full" if PartyHealth.kael_is_full() else "pray_heal_done"
+	var line: String = AuthoredOptionLibrary.templated_line(npc_id, line_id)
+	if line.is_empty():
+		line = "The Light is with you." if line_id == "pray_heal_full" else "Be still. The Light steadies you."
+	if not PartyHealth.kael_is_full():
+		PartyHealth.reset_to_full()
+		print("[DialogueController] Edda heals party to full.")
+	_session.record_npc(line)
+	_box.set_dialogue(line, "warm")
+	_set_options(npc_id, "greeting")
+
+
 # ---------------------------------------------------------------------------
 # Option presentation
 # ---------------------------------------------------------------------------
 
 func _set_options(npc_id: String, topic: String) -> void:
+	var source := AuthoredOptionLibrary.options_source(npc_id, topic)
+	# Mock mode keeps authored options across the board: the in-game free-text
+	# row is hidden in mock anyway, and mock suggestions on top of mock NPC
+	# lines would be canned-on-canned with no real value.
+	#
+	# Note: when a topic is opted into ai_suggested, AI wins even after the
+	# NPC dodges — the authored Press options for the topic don't surface in
+	# this mode. If we ever want the canonical Press shortcut back, the AI
+	# prompt is the place to teach the model to produce a Press-style line,
+	# not the UI selection rule. (Per-topic opt-in lives in
+	# data/options/<npc>.yaml under `options_source`.)
+	if source == "ai_suggested" and not Config.use_mock_ai:
+		_box.set_options_pending(3)
+		_kick_player_suggestions(npc_id, topic)
+		return
+	_set_options_authored(npc_id, topic)
+
+
+func _set_options_authored(npc_id: String, topic: String) -> void:
 	var opts := AuthoredOptionLibrary.options_for(npc_id, topic)
 	if opts.is_empty():
 		opts = AuthoredOptionLibrary.options_for(npc_id, "default")
@@ -404,6 +636,51 @@ func _set_options(npc_id: String, topic: String) -> void:
 	_box.set_options(filtered)
 
 
+func _kick_player_suggestions(npc_id: String, topic: String) -> void:
+	var profile := NpcProfileRegistry.get_profile(npc_id)
+	var last_line := ""
+	if _session != null:
+		last_line = _session.last_npc_line()
+	var turns: Array = []
+	if _session != null:
+		turns = _session.last_turns.duplicate()
+	# When the topic was just dodged, surface the cue to the model so it can
+	# include one pressing suggestion. Dodge state is set by _run_ai_turn_body
+	# after a forbidden/unlocked-no-match capability gate; it persists across
+	# turns within the conversation.
+	var dodged_topic := ""
+	if _session != null and _session.is_pressable(topic):
+		dodged_topic = topic
+	_suggestion_token = PlayerSuggestionGenerator.generate(
+		npc_id,
+		profile.get("display_name", npc_id),
+		profile.get("archetype", ""),
+		last_line,
+		turns,
+		topic,
+		dodged_topic,
+	)
+
+
+func _on_suggestions_ready(token: int, npc_id: String, suggestions: Array) -> void:
+	# Stale: conversation moved on, or player picked something before the
+	# call finished. Drop silently.
+	if token != _suggestion_token:
+		return
+	if _session == null or _session.npc_id != npc_id:
+		return
+	if _box == null or not is_instance_valid(_box):
+		return
+	_suggestion_token = -1
+	if suggestions.is_empty():
+		# Empty result (provider down, validator stripped everything, etc.) —
+		# fall through to authored options so the player isn't stranded with
+		# only "..." rows.
+		_set_options_authored(npc_id, _session.last_topic)
+		return
+	_box.apply_suggestions(suggestions)
+
+
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
@@ -417,6 +694,70 @@ func _archetype_greeting(profile: Dictionary) -> String:
 		"priest":          return "Peace travels with you, stranger."
 		"guard_authority": return "Stranger. Speak plainly."
 	return "Yes?"
+
+
+# State key for the opening line / options / tone. One-shot
+# cooldown_recovery wins so the apology beat fires once and never again.
+# After that, persistent flags resolve in narrative priority:
+# cracked (the loaded post-reveal state) before drunk before default.
+#
+# `consume_oneshot`: when true (open path), pending_cooldown_recovery is
+# cleared as it is read. Post-turn callers pass false to peek without
+# burning the one-shot — the recovery greeting should fire on the next
+# real conversation open, not be eaten mid-turn.
+func _resolve_open_state(npc_id: String, profile: Dictionary, consume_oneshot: bool = true) -> String:
+	var mem := NpcMemoryStore.memory_for(npc_id)
+	var flags: Dictionary = mem.get("flags", {})
+	if bool(flags.get("pending_cooldown_recovery", false)):
+		if consume_oneshot:
+			NpcMemoryStore.set_flag(npc_id, "pending_cooldown_recovery", false)
+		return "cooldown_recovery"
+	if bool(flags.get("cracked", false)):
+		return "cracked"
+	if bool(flags.get("drunk", false)):
+		return "drunk"
+	if bool(flags.get("fed", false)):
+		return "fed"
+	return "default"
+
+
+func _opening_greeting(profile: Dictionary, archetype: String, state: String) -> String:
+	var greetings: Dictionary = profile.get("greetings", {})
+	if greetings.has(state):
+		return String(greetings[state])
+	if greetings.has("default"):
+		return String(greetings["default"])
+	return _archetype_greeting(profile)
+
+
+func _opening_tone(profile: Dictionary, state: String) -> String:
+	# Anchor opening tone to the same state_modifier the rest of the
+	# pipeline uses, so the drunk/cracked greetings render in the right
+	# voice. Falls back to "neutral".
+	var mods: Dictionary = profile.get("state_modifiers", {})
+	var rule: Dictionary = mods.get(state, {})
+	var tone: String = String(rule.get("tone_default", ""))
+	if tone.is_empty():
+		return "neutral"
+	return tone
+
+
+func _opening_topic(profile: Dictionary, state: String) -> String:
+	var by_state: Dictionary = profile.get("default_options_by_state", {})
+	if by_state.has(state):
+		return String(by_state[state])
+	return "default"
+
+
+# After an AI turn, if the resolved state maps to a locked options topic
+# (default_options_by_state), prefer that over the turn's natural topic.
+# Lets the cracked-state coda persist regardless of which option the
+# player picked to land in it.
+func _post_turn_topic(profile: Dictionary, turn_topic: String, state: String) -> String:
+	var by_state: Dictionary = profile.get("default_options_by_state", {})
+	if by_state.has(state):
+		return String(by_state[state])
+	return turn_topic
 
 
 func _anger_out_line(archetype: String) -> String:

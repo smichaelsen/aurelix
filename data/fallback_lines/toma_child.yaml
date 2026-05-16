@@ -11,3 +11,5 @@ lines:
   item_offered:    "For me? Cool!"
   anger_out:       "I'm telling my mother!"
   cooldown_recovery: "Okay. Don't shout this time."
+  out_of_context:  "What? You're weird."
+  offensive:       "You're a mean person. I'm telling!"

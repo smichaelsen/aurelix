@@ -41,6 +41,7 @@ dossier:
     - { id: strange_coin,     tier: full }    # she already has the sketch
   events:
     - { id: tower_smoke,      tier: rumor }
+    - { id: orren_lever,      tier: rumor }   # forward-pointer: nudges player toward Orren+ale
     - { id: vegetable_theft,  tier: rumor }   # she was inside the smithy, did not see
 
 memory_defaults:

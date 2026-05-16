@@ -124,9 +124,9 @@ func _build_stances() -> void:
 		btn.text = marker + entry["label"]
 		btn.alignment = HORIZONTAL_ALIGNMENT_LEFT
 		btn.focus_mode = Control.FOCUS_ALL
-		btn.add_theme_font_size_override("font_size", 8)
+		btn.add_theme_font_size_override("font_size", 16)
 		_apply_flat_button_style(btn)
-		btn.custom_minimum_size = Vector2(0, 12)
+		btn.custom_minimum_size = Vector2(0, 24)
 		var stance: String = entry["stance"]
 		btn.pressed.connect(func(): _on_stance_pressed(stance))
 		_stances.add_child(btn)
@@ -185,7 +185,7 @@ func _build_actions() -> void:
 		btn.text = entry["label"]
 		btn.alignment = HORIZONTAL_ALIGNMENT_LEFT
 		btn.focus_mode = Control.FOCUS_ALL
-		btn.add_theme_font_size_override("font_size", 9)
+		btn.add_theme_font_size_override("font_size", 18)
 		btn.add_theme_color_override("font_color",         Color(0.94, 0.94, 0.88))
 		btn.add_theme_color_override("font_hover_color",   Color(0.94, 0.94, 0.88))
 		btn.add_theme_color_override("font_focus_color",   Color(0.94, 0.66, 0.28))
@@ -211,7 +211,7 @@ func _build_actions() -> void:
 		btn.add_theme_stylebox_override("hover",  sb_flat)
 		btn.add_theme_stylebox_override("focus",  sb_focus)
 		btn.add_theme_stylebox_override("pressed", sb_focus)
-		btn.custom_minimum_size = Vector2(0, 14)
+		btn.custom_minimum_size = Vector2(0, 28)
 		var kind: String = entry["kind"]
 		btn.pressed.connect(func(): _on_action_pressed(kind))
 		_actions.add_child(btn)

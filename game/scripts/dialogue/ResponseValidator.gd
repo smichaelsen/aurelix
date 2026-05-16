@@ -28,7 +28,17 @@ const _MEMORY_UPDATE_MAX_LEN := 240
 
 ## Returns a sanitised copy of the response, plus a list of issues, plus
 ## the list of facts actually granted (after gate + dossier checks).
-static func validate(response: Dictionary, npc_id: String, reveal_ready: bool) -> Dictionary:
+##
+## `gate_decision` is the CapabilityGate's topic-level verdict
+## ("allowed" | "constrained" | "blocked"). It enables the soft-reveal
+## path for briefings carrying a dossier-level `reveal_note`; the
+## deterministic `reveal_ready` path is unchanged.
+static func validate(
+	response: Dictionary,
+	npc_id: String,
+	reveal_ready: bool,
+	gate_decision: String = "allowed",
+) -> Dictionary:
 	var issues: Array[String] = []
 
 	# Required fields.
@@ -48,22 +58,45 @@ static func validate(response: Dictionary, npc_id: String, reveal_ready: bool) -
 			break
 	cleaned["dialogue"] = dialogue
 
-	# revealed_briefing_ids: filter to ones the NPC has, and drop entirely
-	# if the gate didn't grant reveal_ready.
+	# revealed_briefing_ids: filter to ones the NPC has, then accept via
+	# one of two paths:
+	#
+	#   1. Deterministic press: gate granted `reveal_ready` because the
+	#      player's text matched an authored press_keyword angle. This is
+	#      the offline / mock / Phase5Test path; unchanged.
+	#
+	#   2. Soft reveal: the dossier entry for this briefing carries a
+	#      `reveal_note` — an authored in-fiction condition the NPC uses
+	#      to gate sharing — AND the model explicitly raised
+	#      `reveal_intent: true`, asserting it judged the note satisfied.
+	#      We accept the reveal when the topic-level gate is at least
+	#      `constrained` (player has earned engagement on this topic).
+	#      Mock leaves reveal_intent=false by default so its canned
+	#      revealed_briefing_ids cannot bypass the angle gate — Phase5
+	#      determinism intact.
 	var raw_reveals: Array = cleaned.get("revealed_briefing_ids", [])
+	var reveal_intent: bool = bool(cleaned.get("reveal_intent", false))
 	var npc_dossier := NpcProfileRegistry.flatten_dossier(npc_id)
-	var npc_has: Dictionary = {}
+	var npc_entry_by_id: Dictionary = {}
 	for entry in npc_dossier:
-		npc_has[entry.get("id", "")] = true
+		npc_entry_by_id[entry.get("id", "")] = entry
 	var kept: Array = []
 	var granted_facts: Array = []
 	for bid in raw_reveals:
-		if not npc_has.has(bid):
+		if not npc_entry_by_id.has(bid):
 			issues.append("dropped unknown reveal id '%s'" % bid)
 			continue
-		if not reveal_ready:
-			issues.append("dropped unauthorised reveal '%s' (gate did not grant reveal_ready)" % bid)
+		var entry: Dictionary = npc_entry_by_id[bid]
+		var has_reveal_note: bool = not String(entry.get("reveal_note", "")).is_empty()
+		var soft_eligible: bool = (
+			reveal_intent
+			and has_reveal_note
+			and gate_decision in ["allowed", "constrained"]
+		)
+		if not reveal_ready and not soft_eligible:
+			issues.append("dropped unauthorised reveal '%s' (gate did not grant reveal_ready and no soft path eligible)" % bid)
 			continue
+		var path_label: String = "press_keyword" if reveal_ready else "reveal_note"
 		# Approved -> grant the facts the briefing unlocks.
 		kept.append(bid)
 		var briefing := _resolve_briefing(bid)
@@ -72,9 +105,31 @@ static func validate(response: Dictionary, npc_id: String, reveal_ready: bool) -
 				"kind":        "briefing_reveal",
 				"briefing_id": bid,
 				"npc_id":      npc_id,
+				"path":        path_label,
 			})
 			granted_facts.append(fid)
 	cleaned["revealed_briefing_ids"] = kept
+
+	# Claims: non-canon rumor facts the NPC volunteers. Granted via FactLedger
+	# iff the id resolves to a fact with canon: false. Canon facts are NEVER
+	# grantable through this channel — only validated, gated briefing reveals
+	# can grant canon. Unknown ids are dropped, same as reveals.
+	var raw_claims: Array = cleaned.get("claims", [])
+	var kept_claims: Array = []
+	for cid in raw_claims:
+		if not FactRegistry.has_fact(cid):
+			issues.append("dropped unknown claim '%s'" % cid)
+			continue
+		if FactRegistry.is_canon(cid):
+			issues.append("dropped canon claim '%s' (claims may only grant non-canon facts)" % cid)
+			continue
+		FactLedger.grant_fact(cid, {
+			"kind":   "npc_claim",
+			"npc_id": npc_id,
+		})
+		kept_claims.append(cid)
+		granted_facts.append(cid)
+	cleaned["claims"] = kept_claims
 
 	# Default fields.
 	cleaned["tone"]                    = cleaned.get("tone", "neutral")

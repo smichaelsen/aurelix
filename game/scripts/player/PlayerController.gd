@@ -6,9 +6,9 @@ extends Node2D
 ## any of the 8 surrounding tiles.
 ##
 
-const TILE_SIZE        := 32
-const MOVE_DURATION    := 0.12   # seconds per step
-const PIXEL_OFFSET_X   := 4      # match the visual offset used for static sprites
+const TILE_SIZE        := 64
+const MOVE_DURATION    := 0.22   # seconds per step
+const PIXEL_OFFSET_X   := 8      # match the visual offset used for static sprites
 
 @export var sprite_offset_y: int = 0   # set by the scene if Kael needs to sit a bit lower
 
@@ -57,6 +57,9 @@ func _unhandled_input(event: InputEvent) -> void:
 		return
 	if event.is_action_pressed("interact"):
 		_try_interact()
+		return
+	if event.is_action_pressed("heal_self"):
+		_try_heal_self()
 		return
 	# Movement: any combination of 4 cardinal inputs becomes 8-direction.
 	if event is InputEventKey and not event.is_echo() and event.pressed:
@@ -127,10 +130,12 @@ func _animate_to(target: Vector2i) -> void:
 	# Facing is normally set up-front in _try_move. Setting it again here
 	# is idempotent and covers any code path that animates directly.
 	_set_facing(_last_cardinal)
+	EventBus.player_step_changed.emit(true)
 	var tween := create_tween()
 	tween.tween_property(self, "position", _pixel_for(target), MOVE_DURATION)
 	await tween.finished
 	_moving = false
+	EventBus.player_step_changed.emit(false)
 	EventBus.player_moved.emit(grid_pos.x, grid_pos.y)
 	_emit_interaction_state()
 
@@ -186,3 +191,10 @@ func _try_interact() -> void:
 			EventBus.cage_interacted.emit(hit["target_id"])
 		_:
 			print("[Player] interacted with %s (%s)" % [hit["target_id"], hit["target_type"]])
+
+
+# Overworld heal: delegate to HealService so [H] and inventory "Use" share
+# one path. HealService emits party_heal_applied on success; HealToast and
+# any other listener pick it up.
+func _try_heal_self() -> void:
+	HealService.heal_kael_with_best_fit()

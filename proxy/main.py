@@ -16,6 +16,7 @@ from .observability import record, summary
 from .schema import (
     AiRequest, AiResponse,
     ClassifyTopicRequest, ClassifyTopicResponse,
+    PlayerSuggestionsRequest, PlayerSuggestionsResponse,
 )
 
 
@@ -50,4 +51,15 @@ def classify_topic(req: ClassifyTopicRequest) -> ClassifyTopicResponse:
     except RuntimeError as e:
         raise HTTPException(status_code=502, detail=str(e))
     record("classify", req.text, resp.topic_id)
+    return resp
+
+
+@app.post("/v1/suggest_player_options")
+def suggest_player_options(req: PlayerSuggestionsRequest) -> PlayerSuggestionsResponse:
+    try:
+        resp = _provider.suggest_player_options(req)
+    except RuntimeError as e:
+        raise HTTPException(status_code=502, detail=str(e))
+    joined = " | ".join(s.text for s in resp.suggestions)
+    record("suggest", req.last_npc_line, joined, conversation_id=req.npc_display_name)
     return resp

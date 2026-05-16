@@ -76,6 +76,56 @@ func generate(npc_id: String, topic: String, npc_profile: Dictionary) -> Diction
 	}
 
 
+## Scripted response when the classifier flagged the player input as
+## out_of_context (modern tech, real-world places, etc.). NPC is mildly
+## confused; no state mutation — DialogueController treats this as a turn
+## that "did not happen" so the model's last_turns view never carries the
+## setting-break.
+func out_of_context_response(npc_id: String, npc_profile: Dictionary) -> Dictionary:
+	var line := _category_line(npc_id, "out_of_context", "I didn't catch that. What do you mean?")
+	return {
+		"dialogue":               line,
+		"tone":                   "neutral",
+		"topic_addressed":        "out_of_context",
+		"memory_update":          "",
+		"revealed_briefing_ids":  [],
+		"claims":                 [],
+		"request_end_conversation": false,
+	}
+
+
+## Scripted response when the classifier flagged the player input as
+## offensive (grave slurs / explicit content). Triggers the same anger-out
+## flow used by stress_at_limit; conversation ends, AngerCooldownResolver
+## keeps the NPC closed off for a window.
+func offensive_response(npc_id: String, npc_profile: Dictionary) -> Dictionary:
+	var line := _category_line(npc_id, "offensive", "That was unnecessary. Leave me alone.")
+	return {
+		"dialogue":               line,
+		"tone":                   "hostile",
+		"topic_addressed":        "offensive",
+		"memory_update":          "",
+		"revealed_briefing_ids":  [],
+		"claims":                 [],
+		"request_end_conversation": true,
+	}
+
+
+## Look up a top-level category key (e.g. "out_of_context") on the
+## per-NPC bank first, then on the archetype bank, then fall back to the
+## hardcoded default. Distinct from `_line_for` because category keys are
+## not topic-shaped — they sit alongside topics in the per-NPC bank but
+## archetype keys in `_by_archetype` are still flat (an `out_of_context`
+## entry there is a generic default, not an archetype name).
+func _category_line(npc_id: String, category: String, default_line: String) -> String:
+	var npc_bank: Dictionary = _by_npc.get(npc_id, {})
+	if npc_bank.has(category):
+		return String(npc_bank[category])
+	if _by_archetype.has(category):
+		return String(_by_archetype[category])
+	return default_line
+
+
 func _line_for(npc_id: String, topic: String, npc_profile: Dictionary) -> String:
 	var npc_bank: Dictionary = _by_npc.get(npc_id, {})
 	if not npc_bank.is_empty():

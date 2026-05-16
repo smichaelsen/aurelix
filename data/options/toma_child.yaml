@@ -3,6 +3,11 @@ options:
     - { label: "Hello.",                              topic_id: greeting }
     - { label: "What do you know about the tower?",   topic_id: the_tower }
     - { label: "Have you seen the dragon?",           topic_id: the_dragon }
+    - { label: "Where's your family?",                topic_id: personal_history }
+    - { label: "Bye.",                                topic_id: __close }
+  greeting:
+    - { label: "What do you know about the tower?",   topic_id: the_tower }
+    - { label: "Have you seen the dragon?",           topic_id: the_dragon }
     - { label: "Bye.",                                topic_id: __close }
   the_tower:
     - { label: "Where did you hear that?",            topic_id: the_tower }
@@ -12,6 +17,34 @@ options:
     - { label: "What did it look like?",              topic_id: the_dragon }
     - { label: "Back to the tower.",                  topic_id: the_tower }
     - { label: "Bye.",                                topic_id: __close }
-  greeting:
-    - { label: "What do you know about the tower?",   topic_id: the_tower }
+  # Surfaced by default_options_by_state when flags.fed is true. After
+  # apple/ration, Toma opens up — the gossip willingness shifts to
+  # eager_rumor and these prompts unlock the new mock variants.
+  gossip_focused:
+    - { label: "What did you see at the tower?",      topic_id: the_tower }
+    - { label: "Tell me about the dragon.",           topic_id: the_dragon }
+    - { label: "Who robbed Jorin?",                   topic_id: jorin_theft }
+    - { label: "Have you seen Iskar?",                topic_id: the_drake }
     - { label: "Bye.",                                topic_id: __close }
+  personal_history:
+    - { label: "Where's the chapel cottage?",         topic_id: personal_history }
+    - { label: "What's your stick's name?",           topic_id: personal_history }
+    - { label: "Back up.",                            topic_id: greeting }
+    - { label: "Bye.",                                topic_id: __close }
+  jorin_theft:
+    - { label: "Who told you that?",                  topic_id: jorin_theft }
+    - { label: "Anything else?",                      topic_id: gossip }
+    - { label: "Bye.",                                topic_id: __close }
+  the_drake:
+    - { label: "He's friendly. Want to wave?",        topic_id: the_drake }
+    - { label: "Don't tell anyone.",                  topic_id: the_drake }
+    - { label: "Bye.",                                topic_id: __close }
+
+# Keep the new authored banks scripted — children's banter is short, and
+# AI-suggested rephrasings on top of mock-only state variants would render
+# as canned-on-canned.
+options_source:
+  gossip_focused:    authored
+  personal_history:  authored
+  jorin_theft:       authored
+  the_drake:         authored

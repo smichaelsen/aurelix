@@ -10,3 +10,5 @@ lines:
   item_offered:    "For me? Ahh. You shouldn't have."
   anger_out:       "Go bother somebody else."
   cooldown_recovery: "All right, all right. Sit down. Quietly."
+  out_of_context:  "Wha. You talking nonsense, friend."
+  offensive:       "Hey. Hey now. Push off."

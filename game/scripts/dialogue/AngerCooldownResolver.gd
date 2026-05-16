@@ -29,7 +29,9 @@ func set_anger_cooldown(npc_id: String) -> void:
 
 func _on_dialogue_opened(npc_id: String) -> void:
 	# Tick every OTHER NPC's cooldown. When it falls to 0, also clear
-	# their stress so the next conversation isn't an immediate re-anger.
+	# their stress so the next conversation isn't an immediate re-anger,
+	# and arm pending_cooldown_recovery so the *next* time the player
+	# opens dialogue with them they hear the recovery greeting once.
 	for other in NpcMemoryStore.known_npc_ids():
 		if other == npc_id:
 			continue
@@ -38,6 +40,7 @@ func _on_dialogue_opened(npc_id: String) -> void:
 		var t := NpcMemoryStore.decrement_anger_cooldown(other)
 		if t == 0:
 			NpcMemoryStore.clear_stress(other)
+			NpcMemoryStore.set_flag(other, "pending_cooldown_recovery", true)
 			print("[AngerCooldown] %s cooled off; stress reset" % other)
 
 
@@ -50,4 +53,7 @@ func _on_item_offered(npc_id: String, item_id: String) -> void:
 	NpcMemoryStore.set_anger_cooldown(npc_id, 0)
 	NpcMemoryStore.clear_stress(npc_id)
 	NpcMemoryStore.set_flag(npc_id, "forgave_player", true)
+	# Mid-conversation apology — the recovery greeting fires the *next*
+	# time the player opens dialogue. The current turn keeps running.
+	NpcMemoryStore.set_flag(npc_id, "pending_cooldown_recovery", true)
 	print("[AngerCooldown] %s forgave Kael (%s apology accepted)" % [npc_id, item_id])

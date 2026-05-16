@@ -10,6 +10,8 @@
     "press_too_far": "Watch your tone.",
     "item_offered": "I'm not for sale, stranger.",
     "anger_out": "Move along, stranger.",
-    "cooldown_recovery": "We'll start over. Be brief."
+    "cooldown_recovery": "We'll start over. Be brief.",
+    "out_of_context": "I don't take your meaning. Speak plain.",
+    "offensive": "Mind your tongue in my square. Move along."
   }
 }

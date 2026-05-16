@@ -76,6 +76,13 @@ for d in (TILES, SPRITES, UI):
     d.mkdir(parents=True, exist_ok=True)
 
 
+# Output scale. All sprite/tile painting in this file is authored at the
+# logical 32px-tile resolution; we upscale nearest-neighbour at the end of
+# main() so the runtime sees 2x assets without rewriting 74 paint helpers.
+# Bumped to 2 alongside the 960x540 viewport (was 480x270).
+SCALE = 2
+
+
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
@@ -1511,6 +1518,17 @@ def main():
     icon_arrow_run()
     icon_fist()
     icon_plus()
+
+    if SCALE != 1:
+        print(f'Upscaling all assets nearest-neighbour x{SCALE}...')
+        n = 0
+        for png in ASSETS.rglob('*.png'):
+            with Image.open(png) as im:
+                im.load()
+                scaled = im.resize((im.width * SCALE, im.height * SCALE), Image.NEAREST)
+            scaled.save(png)
+            n += 1
+        print(f'  upscaled {n} PNGs')
 
     print('Done. See game/assets/')
 
