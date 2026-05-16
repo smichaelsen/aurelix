@@ -51,6 +51,12 @@ change.
   FallbackProvider with authored line banks;
   DebugOverlay surfaces topic / gate / briefings /
   raw JSON / validation.
+- Bandit-camp cage persistence fix (2026-05-16):
+  `CageHandler._ready()` now swaps the cage sprite
+  to `cage_empty.png` (deferred) when
+  `IskarCompanion.bonded` is true, so re-entering
+  forest_edge no longer reverts the cage to the
+  drake-inside texture.
 - Code review (2026-05-16): fixed
   `LocalProxyProvider` HTTPRequest concurrency bug
   (shared node scrambled overlapping `request_completed`

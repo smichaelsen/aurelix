@@ -17,6 +17,8 @@ const CAPTION_DURATION := 2.5
 func _ready() -> void:
 	_panel.visible = false
 	EventBus.cage_interacted.connect(_on_cage_interacted)
+	if IskarCompanion.bonded:
+		_swap_cage_sprite.call_deferred()
 
 
 func _on_cage_interacted(_object_id: String) -> void:
