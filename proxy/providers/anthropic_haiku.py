@@ -52,7 +52,7 @@ Schema:
 """
 
 
-_JSON_BLOCK = re.compile(r"\{.*\}", re.DOTALL)
+_FENCED_JSON = re.compile(r"```(?:json)?\s*(\{.*?\})\s*```", re.DOTALL)
 
 
 class AnthropicHaikuProvider:
@@ -93,7 +93,10 @@ class AnthropicHaikuProvider:
             raise RuntimeError(f"Anthropic API error: {e}") from e
         if not msg.content:
             raise RuntimeError("Anthropic returned no content")
-        return msg.content[0].text
+        for block in msg.content:
+            if getattr(block, "type", None) == "text":
+                return block.text
+        raise RuntimeError("Anthropic returned no text block")
 
     def _render_user(self, req: AiRequest) -> str:
         # Compact, structured prompt body. Field names match the schema.
@@ -148,7 +151,40 @@ class AnthropicHaikuProvider:
             return ClassifyTopicResponse(topic_id=fallback, confidence=0.0)
 
     def _extract_json(self, text: str) -> dict:
-        match = _JSON_BLOCK.search(text)
-        if not match:
+        fenced = _FENCED_JSON.search(text)
+        if fenced:
+            return json.loads(fenced.group(1))
+        candidate = self._first_balanced_object(text)
+        if candidate is None:
             raise ValueError("no JSON object in response")
-        return json.loads(match.group(0))
+        return json.loads(candidate)
+
+    @staticmethod
+    def _first_balanced_object(text: str) -> str | None:
+        # Scan for the first balanced {...}, honoring string literals so braces
+        # inside quoted dialogue don't throw off the depth counter.
+        start = text.find("{")
+        if start < 0:
+            return None
+        depth = 0
+        in_string = False
+        escape = False
+        for i in range(start, len(text)):
+            ch = text[i]
+            if in_string:
+                if escape:
+                    escape = False
+                elif ch == "\\":
+                    escape = True
+                elif ch == '"':
+                    in_string = False
+                continue
+            if ch == '"':
+                in_string = True
+            elif ch == "{":
+                depth += 1
+            elif ch == "}":
+                depth -= 1
+                if depth == 0:
+                    return text[start:i + 1]
+        return None

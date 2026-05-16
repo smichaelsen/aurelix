@@ -12,13 +12,6 @@ const TIMEOUT_SECONDS := 5.0
 
 
 var host: String = DEFAULT_HOST
-var _http: HTTPRequest
-
-
-func _ready() -> void:
-	_http = HTTPRequest.new()
-	_http.timeout = TIMEOUT_SECONDS
-	add_child(_http)
 
 
 func generate(request: Dictionary) -> Dictionary:
@@ -49,21 +42,38 @@ func health() -> bool:
 # Internals
 # --------------------------------------------------------------------------
 
+# Each call uses its own HTTPRequest node. A single shared node would let
+# overlapping calls (e.g. classify_topic then generate, or two NPCs talking
+# in tests) collide on `request_completed`, scrambling responses.
+func _make_request() -> HTTPRequest:
+	var req := HTTPRequest.new()
+	req.timeout = TIMEOUT_SECONDS
+	add_child(req)
+	return req
+
+
 func _http_get(url: String) -> Dictionary:
-	var err := _http.request(url)
+	var req := _make_request()
+	var err := req.request(url)
 	if err != OK:
+		push_warning("[LocalProxyProvider] request err: %d" % err)
+		req.queue_free()
 		return {}
-	var result = await _http.request_completed
+	var result = await req.request_completed
+	req.queue_free()
 	return _parse(result)
 
 
 func _http_post(url: String, body: String) -> Dictionary:
 	var headers := PackedStringArray(["Content-Type: application/json"])
-	var err := _http.request(url, headers, HTTPClient.METHOD_POST, body)
+	var req := _make_request()
+	var err := req.request(url, headers, HTTPClient.METHOD_POST, body)
 	if err != OK:
 		push_warning("[LocalProxyProvider] request err: %d" % err)
+		req.queue_free()
 		return {}
-	var result = await _http.request_completed
+	var result = await req.request_completed
+	req.queue_free()
 	return _parse(result)
 
 
