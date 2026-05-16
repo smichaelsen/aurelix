@@ -1,0 +1,15 @@
+{
+  "lines": {
+    "_default": "Not my trade. Ask elsewhere.",
+    "greeting": "Don't lean on the bellows. What do you need?",
+    "the_tower": "I won't say more than I already have about the tower.",
+    "the_dragon": "If it's near the tower, it's the reeve's problem. Not mine.",
+    "the_drake": "Strange little thing at your heel. Keep it out of the forge.",
+    "gold_eyed_one": "I've said all I'll say about that mark.",
+    "trade": "Iron sword's thirty coin. Jerkin's twenty-five. Take or leave.",
+    "press_too_far": "I am at my anvil. You are in my way.",
+    "item_offered": "Hm. I'll take a look.",
+    "anger_out": "Out. Now.",
+    "cooldown_recovery": "Apology accepted. Let's start again."
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "lines": {
+    "_default": "Speak plainly, stranger.",
+    "greeting": "Stranger. Speak plainly.",
+    "the_tower": "Coin and bread for proof. That offer stands.",
+    "the_dragon": "Bring me proof of where it was seen and I'll pay.",
+    "the_drake": "Keep that creature on a leash in my square.",
+    "gold_eyed_one": "Names I do not know are no business of mine. Yet.",
+    "quest_status": "Have you found anything?",
+    "press_too_far": "Watch your tone.",
+    "item_offered": "I'm not for sale, stranger.",
+    "anger_out": "Move along, stranger.",
+    "cooldown_recovery": "We'll start over. Be brief."
+  }
+}

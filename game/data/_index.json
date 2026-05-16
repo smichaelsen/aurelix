@@ -1,0 +1,381 @@
+{
+  "counts": {
+    "topics": 20,
+    "facts": 18,
+    "npcs": 7,
+    "briefings": 27,
+    "options": 6
+  },
+  "topics_file": "topics.json",
+  "facts_file": "facts.json",
+  "npcs": [
+    {
+      "id": "drust_bandit",
+      "file": "npc/drust_bandit.json"
+    },
+    {
+      "id": "edda_priest",
+      "file": "npc/edda_priest.json"
+    },
+    {
+      "id": "halden_reeve",
+      "file": "npc/halden_reeve.json"
+    },
+    {
+      "id": "kael_self",
+      "file": "npc/kael_self.json"
+    },
+    {
+      "id": "mara_blacksmith",
+      "file": "npc/mara_blacksmith.json"
+    },
+    {
+      "id": "orren_drunk",
+      "file": "npc/orren_drunk.json"
+    },
+    {
+      "id": "toma_child",
+      "file": "npc/toma_child.json"
+    }
+  ],
+  "briefings": [
+    {
+      "id": "bandits_defeated",
+      "tier": "rumor",
+      "type": "event",
+      "file": "briefings/events/bandits_defeated.rumor.json",
+      "topic_tags": [
+        "bandits",
+        "forest",
+        "gossip"
+      ]
+    },
+    {
+      "id": "bandits_defeated",
+      "tier": "witness",
+      "type": "event",
+      "file": "briefings/events/bandits_defeated.witness.json",
+      "topic_tags": [
+        "bandits",
+        "forest",
+        "gold_eyed_one"
+      ]
+    },
+    {
+      "id": "iskar_rescued",
+      "tier": "witness",
+      "type": "event",
+      "file": "briefings/events/iskar_rescued.witness.json",
+      "topic_tags": [
+        "the_drake",
+        "bandits",
+        "gold_eyed_one"
+      ]
+    },
+    {
+      "id": "kael_has_drake",
+      "tier": "rumor",
+      "type": "event",
+      "file": "briefings/events/kael_has_drake.rumor.json",
+      "topic_tags": [
+        "the_drake",
+        "gossip"
+      ]
+    },
+    {
+      "id": "kael_has_drake",
+      "tier": "witness",
+      "type": "event",
+      "file": "briefings/events/kael_has_drake.witness.json",
+      "topic_tags": [
+        "the_drake",
+        "the_dragon",
+        "gossip"
+      ]
+    },
+    {
+      "id": "tower_smoke",
+      "tier": "rumor",
+      "type": "event",
+      "file": "briefings/events/tower_smoke.rumor.json",
+      "topic_tags": [
+        "the_tower",
+        "gossip"
+      ]
+    },
+    {
+      "id": "tower_smoke",
+      "tier": "witness",
+      "type": "event",
+      "file": "briefings/events/tower_smoke.witness.json",
+      "topic_tags": [
+        "the_tower",
+        "the_dragon",
+        "gossip"
+      ]
+    },
+    {
+      "id": "vegetable_theft",
+      "tier": "rumor",
+      "type": "event",
+      "file": "briefings/events/vegetable_theft.rumor.json",
+      "topic_tags": [
+        "jorin_theft",
+        "gossip"
+      ]
+    },
+    {
+      "id": "vegetable_theft",
+      "tier": "witness",
+      "type": "event",
+      "file": "briefings/events/vegetable_theft.witness.json",
+      "topic_tags": [
+        "jorin_theft",
+        "bandits",
+        "gossip"
+      ]
+    },
+    {
+      "id": "gold_eyed_one",
+      "tier": "rumor",
+      "type": "faction",
+      "file": "briefings/factions/gold_eyed_one.json",
+      "topic_tags": [
+        "gold_eyed_one"
+      ]
+    },
+    {
+      "id": "bandit_note",
+      "tier": "full",
+      "type": "item",
+      "file": "briefings/items/bandit_note.json",
+      "topic_tags": [
+        "gold_eyed_one",
+        "bandits"
+      ]
+    },
+    {
+      "id": "bone_tag",
+      "tier": "full",
+      "type": "item",
+      "file": "briefings/items/bone_tag.json",
+      "topic_tags": [
+        "the_drake"
+      ]
+    },
+    {
+      "id": "small_charm",
+      "tier": "full",
+      "type": "item",
+      "file": "briefings/items/small_charm.json",
+      "topic_tags": [
+        "religion"
+      ]
+    },
+    {
+      "id": "strange_coin",
+      "tier": "full",
+      "type": "item",
+      "file": "briefings/items/strange_coin.json",
+      "topic_tags": [
+        "gold_eyed_one",
+        "trade"
+      ]
+    },
+    {
+      "id": "bandit_camp",
+      "tier": "full",
+      "type": "location",
+      "file": "briefings/locations/bandit_camp.json",
+      "topic_tags": [
+        "bandits",
+        "forest",
+        "gold_eyed_one"
+      ]
+    },
+    {
+      "id": "forest_edge",
+      "tier": "full",
+      "type": "location",
+      "file": "briefings/locations/forest_edge.json",
+      "topic_tags": [
+        "forest",
+        "the_tower",
+        "bandits",
+        "the_dragon"
+      ]
+    },
+    {
+      "id": "marlow_hollow",
+      "tier": "full",
+      "type": "location",
+      "file": "briefings/locations/marlow_hollow.json",
+      "topic_tags": [
+        "the_kingdom",
+        "small_talk",
+        "gossip",
+        "personal_history"
+      ]
+    },
+    {
+      "id": "old_tower",
+      "tier": "full",
+      "type": "location",
+      "file": "briefings/locations/old_tower.json",
+      "topic_tags": [
+        "the_tower",
+        "the_dragon",
+        "forest",
+        "gossip"
+      ]
+    },
+    {
+      "id": "drust_bandit",
+      "tier": "full",
+      "type": "person",
+      "file": "briefings/people/drust_bandit.json",
+      "topic_tags": [
+        "bandits",
+        "gold_eyed_one"
+      ]
+    },
+    {
+      "id": "edda_priest",
+      "tier": "full",
+      "type": "person",
+      "file": "briefings/people/edda_priest.json",
+      "topic_tags": [
+        "religion",
+        "personal_history",
+        "gossip"
+      ]
+    },
+    {
+      "id": "halden_reeve",
+      "tier": "full",
+      "type": "person",
+      "file": "briefings/people/halden_reeve.json",
+      "topic_tags": [
+        "the_reeve",
+        "the_kingdom",
+        "quest_status",
+        "personal_history"
+      ]
+    },
+    {
+      "id": "iskar_drake",
+      "tier": "full",
+      "type": "person",
+      "file": "briefings/people/iskar_drake.json",
+      "topic_tags": [
+        "the_drake",
+        "the_dragon"
+      ]
+    },
+    {
+      "id": "kael_self",
+      "tier": "full",
+      "type": "person",
+      "file": "briefings/people/kael_self.json",
+      "topic_tags": [
+        "personal_history",
+        "the_kingdom"
+      ]
+    },
+    {
+      "id": "mara_blacksmith",
+      "tier": "full",
+      "type": "person",
+      "file": "briefings/people/mara_blacksmith.json",
+      "topic_tags": [
+        "trade",
+        "personal_history",
+        "gossip"
+      ]
+    },
+    {
+      "id": "orren_drunk",
+      "tier": "full",
+      "type": "person",
+      "file": "briefings/people/orren_drunk.json",
+      "topic_tags": [
+        "personal_history",
+        "gossip",
+        "the_tower"
+      ]
+    },
+    {
+      "id": "toma_child",
+      "tier": "full",
+      "type": "person",
+      "file": "briefings/people/toma_child.json",
+      "topic_tags": [
+        "personal_history",
+        "gossip"
+      ]
+    },
+    {
+      "id": "kingdom_overview",
+      "tier": "full",
+      "type": "world",
+      "file": "briefings/world/kingdom_overview.json",
+      "topic_tags": [
+        "the_kingdom",
+        "gossip",
+        "personal_history"
+      ]
+    }
+  ],
+  "options": [
+    {
+      "npc_id": "edda_priest",
+      "file": "options/edda_priest.json"
+    },
+    {
+      "npc_id": "halden_reeve",
+      "file": "options/halden_reeve.json"
+    },
+    {
+      "npc_id": "kael_self",
+      "file": "options/kael_self.json"
+    },
+    {
+      "npc_id": "mara_blacksmith",
+      "file": "options/mara_blacksmith.json"
+    },
+    {
+      "npc_id": "orren_drunk",
+      "file": "options/orren_drunk.json"
+    },
+    {
+      "npc_id": "toma_child",
+      "file": "options/toma_child.json"
+    }
+  ],
+  "fallback": [
+    {
+      "npc_id": "_archetype",
+      "file": "fallback_lines/_archetype.json"
+    },
+    {
+      "npc_id": "edda_priest",
+      "file": "fallback_lines/edda_priest.json"
+    },
+    {
+      "npc_id": "halden_reeve",
+      "file": "fallback_lines/halden_reeve.json"
+    },
+    {
+      "npc_id": "mara_blacksmith",
+      "file": "fallback_lines/mara_blacksmith.json"
+    },
+    {
+      "npc_id": "orren_drunk",
+      "file": "fallback_lines/orren_drunk.json"
+    },
+    {
+      "npc_id": "toma_child",
+      "file": "fallback_lines/toma_child.json"
+    }
+  ]
+}

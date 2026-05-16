@@ -1,0 +1,20 @@
+{
+  "id": "bandits_defeated",
+  "tier": "witness",
+  "type": "event",
+  "title": "The bandit camp on the forest path is cleared",
+  "topic_tags": [
+    "bandits",
+    "forest",
+    "gold_eyed_one"
+  ],
+  "facts_unlocked_on_reveal": [
+    "bandit_camp_cleared",
+    "drust_dead"
+  ],
+  "witnesses": [
+    "kael"
+  ],
+  "contradicts": [],
+  "body": "The camp set up between the two leaning pines and the fall of stones\nhas been cleared. Three of its men are dead by the fire. Drust, who\nran it, is dead at the threshold of his tent with a notched-guard\nsword still in his hand. The cage near the fire is open. The cooking\npot is overturned. The forest path is open again to anyone who knows\nwhere it leads.\n\nA small folded note was on Drust's person. It mentioned the gold-eyed\none. A small foreign coin was in his belt-purse."
+}

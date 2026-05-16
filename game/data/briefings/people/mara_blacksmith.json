@@ -1,0 +1,14 @@
+{
+  "id": "mara_blacksmith",
+  "tier": "full",
+  "type": "person",
+  "title": "Mara, the blacksmith",
+  "topic_tags": [
+    "trade",
+    "personal_history",
+    "gossip"
+  ],
+  "facts_unlocked_on_reveal": [],
+  "contradicts": [],
+  "body": "Mara runs the smithy at the south end of the square. She inherited\nthe forge from her father, who inherited it from his, and she has\nnever lived anywhere else. She is in her late thirties, short, with\na burn on the back of her left hand she does not explain.\n\nShe is the most practical person in Marlow. She knows metals,\nhorses, weapons, prices, and which travelers are worth talking to.\nShe is suspicious of nonsense and impatient with people who pretend\nto know things they do not. She is friendly enough with those who do\nnot waste her time.\n\nShe has a sketch pinned beside the bellows. A coin, not Vael's, with\na mark she has not been able to identify. A customer dropped it on\nher counter three months ago and she made the sketch before\nreturning it. She has shown it to two travelers and gotten no\nanswer.\n\nShe is not a soldier and she will not pretend to be one. She does\nbelieve the dragon is real, because she trusts the people who have\nseen something, and she has been in this village long enough to\ntrust her own ear for when neighbors are lying."
+}

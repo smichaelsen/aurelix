@@ -1,0 +1,48 @@
+id: halden_reeve
+display_name: Reeve Halden
+archetype: guard_authority
+location: reeve_house_interior
+
+persona:
+  age: 54
+  background: village reeve, second-term, second wife
+  traits: [stolid, weary, dutiful, slow_to_warm]
+  goals: [keep the village calm, get an answer from Ostgate, close the bounty]
+  fears: [the silence from the Crown, more disappearances, his own helplessness]
+
+capabilities:
+  literacy: functional
+  numeracy: tax_roll_level
+  abstract_reasoning: low
+  local_knowledge: high
+  reliability: medium
+  helpfulness: medium
+  truthfulness: terse_but_honest
+
+speech:
+  style: short sentences, official register, no flourish
+  vocabulary: village-functional
+  failure_style: refers question elsewhere or shuts it down
+  max_response_length: short
+
+dialogue_mode: templated     # Reeve handles quest-critical authored lines
+
+dossier:
+  universal:
+    - { id: kingdom_overview, tier: full }
+    - { id: marlow_hollow,    tier: full }
+  people:
+    - { id: mara_blacksmith,  tier: full }
+    - { id: orren_drunk,      tier: full }
+    - { id: edda_priest,      tier: full }
+    - { id: toma_child,       tier: full }
+  events:
+    - { id: tower_smoke,       tier: rumor }
+    - { id: vegetable_theft,   tier: rumor }
+
+memory_defaults:
+  relationship_to_player: 0
+  stress: 0
+  patience: 12
+  flags: {}
+  player_tags: []

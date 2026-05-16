@@ -1,0 +1,15 @@
+{
+  "lines": {
+    "_default": "I dunno. Want to see a frog?",
+    "greeting": "Are you a knight? You don't look like one.",
+    "the_tower": "Mama says don't go up there. So I don't.",
+    "the_dragon": "Is it really up there? Wow.",
+    "the_drake": "Can I pet him? Please. Please.",
+    "gold_eyed_one": "Sounds spooky. I don't know.",
+    "formal_math": "That's too many numbers. My stick is better. It goes thwack.",
+    "press_too_far": "I'm telling my mother!",
+    "item_offered": "For me? Cool!",
+    "anger_out": "I'm telling my mother!",
+    "cooldown_recovery": "Okay. Don't shout this time."
+  }
+}

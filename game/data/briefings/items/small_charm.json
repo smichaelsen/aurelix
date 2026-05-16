@@ -1,0 +1,14 @@
+{
+  "id": "small_charm",
+  "tier": "full",
+  "type": "item",
+  "title": "A small chapel charm",
+  "topic_tags": [
+    "religion"
+  ],
+  "facts_unlocked_on_reveal": [
+    "small_charm_found"
+  ],
+  "contradicts": [],
+  "body": "A small charm of bone and waxed cord, the bone shaped to a long oval\nand marked with a single sigil of the Order. It is the kind a priest\ngives a young person before a journey, or keeps beside a prayer cushion\nfor the next person who will need one.\n\nIt was tucked into the seam of the prayer cushion at the front of the\nchapel, where a careful kneel would find it and an inattentive one\nwould not. Sister Edda does not appear to be looking for it.\n\nWorn close, the charm steadies the wearer's step. Those who carry one\nmove a little faster on roads they are afraid of."
+}

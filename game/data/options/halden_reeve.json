@@ -1,0 +1,44 @@
+{
+  "options": {
+    "not_started": [
+      {
+        "label": "I'll find your dragon.",
+        "topic_id": "quest_status",
+        "action": "accept_quest"
+      },
+      {
+        "label": "Tell me more.",
+        "topic_id": "quest_status",
+        "action": "tell_more"
+      },
+      {
+        "label": "Not interested.",
+        "topic_id": "__close"
+      }
+    ],
+    "active": [
+      {
+        "label": "Still looking.",
+        "topic_id": "__close"
+      },
+      {
+        "label": "Anything new on your end?",
+        "topic_id": "quest_status",
+        "action": "tell_more"
+      }
+    ],
+    "complete": [
+      {
+        "label": "Farewell.",
+        "topic_id": "__close"
+      }
+    ]
+  },
+  "templated_lines": {
+    "not_started_brief": "Stranger. The notice on the board is mine. A dragon was sighted near\nthe old tower. I want proof of where it was seen. Coin and bread for\nwhoever brings it.\n",
+    "not_started_more": "Talk to Orren the drunk if you can stand him. He sleeps near the tavern.\nMara at the smithy heard something from a traveler. The chapel may know\nmore, but Sister Edda has been quiet.\n",
+    "active_progress": "Have you found anything?\n",
+    "active_more": "Three sources have spoken so far. The tower has not been quiet.\n",
+    "complete_turn_in": "Proof. Good. Here is your coin and bread.\n"
+  }
+}

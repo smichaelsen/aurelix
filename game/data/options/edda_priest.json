@@ -1,0 +1,72 @@
+{
+  "options": {
+    "default": [
+      {
+        "label": "Sister Edda.",
+        "topic_id": "greeting"
+      },
+      {
+        "label": "What do you make of the tower?",
+        "topic_id": "the_tower"
+      },
+      {
+        "label": "Tell me about the Order.",
+        "topic_id": "religion"
+      },
+      {
+        "label": "Goodbye.",
+        "topic_id": "__close"
+      }
+    ],
+    "the_tower": [
+      {
+        "label": "Why warn me?",
+        "topic_id": "the_tower"
+      },
+      {
+        "label": "What do you suspect?",
+        "topic_id": "the_tower"
+      },
+      {
+        "label": "Forget I asked.",
+        "topic_id": "greeting"
+      },
+      {
+        "label": "Goodbye.",
+        "topic_id": "__close"
+      }
+    ],
+    "religion": [
+      {
+        "label": "Tell me about the Light.",
+        "topic_id": "religion"
+      },
+      {
+        "label": "Has the Light answered?",
+        "topic_id": "religion"
+      },
+      {
+        "label": "Forget I asked.",
+        "topic_id": "greeting"
+      },
+      {
+        "label": "Goodbye.",
+        "topic_id": "__close"
+      }
+    ],
+    "greeting": [
+      {
+        "label": "What do you make of the tower?",
+        "topic_id": "the_tower"
+      },
+      {
+        "label": "Tell me about the Order.",
+        "topic_id": "religion"
+      },
+      {
+        "label": "Goodbye.",
+        "topic_id": "__close"
+      }
+    ]
+  }
+}

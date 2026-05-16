@@ -1,0 +1,27 @@
+## Authored journal queries. Player can pick one or type free text.
+
+options:
+  default:
+    - { label: "What do I know about the old tower?", topic_id: the_tower }
+    - { label: "Who is 'the gold-eyed one'?",          topic_id: gold_eyed_one }
+    - { label: "What about Iskar?",                     topic_id: the_drake }
+    - { label: "Tell me about the kingdom.",            topic_id: the_kingdom }
+    - { label: "Close the journal.",                    topic_id: __close }
+
+  the_tower:
+    - { label: "Who told me this?",                     topic_id: the_tower }
+    - { label: "Anything else about the tower?",        topic_id: the_tower }
+    - { label: "Back.",                                 topic_id: default }
+    - { label: "Close.",                                topic_id: __close }
+
+  gold_eyed_one:
+    - { label: "Where did I hear that name?",           topic_id: gold_eyed_one }
+    - { label: "What might it have to do with the tower?", topic_id: the_tower }
+    - { label: "Back.",                                 topic_id: default }
+    - { label: "Close.",                                topic_id: __close }
+
+  the_drake:
+    - { label: "What is he?",                           topic_id: the_drake }
+    - { label: "Where did he come from?",               topic_id: the_drake }
+    - { label: "Back.",                                 topic_id: default }
+    - { label: "Close.",                                topic_id: __close }

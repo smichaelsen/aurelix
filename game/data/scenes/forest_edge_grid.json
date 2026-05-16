@@ -1,0 +1,786 @@
+{
+  "size": {
+    "cols": 15,
+    "rows": 9
+  },
+  "tile_size": 32,
+  "player_start": {
+    "col": 6,
+    "row": 8
+  },
+  "entry_points": {
+    "default": {
+      "col": 6,
+      "row": 8
+    },
+    "from_village": {
+      "col": 6,
+      "row": 8
+    }
+  },
+  "tiles": [
+    {
+      "col": 0,
+      "row": 0,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 1,
+      "row": 0,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 2,
+      "row": 0,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 3,
+      "row": 0,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 4,
+      "row": 0,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 5,
+      "row": 0,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 6,
+      "row": 0,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 7,
+      "row": 0,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 8,
+      "row": 0,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 9,
+      "row": 0,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 10,
+      "row": 0,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 11,
+      "row": 0,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 12,
+      "row": 0,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 13,
+      "row": 0,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 14,
+      "row": 0,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 0,
+      "row": 1,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 1,
+      "row": 1,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 2,
+      "row": 1,
+      "tile": "camp_dirt"
+    },
+    {
+      "col": 3,
+      "row": 1,
+      "tile": "camp_dirt"
+    },
+    {
+      "col": 4,
+      "row": 1,
+      "tile": "camp_dirt"
+    },
+    {
+      "col": 5,
+      "row": 1,
+      "tile": "camp_dirt"
+    },
+    {
+      "col": 6,
+      "row": 1,
+      "tile": "camp_dirt"
+    },
+    {
+      "col": 7,
+      "row": 1,
+      "tile": "camp_dirt"
+    },
+    {
+      "col": 8,
+      "row": 1,
+      "tile": "camp_dirt"
+    },
+    {
+      "col": 9,
+      "row": 1,
+      "tile": "camp_dirt"
+    },
+    {
+      "col": 10,
+      "row": 1,
+      "tile": "camp_dirt"
+    },
+    {
+      "col": 11,
+      "row": 1,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 12,
+      "row": 1,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 13,
+      "row": 1,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 14,
+      "row": 1,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 0,
+      "row": 2,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 1,
+      "row": 2,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 2,
+      "row": 2,
+      "tile": "camp_dirt"
+    },
+    {
+      "col": 3,
+      "row": 2,
+      "tile": "camp_dirt"
+    },
+    {
+      "col": 4,
+      "row": 2,
+      "tile": "camp_dirt"
+    },
+    {
+      "col": 5,
+      "row": 2,
+      "tile": "camp_dirt"
+    },
+    {
+      "col": 6,
+      "row": 2,
+      "tile": "camp_dirt"
+    },
+    {
+      "col": 7,
+      "row": 2,
+      "tile": "camp_dirt"
+    },
+    {
+      "col": 8,
+      "row": 2,
+      "tile": "camp_dirt"
+    },
+    {
+      "col": 9,
+      "row": 2,
+      "tile": "camp_dirt"
+    },
+    {
+      "col": 10,
+      "row": 2,
+      "tile": "camp_dirt"
+    },
+    {
+      "col": 11,
+      "row": 2,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 12,
+      "row": 2,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 13,
+      "row": 2,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 14,
+      "row": 2,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 0,
+      "row": 3,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 1,
+      "row": 3,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 2,
+      "row": 3,
+      "tile": "camp_dirt"
+    },
+    {
+      "col": 3,
+      "row": 3,
+      "tile": "camp_dirt"
+    },
+    {
+      "col": 4,
+      "row": 3,
+      "tile": "camp_dirt"
+    },
+    {
+      "col": 5,
+      "row": 3,
+      "tile": "camp_dirt"
+    },
+    {
+      "col": 6,
+      "row": 3,
+      "tile": "camp_dirt"
+    },
+    {
+      "col": 7,
+      "row": 3,
+      "tile": "camp_dirt"
+    },
+    {
+      "col": 8,
+      "row": 3,
+      "tile": "camp_dirt"
+    },
+    {
+      "col": 9,
+      "row": 3,
+      "tile": "camp_dirt"
+    },
+    {
+      "col": 10,
+      "row": 3,
+      "tile": "camp_dirt"
+    },
+    {
+      "col": 11,
+      "row": 3,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 12,
+      "row": 3,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 13,
+      "row": 3,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 14,
+      "row": 3,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 0,
+      "row": 4,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 1,
+      "row": 4,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 2,
+      "row": 4,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 3,
+      "row": 4,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 4,
+      "row": 4,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 5,
+      "row": 4,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 6,
+      "row": 4,
+      "tile": "forest_path"
+    },
+    {
+      "col": 7,
+      "row": 4,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 8,
+      "row": 4,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 9,
+      "row": 4,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 10,
+      "row": 4,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 11,
+      "row": 4,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 12,
+      "row": 4,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 13,
+      "row": 4,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 14,
+      "row": 4,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 0,
+      "row": 5,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 1,
+      "row": 5,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 2,
+      "row": 5,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 3,
+      "row": 5,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 4,
+      "row": 5,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 5,
+      "row": 5,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 6,
+      "row": 5,
+      "tile": "forest_path"
+    },
+    {
+      "col": 7,
+      "row": 5,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 8,
+      "row": 5,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 9,
+      "row": 5,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 10,
+      "row": 5,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 11,
+      "row": 5,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 12,
+      "row": 5,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 13,
+      "row": 5,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 14,
+      "row": 5,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 0,
+      "row": 6,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 1,
+      "row": 6,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 2,
+      "row": 6,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 3,
+      "row": 6,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 4,
+      "row": 6,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 5,
+      "row": 6,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 6,
+      "row": 6,
+      "tile": "forest_path"
+    },
+    {
+      "col": 7,
+      "row": 6,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 8,
+      "row": 6,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 9,
+      "row": 6,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 10,
+      "row": 6,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 11,
+      "row": 6,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 12,
+      "row": 6,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 13,
+      "row": 6,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 14,
+      "row": 6,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 0,
+      "row": 7,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 1,
+      "row": 7,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 2,
+      "row": 7,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 3,
+      "row": 7,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 4,
+      "row": 7,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 5,
+      "row": 7,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 6,
+      "row": 7,
+      "tile": "forest_path"
+    },
+    {
+      "col": 7,
+      "row": 7,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 8,
+      "row": 7,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 9,
+      "row": 7,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 10,
+      "row": 7,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 11,
+      "row": 7,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 12,
+      "row": 7,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 13,
+      "row": 7,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 14,
+      "row": 7,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 0,
+      "row": 8,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 1,
+      "row": 8,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 2,
+      "row": 8,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 3,
+      "row": 8,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 4,
+      "row": 8,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 5,
+      "row": 8,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 6,
+      "row": 8,
+      "tile": "forest_path"
+    },
+    {
+      "col": 7,
+      "row": 8,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 8,
+      "row": 8,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 9,
+      "row": 8,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 10,
+      "row": 8,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 11,
+      "row": 8,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 12,
+      "row": 8,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 13,
+      "row": 8,
+      "tile": "forest_floor"
+    },
+    {
+      "col": 14,
+      "row": 8,
+      "tile": "forest_floor"
+    }
+  ],
+  "props": [
+    {
+      "col": 0,
+      "row": 4,
+      "prop": "tree"
+    },
+    {
+      "col": 14,
+      "row": 4,
+      "prop": "tree"
+    },
+    {
+      "col": 0,
+      "row": 6,
+      "prop": "tree"
+    },
+    {
+      "col": 14,
+      "row": 6,
+      "prop": "tree"
+    },
+    {
+      "col": 3,
+      "row": 4,
+      "prop": "tree"
+    },
+    {
+      "col": 11,
+      "row": 4,
+      "prop": "tree"
+    },
+    {
+      "col": 4,
+      "row": 2,
+      "prop": "fire_pit"
+    },
+    {
+      "col": 8,
+      "row": 2,
+      "prop": "cage_iskar"
+    },
+    {
+      "col": 3,
+      "row": 3,
+      "prop": "barrel"
+    }
+  ],
+  "encounters": [
+    {
+      "id": "bandit_path_b",
+      "sprite": "bandit",
+      "combatant": "bandit",
+      "col": 6,
+      "row": 7
+    },
+    {
+      "id": "wolf_path_a",
+      "sprite": "wolf",
+      "combatant": "wolf",
+      "col": 6,
+      "row": 5
+    },
+    {
+      "id": "drust_camp",
+      "sprite": "bandit",
+      "combatant": "bandit",
+      "col": 6,
+      "row": 2
+    }
+  ],
+  "objects": [
+    {
+      "id": "iskar_cage",
+      "type": "cage",
+      "col": 8,
+      "row": 2,
+      "label": "Iskar's cage"
+    }
+  ],
+  "exits": [
+    {
+      "col": 6,
+      "row": 8,
+      "direction": "south",
+      "target": "village_square"
+    }
+  ],
+  "npcs": []
+}

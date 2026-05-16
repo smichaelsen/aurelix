@@ -1,0 +1,31 @@
+{
+  "solid_tiles": [
+    "thatched_roof",
+    "wood_wall",
+    "window",
+    "door",
+    "well_stone",
+    "well_water",
+    "notice_board",
+    "chapel_stone"
+  ],
+  "solid_props": [
+    "tree",
+    "lantern",
+    "anvil",
+    "barrel",
+    "tavern_sign",
+    "chimney",
+    "cage_iskar",
+    "cage_empty",
+    "fire_pit"
+  ],
+  "passable_tiles": [
+    "grass",
+    "cobble",
+    "path",
+    "forest_floor",
+    "forest_path",
+    "camp_dirt"
+  ]
+}

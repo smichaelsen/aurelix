@@ -1,0 +1,20 @@
+options:
+  default:
+    - { label: "Hello, friend.",                       topic_id: greeting }
+    - { label: "What did you see at the tower?",       topic_id: the_tower }
+    - { label: "How are you, Orren?",                  topic_id: personal_history }
+    - { label: "Goodbye.",                             topic_id: __close }
+  the_tower:
+    - { label: "You saw something, didn't you?",       topic_id: the_tower, verb: press, press_angle: angle_saw_something }
+    - { label: "You're afraid of the wings.",          topic_id: the_tower, verb: press, press_angle: angle_wings }
+    - { label: "I won't tell the reeve.",              topic_id: the_tower, verb: press, press_angle: angle_safe_to_share }
+    - { label: "Forget I asked.",                      topic_id: greeting }
+  personal_history:
+    - { label: "Where did you come from?",             topic_id: personal_history }
+    - { label: "What did you used to do?",             topic_id: personal_history }
+    - { label: "Forget I asked.",                      topic_id: greeting }
+    - { label: "Goodbye.",                             topic_id: __close }
+  greeting:
+    - { label: "What did you see at the tower?",       topic_id: the_tower }
+    - { label: "How are you, Orren?",                  topic_id: personal_history }
+    - { label: "Goodbye.",                             topic_id: __close }

@@ -1,0 +1,14 @@
+{
+  "id": "bone_tag",
+  "tier": "full",
+  "type": "item",
+  "title": "A bone tag carved with a name",
+  "topic_tags": [
+    "the_drake"
+  ],
+  "facts_unlocked_on_reveal": [
+    "iskar_named"
+  ],
+  "contradicts": [],
+  "body": "A small flat piece of bone, smoothed and pierced and tied with cord\nto the cage that held the hatchling. The name carved on it, in old\nhand, is one word:\n\n  Iskar.\n\nThe carving is careful. The strokes are not the work of a bandit\nkilling time at a fire. Whoever made this tag named the creature\ndeliberately, and did so before the cage came into the bandits'\nhands."
+}

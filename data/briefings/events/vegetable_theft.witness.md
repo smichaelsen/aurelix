@@ -1,0 +1,26 @@
+---
+id: vegetable_theft
+tier: witness
+type: event
+title: The theft of Jorin's vegetables and coin box
+topic_tags: [jorin_theft, bandits, gossip]
+facts_unlocked_on_reveal:
+  - jorin_lost_coin_box
+  - bandits_present_in_marlow_region
+witnesses:
+  - jorin     # not modeled as an NPC in the demo; named for continuity
+  - pell      # not modeled; flavor for the notice board's lost-goat note
+contradicts: []
+---
+
+On a market morning, in the hour before the carts were fully
+unloaded, three men came through the square wearing travelling
+cloaks too heavy for the weather. They knocked over Jorin's onion
+crates, and one of them took his coin box from under the bench while
+Mara was inside her smithy and could not see. The taller one had a
+sword with a notched guard. They went north out of the square at
+a walk, not a run, and were gone before anyone called for the reeve.
+
+Jorin lost most of a week's coin and was not gentle with his account
+of it. Pell, who keeps lost-goat notices on the board, saw the
+direction they went.

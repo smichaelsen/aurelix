@@ -1,0 +1,9 @@
+## Archetype-keyed last-resort fallbacks. Used when no per-NPC bank has a
+## matching key.
+lines:
+  drunk:           "Mm. What was that."
+  village_child:   "I dunno. Want to see something cool?"
+  blacksmith:      "Not my trade. Ask elsewhere."
+  priest:          "I have nothing to add to that. Be well."
+  guard_authority: "Speak plainly, stranger."
+  _default:        "..."

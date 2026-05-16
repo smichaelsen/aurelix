@@ -1,0 +1,27 @@
+# Godot
+.godot/
+*.translation
+export.cfg
+export_presets.cfg
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+
+# IDE
+.idea/
+.vscode/
+
+# OS
+.DS_Store
+
+# Local config / secrets
+.env
+.env.local
+*.key
+
+# Saves (local runtime data)
+user://

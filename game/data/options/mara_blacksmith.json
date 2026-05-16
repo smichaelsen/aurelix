@@ -1,0 +1,80 @@
+{
+  "options": {
+    "default": [
+      {
+        "label": "Show me your wares.",
+        "topic_id": "trade",
+        "action": "open_shop"
+      },
+      {
+        "label": "Heard anything about the tower?",
+        "topic_id": "the_tower"
+      },
+      {
+        "label": "Who is the reeve?",
+        "topic_id": "the_reeve"
+      },
+      {
+        "label": "Goodbye.",
+        "topic_id": "__close"
+      }
+    ],
+    "the_tower": [
+      {
+        "label": "Who saw the smoke?",
+        "topic_id": "the_tower"
+      },
+      {
+        "label": "Tell me more.",
+        "topic_id": "the_tower"
+      },
+      {
+        "label": "Forget the tower.",
+        "topic_id": "greeting"
+      },
+      {
+        "label": "Goodbye.",
+        "topic_id": "__close"
+      }
+    ],
+    "the_reeve": [
+      {
+        "label": "Why does he need help?",
+        "topic_id": "the_reeve"
+      },
+      {
+        "label": "Forget the reeve.",
+        "topic_id": "greeting"
+      },
+      {
+        "label": "Goodbye.",
+        "topic_id": "__close"
+      }
+    ],
+    "trade": [
+      {
+        "label": "I'll come back later.",
+        "topic_id": "greeting"
+      },
+      {
+        "label": "Goodbye.",
+        "topic_id": "__close"
+      }
+    ],
+    "greeting": [
+      {
+        "label": "Show me your wares.",
+        "topic_id": "trade",
+        "action": "open_shop"
+      },
+      {
+        "label": "Heard anything about the tower?",
+        "topic_id": "the_tower"
+      },
+      {
+        "label": "Goodbye.",
+        "topic_id": "__close"
+      }
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "id": "tower_smoke",
+  "tier": "witness",
+  "type": "event",
+  "title": "Smoke and wings near the old tower",
+  "topic_tags": [
+    "the_tower",
+    "the_dragon",
+    "gossip"
+  ],
+  "facts_unlocked_on_reveal": [
+    "dragon_seen_near_old_tower"
+  ],
+  "witnesses": [
+    "orren_drunk"
+  ],
+  "contradicts": [],
+  "body": "On the night of the new moon, between the last cart bell and the hour\nthe chapel candles go cold, smoke rose from the old tower into a sky\nthat should have been clear. Wings, heavier than any owl's, passed\nover the forest path at low height. The smoke smelled of old burn.\nWhatever flew did not call.\n\nOrren saw the smoke from the road outside the tavern. He saw the wings\ncross the moon. He has not slept right since. He has told no one,\nsober or otherwise, what he saw plainly."
+}

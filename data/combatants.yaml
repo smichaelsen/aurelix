@@ -1,0 +1,64 @@
+# Demo combatant stat blocks.
+#
+# Each entry:
+#   name          display name
+#   hp            starting and max hp
+#   atk           base attack
+#   def           base defense
+#   spd           initiative; higher = goes first
+#   attack_name   short verb shown in narration ("swings", "bites")
+#   is_boss       optional, true for named mini-bosses
+#   pre_fight_line optional, played before combat begins
+#
+# Kael's atk/def are base values; the Inventory adds equipment bonuses
+# at runtime. Enemies are raw stat blocks.
+
+combatants:
+
+  kael:
+    name: Kael
+    hp: 24
+    atk: 2
+    def: 0
+    spd: 8
+    attack_name: swings
+
+  wolf:
+    name: Wolf
+    hp: 10
+    atk: 4
+    def: 1
+    spd: 7
+    attack_name: bites
+
+  bandit:
+    name: Bandit
+    hp: 14
+    atk: 5
+    def: 2
+    spd: 6
+    attack_name: stabs
+
+  drust:
+    name: Drust
+    hp: 18
+    atk: 6
+    def: 2
+    spd: 7
+    attack_name: cuts
+    is_boss: true
+    pre_fight_line: "Drop the sword and walk away, marsh-rat. The cargo isn't yours."
+
+  iskar:
+    name: Iskar
+    hp: 14
+    atk: 3
+    def: 0
+    spd: 9
+    attack_name: bites
+    # Iskar's actions in combat are stance-driven; see IskarCompanion.gd.
+    ember_spark:
+      atk_bonus: 2
+      burn_turns: 3
+      burn_per_turn: 2
+      unlock_tier: 1

@@ -1,0 +1,803 @@
+[gd_scene load_steps=28 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/tiles/grass.png" id="1_grass"]
+[ext_resource type="Texture2D" path="res://assets/tiles/thatched_roof.png" id="2_thatched_roof"]
+[ext_resource type="Texture2D" path="res://assets/tiles/wood_wall.png" id="3_wood_wall"]
+[ext_resource type="Texture2D" path="res://assets/tiles/window.png" id="4_window"]
+[ext_resource type="Texture2D" path="res://assets/tiles/door.png" id="5_door"]
+[ext_resource type="Texture2D" path="res://assets/tiles/cobble.png" id="6_cobble"]
+[ext_resource type="Texture2D" path="res://assets/tiles/well_stone.png" id="7_well_stone"]
+[ext_resource type="Texture2D" path="res://assets/tiles/well_water.png" id="8_well_water"]
+[ext_resource type="Texture2D" path="res://assets/tiles/notice_board.png" id="9_notice_board"]
+[ext_resource type="Texture2D" path="res://assets/tiles/path.png" id="10_path"]
+[ext_resource type="Texture2D" path="res://assets/tiles/tree.png" id="11_tree"]
+[ext_resource type="Texture2D" path="res://assets/tiles/tavern_sign.png" id="12_tavern_sign"]
+[ext_resource type="Texture2D" path="res://assets/tiles/lantern.png" id="13_lantern"]
+[ext_resource type="Texture2D" path="res://assets/tiles/chimney.png" id="14_chimney"]
+[ext_resource type="Texture2D" path="res://assets/tiles/anvil.png" id="15_anvil"]
+[ext_resource type="Texture2D" path="res://assets/tiles/barrel.png" id="16_barrel"]
+[ext_resource type="Texture2D" path="res://assets/tiles/flower_patch.png" id="17_flower_patch"]
+[ext_resource type="Texture2D" path="res://assets/sprites/toma.png" id="18_toma"]
+[ext_resource type="Texture2D" path="res://assets/sprites/mara.png" id="19_mara"]
+[ext_resource type="Texture2D" path="res://assets/sprites/orren.png" id="20_orren"]
+[ext_resource type="Texture2D" path="res://assets/sprites/halden.png" id="21_halden"]
+[ext_resource type="Texture2D" path="res://assets/sprites/edda.png" id="22_edda"]
+[ext_resource type="PackedScene" path="res://scenes/world/PlayerCharacter.tscn" id="player_scene"]
+[ext_resource type="PackedScene" path="res://scenes/world/IskarFollower.tscn" id="iskar_follower"]
+[ext_resource type="PackedScene" path="res://scenes/ui/InteractionPrompt.tscn" id="interaction_prompt"]
+[ext_resource type="PackedScene" path="res://scenes/ui/NoticeBoardOverlay.tscn" id="notice_board_overlay"]
+[ext_resource type="PackedScene" path="res://scenes/ui/QuestToast.tscn" id="quest_toast"]
+
+[node name="VillageSquare" type="Node2D"]
+
+[node name="Tiles" type="Node2D" parent="."]
+
+[node name="T_00_00_grass" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_grass")
+centered = false
+position = Vector2(0, 0)
+
+[node name="T_01_00_thatched_roof" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("2_thatched_roof")
+centered = false
+position = Vector2(32, 0)
+
+[node name="T_02_00_thatched_roof" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("2_thatched_roof")
+centered = false
+position = Vector2(64, 0)
+
+[node name="T_03_00_thatched_roof" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("2_thatched_roof")
+centered = false
+position = Vector2(96, 0)
+
+[node name="T_04_00_thatched_roof" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("2_thatched_roof")
+centered = false
+position = Vector2(128, 0)
+
+[node name="T_05_00_thatched_roof" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("2_thatched_roof")
+centered = false
+position = Vector2(160, 0)
+
+[node name="T_06_00_grass" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_grass")
+centered = false
+position = Vector2(192, 0)
+
+[node name="T_07_00_thatched_roof" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("2_thatched_roof")
+centered = false
+position = Vector2(224, 0)
+
+[node name="T_08_00_thatched_roof" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("2_thatched_roof")
+centered = false
+position = Vector2(256, 0)
+
+[node name="T_09_00_thatched_roof" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("2_thatched_roof")
+centered = false
+position = Vector2(288, 0)
+
+[node name="T_10_00_thatched_roof" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("2_thatched_roof")
+centered = false
+position = Vector2(320, 0)
+
+[node name="T_11_00_thatched_roof" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("2_thatched_roof")
+centered = false
+position = Vector2(352, 0)
+
+[node name="T_12_00_grass" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_grass")
+centered = false
+position = Vector2(384, 0)
+
+[node name="T_13_00_grass" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_grass")
+centered = false
+position = Vector2(416, 0)
+
+[node name="T_14_00_grass" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_grass")
+centered = false
+position = Vector2(448, 0)
+
+[node name="T_00_01_grass" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_grass")
+centered = false
+position = Vector2(0, 32)
+
+[node name="T_01_01_wood_wall" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("3_wood_wall")
+centered = false
+position = Vector2(32, 32)
+
+[node name="T_02_01_window" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("4_window")
+centered = false
+position = Vector2(64, 32)
+
+[node name="T_03_01_wood_wall" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("3_wood_wall")
+centered = false
+position = Vector2(96, 32)
+
+[node name="T_04_01_window" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("4_window")
+centered = false
+position = Vector2(128, 32)
+
+[node name="T_05_01_wood_wall" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("3_wood_wall")
+centered = false
+position = Vector2(160, 32)
+
+[node name="T_06_01_grass" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_grass")
+centered = false
+position = Vector2(192, 32)
+
+[node name="T_07_01_wood_wall" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("3_wood_wall")
+centered = false
+position = Vector2(224, 32)
+
+[node name="T_08_01_window" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("4_window")
+centered = false
+position = Vector2(256, 32)
+
+[node name="T_09_01_wood_wall" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("3_wood_wall")
+centered = false
+position = Vector2(288, 32)
+
+[node name="T_10_01_window" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("4_window")
+centered = false
+position = Vector2(320, 32)
+
+[node name="T_11_01_wood_wall" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("3_wood_wall")
+centered = false
+position = Vector2(352, 32)
+
+[node name="T_12_01_grass" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_grass")
+centered = false
+position = Vector2(384, 32)
+
+[node name="T_13_01_grass" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_grass")
+centered = false
+position = Vector2(416, 32)
+
+[node name="T_14_01_grass" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_grass")
+centered = false
+position = Vector2(448, 32)
+
+[node name="T_00_02_grass" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_grass")
+centered = false
+position = Vector2(0, 64)
+
+[node name="T_01_02_wood_wall" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("3_wood_wall")
+centered = false
+position = Vector2(32, 64)
+
+[node name="T_02_02_wood_wall" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("3_wood_wall")
+centered = false
+position = Vector2(64, 64)
+
+[node name="T_03_02_door" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("5_door")
+centered = false
+position = Vector2(96, 64)
+
+[node name="T_04_02_wood_wall" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("3_wood_wall")
+centered = false
+position = Vector2(128, 64)
+
+[node name="T_05_02_wood_wall" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("3_wood_wall")
+centered = false
+position = Vector2(160, 64)
+
+[node name="T_06_02_grass" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_grass")
+centered = false
+position = Vector2(192, 64)
+
+[node name="T_07_02_wood_wall" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("3_wood_wall")
+centered = false
+position = Vector2(224, 64)
+
+[node name="T_08_02_wood_wall" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("3_wood_wall")
+centered = false
+position = Vector2(256, 64)
+
+[node name="T_09_02_door" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("5_door")
+centered = false
+position = Vector2(288, 64)
+
+[node name="T_10_02_wood_wall" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("3_wood_wall")
+centered = false
+position = Vector2(320, 64)
+
+[node name="T_11_02_wood_wall" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("3_wood_wall")
+centered = false
+position = Vector2(352, 64)
+
+[node name="T_12_02_grass" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_grass")
+centered = false
+position = Vector2(384, 64)
+
+[node name="T_13_02_grass" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_grass")
+centered = false
+position = Vector2(416, 64)
+
+[node name="T_14_02_grass" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_grass")
+centered = false
+position = Vector2(448, 64)
+
+[node name="T_00_03_grass" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_grass")
+centered = false
+position = Vector2(0, 96)
+
+[node name="T_01_03_cobble" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("6_cobble")
+centered = false
+position = Vector2(32, 96)
+
+[node name="T_02_03_cobble" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("6_cobble")
+centered = false
+position = Vector2(64, 96)
+
+[node name="T_03_03_cobble" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("6_cobble")
+centered = false
+position = Vector2(96, 96)
+
+[node name="T_04_03_cobble" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("6_cobble")
+centered = false
+position = Vector2(128, 96)
+
+[node name="T_05_03_cobble" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("6_cobble")
+centered = false
+position = Vector2(160, 96)
+
+[node name="T_06_03_cobble" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("6_cobble")
+centered = false
+position = Vector2(192, 96)
+
+[node name="T_07_03_cobble" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("6_cobble")
+centered = false
+position = Vector2(224, 96)
+
+[node name="T_08_03_cobble" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("6_cobble")
+centered = false
+position = Vector2(256, 96)
+
+[node name="T_09_03_cobble" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("6_cobble")
+centered = false
+position = Vector2(288, 96)
+
+[node name="T_10_03_cobble" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("6_cobble")
+centered = false
+position = Vector2(320, 96)
+
+[node name="T_11_03_cobble" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("6_cobble")
+centered = false
+position = Vector2(352, 96)
+
+[node name="T_12_03_cobble" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("6_cobble")
+centered = false
+position = Vector2(384, 96)
+
+[node name="T_13_03_cobble" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("6_cobble")
+centered = false
+position = Vector2(416, 96)
+
+[node name="T_14_03_grass" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_grass")
+centered = false
+position = Vector2(448, 96)
+
+[node name="T_00_04_grass" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_grass")
+centered = false
+position = Vector2(0, 128)
+
+[node name="T_01_04_cobble" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("6_cobble")
+centered = false
+position = Vector2(32, 128)
+
+[node name="T_02_04_cobble" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("6_cobble")
+centered = false
+position = Vector2(64, 128)
+
+[node name="T_03_04_cobble" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("6_cobble")
+centered = false
+position = Vector2(96, 128)
+
+[node name="T_04_04_cobble" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("6_cobble")
+centered = false
+position = Vector2(128, 128)
+
+[node name="T_05_04_cobble" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("6_cobble")
+centered = false
+position = Vector2(160, 128)
+
+[node name="T_06_04_cobble" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("6_cobble")
+centered = false
+position = Vector2(192, 128)
+
+[node name="T_07_04_well_stone" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("7_well_stone")
+centered = false
+position = Vector2(224, 128)
+
+[node name="T_08_04_cobble" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("6_cobble")
+centered = false
+position = Vector2(256, 128)
+
+[node name="T_09_04_cobble" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("6_cobble")
+centered = false
+position = Vector2(288, 128)
+
+[node name="T_10_04_cobble" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("6_cobble")
+centered = false
+position = Vector2(320, 128)
+
+[node name="T_11_04_cobble" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("6_cobble")
+centered = false
+position = Vector2(352, 128)
+
+[node name="T_12_04_cobble" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("6_cobble")
+centered = false
+position = Vector2(384, 128)
+
+[node name="T_13_04_cobble" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("6_cobble")
+centered = false
+position = Vector2(416, 128)
+
+[node name="T_14_04_grass" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_grass")
+centered = false
+position = Vector2(448, 128)
+
+[node name="T_00_05_grass" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_grass")
+centered = false
+position = Vector2(0, 160)
+
+[node name="T_01_05_cobble" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("6_cobble")
+centered = false
+position = Vector2(32, 160)
+
+[node name="T_02_05_cobble" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("6_cobble")
+centered = false
+position = Vector2(64, 160)
+
+[node name="T_03_05_cobble" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("6_cobble")
+centered = false
+position = Vector2(96, 160)
+
+[node name="T_04_05_cobble" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("6_cobble")
+centered = false
+position = Vector2(128, 160)
+
+[node name="T_05_05_cobble" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("6_cobble")
+centered = false
+position = Vector2(160, 160)
+
+[node name="T_06_05_cobble" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("6_cobble")
+centered = false
+position = Vector2(192, 160)
+
+[node name="T_07_05_well_water" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("8_well_water")
+centered = false
+position = Vector2(224, 160)
+
+[node name="T_08_05_cobble" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("6_cobble")
+centered = false
+position = Vector2(256, 160)
+
+[node name="T_09_05_cobble" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("6_cobble")
+centered = false
+position = Vector2(288, 160)
+
+[node name="T_10_05_cobble" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("6_cobble")
+centered = false
+position = Vector2(320, 160)
+
+[node name="T_11_05_cobble" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("6_cobble")
+centered = false
+position = Vector2(352, 160)
+
+[node name="T_12_05_cobble" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("6_cobble")
+centered = false
+position = Vector2(384, 160)
+
+[node name="T_13_05_cobble" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("6_cobble")
+centered = false
+position = Vector2(416, 160)
+
+[node name="T_14_05_grass" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_grass")
+centered = false
+position = Vector2(448, 160)
+
+[node name="T_00_06_grass" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_grass")
+centered = false
+position = Vector2(0, 192)
+
+[node name="T_01_06_cobble" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("6_cobble")
+centered = false
+position = Vector2(32, 192)
+
+[node name="T_02_06_cobble" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("6_cobble")
+centered = false
+position = Vector2(64, 192)
+
+[node name="T_03_06_cobble" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("6_cobble")
+centered = false
+position = Vector2(96, 192)
+
+[node name="T_04_06_notice_board" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("9_notice_board")
+centered = false
+position = Vector2(128, 192)
+
+[node name="T_05_06_cobble" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("6_cobble")
+centered = false
+position = Vector2(160, 192)
+
+[node name="T_06_06_cobble" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("6_cobble")
+centered = false
+position = Vector2(192, 192)
+
+[node name="T_07_06_cobble" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("6_cobble")
+centered = false
+position = Vector2(224, 192)
+
+[node name="T_08_06_cobble" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("6_cobble")
+centered = false
+position = Vector2(256, 192)
+
+[node name="T_09_06_cobble" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("6_cobble")
+centered = false
+position = Vector2(288, 192)
+
+[node name="T_10_06_cobble" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("6_cobble")
+centered = false
+position = Vector2(320, 192)
+
+[node name="T_11_06_cobble" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("6_cobble")
+centered = false
+position = Vector2(352, 192)
+
+[node name="T_12_06_cobble" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("6_cobble")
+centered = false
+position = Vector2(384, 192)
+
+[node name="T_13_06_cobble" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("6_cobble")
+centered = false
+position = Vector2(416, 192)
+
+[node name="T_14_06_grass" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_grass")
+centered = false
+position = Vector2(448, 192)
+
+[node name="T_00_07_grass" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_grass")
+centered = false
+position = Vector2(0, 224)
+
+[node name="T_01_07_cobble" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("6_cobble")
+centered = false
+position = Vector2(32, 224)
+
+[node name="T_02_07_cobble" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("6_cobble")
+centered = false
+position = Vector2(64, 224)
+
+[node name="T_03_07_cobble" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("6_cobble")
+centered = false
+position = Vector2(96, 224)
+
+[node name="T_04_07_cobble" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("6_cobble")
+centered = false
+position = Vector2(128, 224)
+
+[node name="T_05_07_cobble" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("6_cobble")
+centered = false
+position = Vector2(160, 224)
+
+[node name="T_06_07_cobble" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("6_cobble")
+centered = false
+position = Vector2(192, 224)
+
+[node name="T_07_07_path" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("10_path")
+centered = false
+position = Vector2(224, 224)
+
+[node name="T_08_07_cobble" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("6_cobble")
+centered = false
+position = Vector2(256, 224)
+
+[node name="T_09_07_cobble" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("6_cobble")
+centered = false
+position = Vector2(288, 224)
+
+[node name="T_10_07_cobble" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("6_cobble")
+centered = false
+position = Vector2(320, 224)
+
+[node name="T_11_07_cobble" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("6_cobble")
+centered = false
+position = Vector2(352, 224)
+
+[node name="T_12_07_cobble" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("6_cobble")
+centered = false
+position = Vector2(384, 224)
+
+[node name="T_13_07_cobble" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("6_cobble")
+centered = false
+position = Vector2(416, 224)
+
+[node name="T_14_07_grass" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_grass")
+centered = false
+position = Vector2(448, 224)
+
+[node name="T_00_08_grass" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_grass")
+centered = false
+position = Vector2(0, 256)
+
+[node name="T_01_08_grass" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_grass")
+centered = false
+position = Vector2(32, 256)
+
+[node name="T_02_08_grass" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_grass")
+centered = false
+position = Vector2(64, 256)
+
+[node name="T_03_08_grass" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_grass")
+centered = false
+position = Vector2(96, 256)
+
+[node name="T_04_08_grass" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_grass")
+centered = false
+position = Vector2(128, 256)
+
+[node name="T_05_08_grass" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_grass")
+centered = false
+position = Vector2(160, 256)
+
+[node name="T_06_08_grass" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_grass")
+centered = false
+position = Vector2(192, 256)
+
+[node name="T_07_08_path" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("10_path")
+centered = false
+position = Vector2(224, 256)
+
+[node name="T_08_08_grass" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_grass")
+centered = false
+position = Vector2(256, 256)
+
+[node name="T_09_08_grass" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_grass")
+centered = false
+position = Vector2(288, 256)
+
+[node name="T_10_08_grass" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_grass")
+centered = false
+position = Vector2(320, 256)
+
+[node name="T_11_08_grass" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_grass")
+centered = false
+position = Vector2(352, 256)
+
+[node name="T_12_08_grass" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_grass")
+centered = false
+position = Vector2(384, 256)
+
+[node name="T_13_08_grass" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_grass")
+centered = false
+position = Vector2(416, 256)
+
+[node name="T_14_08_grass" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_grass")
+centered = false
+position = Vector2(448, 256)
+
+[node name="Props" type="Node2D" parent="."]
+
+[node name="P_00_01_tree" type="Sprite2D" parent="Props"]
+texture = ExtResource("11_tree")
+centered = false
+position = Vector2(0, 32)
+
+[node name="P_14_01_tree" type="Sprite2D" parent="Props"]
+texture = ExtResource("11_tree")
+centered = false
+position = Vector2(448, 32)
+
+[node name="P_00_06_tree" type="Sprite2D" parent="Props"]
+texture = ExtResource("11_tree")
+centered = false
+position = Vector2(0, 192)
+
+[node name="P_14_06_tree" type="Sprite2D" parent="Props"]
+texture = ExtResource("11_tree")
+centered = false
+position = Vector2(448, 192)
+
+[node name="P_03_01_tavern_sign" type="Sprite2D" parent="Props"]
+texture = ExtResource("12_tavern_sign")
+centered = false
+position = Vector2(96, 32)
+
+[node name="P_05_03_lantern" type="Sprite2D" parent="Props"]
+texture = ExtResource("13_lantern")
+centered = false
+position = Vector2(160, 96)
+
+[node name="P_08_00_chimney" type="Sprite2D" parent="Props"]
+texture = ExtResource("14_chimney")
+centered = false
+position = Vector2(256, 0)
+
+[node name="P_10_03_anvil" type="Sprite2D" parent="Props"]
+texture = ExtResource("15_anvil")
+centered = false
+position = Vector2(320, 96)
+
+[node name="P_12_03_barrel" type="Sprite2D" parent="Props"]
+texture = ExtResource("16_barrel")
+centered = false
+position = Vector2(384, 96)
+
+[node name="P_01_04_flower_patch" type="Sprite2D" parent="Props"]
+texture = ExtResource("17_flower_patch")
+centered = false
+position = Vector2(32, 128)
+
+[node name="P_13_07_flower_patch" type="Sprite2D" parent="Props"]
+texture = ExtResource("17_flower_patch")
+centered = false
+position = Vector2(416, 224)
+
+[node name="Characters" type="Node2D" parent="."]
+
+[node name="Toma" type="Sprite2D" parent="Characters"]
+texture = ExtResource("18_toma")
+centered = false
+position = Vector2(196, 128)
+
+[node name="Mara" type="Sprite2D" parent="Characters"]
+texture = ExtResource("19_mara")
+centered = false
+position = Vector2(292, 96)
+
+[node name="Orren" type="Sprite2D" parent="Characters"]
+texture = ExtResource("20_orren")
+centered = false
+position = Vector2(132, 96)
+
+[node name="Halden" type="Sprite2D" parent="Characters"]
+texture = ExtResource("21_halden")
+centered = false
+position = Vector2(356, 224)
+
+[node name="Edda" type="Sprite2D" parent="Characters"]
+texture = ExtResource("22_edda")
+centered = false
+position = Vector2(100, 224)
+
+[node name="Player" parent="." instance=ExtResource("player_scene")]
+position = Vector2(228, 192)
+
+[node name="IskarFollower" parent="." instance=ExtResource("iskar_follower")]
+
+[node name="InteractionPrompt" parent="." instance=ExtResource("interaction_prompt")]
+
+[node name="NoticeBoardOverlay" parent="." instance=ExtResource("notice_board_overlay")]
+
+[node name="QuestToast" parent="." instance=ExtResource("quest_toast")]

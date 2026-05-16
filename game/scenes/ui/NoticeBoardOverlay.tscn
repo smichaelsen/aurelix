@@ -1,0 +1,32 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/world/NoticeBoardHandler.gd" id="1_nb"]
+
+[sub_resource type="StyleBoxFlat" id="notice_style"]
+bg_color = Color(0.878, 0.839, 0.737, 1)
+border_color = Color(0.211, 0.149, 0.118, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+
+[node name="NoticeBoardOverlay" type="CanvasLayer"]
+script = ExtResource("1_nb")
+layer = 20
+
+[node name="Panel" type="Panel" parent="."]
+offset_left = 60.0
+offset_top = 60.0
+offset_right = 420.0
+offset_bottom = 200.0
+theme_override_styles/panel = SubResource("notice_style")
+
+[node name="Label" type="Label" parent="Panel"]
+offset_left = 12.0
+offset_top = 8.0
+offset_right = 348.0
+offset_bottom = 132.0
+theme_override_colors/font_color = Color(0.11, 0.10, 0.12, 1)
+theme_override_font_sizes/font_size = 9
+text = "..."
+autowrap_mode = 2

@@ -1,0 +1,30 @@
+# Halden's dialogue is templated, not AI. Options branch by quest state.
+# The DialogueController routes him to HaldenScript first; HaldenScript
+# picks the right beat from `templated_lines` and the right option list.
+
+options:
+  not_started:
+    - { label: "I'll find your dragon.",               topic_id: quest_status, action: accept_quest }
+    - { label: "Tell me more.",                        topic_id: quest_status, action: tell_more }
+    - { label: "Not interested.",                      topic_id: __close }
+  active:
+    - { label: "Still looking.",                       topic_id: __close }
+    - { label: "Anything new on your end?",            topic_id: quest_status, action: tell_more }
+  complete:
+    - { label: "Farewell.",                            topic_id: __close }
+
+templated_lines:
+  not_started_brief: |
+    Stranger. The notice on the board is mine. A dragon was sighted near
+    the old tower. I want proof of where it was seen. Coin and bread for
+    whoever brings it.
+  not_started_more: |
+    Talk to Orren the drunk if you can stand him. He sleeps near the tavern.
+    Mara at the smithy heard something from a traveler. The chapel may know
+    more, but Sister Edda has been quiet.
+  active_progress: |
+    Have you found anything?
+  active_more: |
+    Three sources have spoken so far. The tower has not been quiet.
+  complete_turn_in: |
+    Proof. Good. Here is your coin and bread.

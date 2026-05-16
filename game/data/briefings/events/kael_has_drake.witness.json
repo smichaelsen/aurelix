@@ -1,0 +1,17 @@
+{
+  "id": "kael_has_drake",
+  "tier": "witness",
+  "type": "event",
+  "title": "The stranger has come back with a creature",
+  "topic_tags": [
+    "the_drake",
+    "the_dragon",
+    "gossip"
+  ],
+  "facts_unlocked_on_reveal": [
+    "iskar_visible_in_village"
+  ],
+  "witnesses": [],
+  "contradicts": [],
+  "body": "The stranger from the south has returned from the forest with a\nsmall creature at his heel. The creature is dark, lizard-like,\nlarger than a cat and smaller than a dog. It has wings it does not\nuse. It watches people without blinking. It does not run from the\nstranger and the stranger does not chain it.\n\nIt is not a dog. It is not a hawk. It is not anything anyone in\nMarlow has seen kept as company.\n\nThe villagers who have seen it walk together with the stranger now\nknow this much of it: it exists, it is here, and it has come from\nthe forest where the smoke has been coming from."
+}

@@ -1,0 +1,15 @@
+{
+  "id": "strange_coin",
+  "tier": "full",
+  "type": "item",
+  "title": "A small foreign coin",
+  "topic_tags": [
+    "gold_eyed_one",
+    "trade"
+  ],
+  "facts_unlocked_on_reveal": [
+    "mara_recognized_coin"
+  ],
+  "contradicts": [],
+  "body": "A coin smaller than a Vael half-crown, struck in a metal that does\nnot match copper, silver, or anything Mara has seen pass through her\nforge. The face shows a circle within a circle and a mark like a\nnarrow eye. The edge is milled in an unfamiliar pattern.\n\nMara has a sketch of one already pinned beside her bellows. She made\nit the last time a traveler dropped one on her counter, three months\nago. She has not been able to match the mint or the mark to anything\nshe knows.\n\nIt is not currency Vael honors. It is not, by appearance, a forgery\nof anything Vael honors. It is something else."
+}

@@ -1,0 +1,789 @@
+{
+  "size": {
+    "cols": 15,
+    "rows": 9
+  },
+  "tile_size": 32,
+  "player_start": {
+    "col": 7,
+    "row": 6
+  },
+  "tiles": [
+    {
+      "col": 0,
+      "row": 0,
+      "tile": "grass"
+    },
+    {
+      "col": 1,
+      "row": 0,
+      "tile": "thatched_roof"
+    },
+    {
+      "col": 2,
+      "row": 0,
+      "tile": "thatched_roof"
+    },
+    {
+      "col": 3,
+      "row": 0,
+      "tile": "thatched_roof"
+    },
+    {
+      "col": 4,
+      "row": 0,
+      "tile": "thatched_roof"
+    },
+    {
+      "col": 5,
+      "row": 0,
+      "tile": "thatched_roof"
+    },
+    {
+      "col": 6,
+      "row": 0,
+      "tile": "grass"
+    },
+    {
+      "col": 7,
+      "row": 0,
+      "tile": "thatched_roof"
+    },
+    {
+      "col": 8,
+      "row": 0,
+      "tile": "thatched_roof"
+    },
+    {
+      "col": 9,
+      "row": 0,
+      "tile": "thatched_roof"
+    },
+    {
+      "col": 10,
+      "row": 0,
+      "tile": "thatched_roof"
+    },
+    {
+      "col": 11,
+      "row": 0,
+      "tile": "thatched_roof"
+    },
+    {
+      "col": 12,
+      "row": 0,
+      "tile": "grass"
+    },
+    {
+      "col": 13,
+      "row": 0,
+      "tile": "grass"
+    },
+    {
+      "col": 14,
+      "row": 0,
+      "tile": "grass"
+    },
+    {
+      "col": 0,
+      "row": 1,
+      "tile": "grass"
+    },
+    {
+      "col": 1,
+      "row": 1,
+      "tile": "wood_wall"
+    },
+    {
+      "col": 2,
+      "row": 1,
+      "tile": "window"
+    },
+    {
+      "col": 3,
+      "row": 1,
+      "tile": "wood_wall"
+    },
+    {
+      "col": 4,
+      "row": 1,
+      "tile": "window"
+    },
+    {
+      "col": 5,
+      "row": 1,
+      "tile": "wood_wall"
+    },
+    {
+      "col": 6,
+      "row": 1,
+      "tile": "grass"
+    },
+    {
+      "col": 7,
+      "row": 1,
+      "tile": "wood_wall"
+    },
+    {
+      "col": 8,
+      "row": 1,
+      "tile": "window"
+    },
+    {
+      "col": 9,
+      "row": 1,
+      "tile": "wood_wall"
+    },
+    {
+      "col": 10,
+      "row": 1,
+      "tile": "window"
+    },
+    {
+      "col": 11,
+      "row": 1,
+      "tile": "wood_wall"
+    },
+    {
+      "col": 12,
+      "row": 1,
+      "tile": "grass"
+    },
+    {
+      "col": 13,
+      "row": 1,
+      "tile": "grass"
+    },
+    {
+      "col": 14,
+      "row": 1,
+      "tile": "grass"
+    },
+    {
+      "col": 0,
+      "row": 2,
+      "tile": "grass"
+    },
+    {
+      "col": 1,
+      "row": 2,
+      "tile": "wood_wall"
+    },
+    {
+      "col": 2,
+      "row": 2,
+      "tile": "wood_wall"
+    },
+    {
+      "col": 3,
+      "row": 2,
+      "tile": "door"
+    },
+    {
+      "col": 4,
+      "row": 2,
+      "tile": "wood_wall"
+    },
+    {
+      "col": 5,
+      "row": 2,
+      "tile": "wood_wall"
+    },
+    {
+      "col": 6,
+      "row": 2,
+      "tile": "grass"
+    },
+    {
+      "col": 7,
+      "row": 2,
+      "tile": "wood_wall"
+    },
+    {
+      "col": 8,
+      "row": 2,
+      "tile": "wood_wall"
+    },
+    {
+      "col": 9,
+      "row": 2,
+      "tile": "door"
+    },
+    {
+      "col": 10,
+      "row": 2,
+      "tile": "wood_wall"
+    },
+    {
+      "col": 11,
+      "row": 2,
+      "tile": "wood_wall"
+    },
+    {
+      "col": 12,
+      "row": 2,
+      "tile": "grass"
+    },
+    {
+      "col": 13,
+      "row": 2,
+      "tile": "grass"
+    },
+    {
+      "col": 14,
+      "row": 2,
+      "tile": "grass"
+    },
+    {
+      "col": 0,
+      "row": 3,
+      "tile": "grass"
+    },
+    {
+      "col": 1,
+      "row": 3,
+      "tile": "cobble"
+    },
+    {
+      "col": 2,
+      "row": 3,
+      "tile": "cobble"
+    },
+    {
+      "col": 3,
+      "row": 3,
+      "tile": "cobble"
+    },
+    {
+      "col": 4,
+      "row": 3,
+      "tile": "cobble"
+    },
+    {
+      "col": 5,
+      "row": 3,
+      "tile": "cobble"
+    },
+    {
+      "col": 6,
+      "row": 3,
+      "tile": "cobble"
+    },
+    {
+      "col": 7,
+      "row": 3,
+      "tile": "cobble"
+    },
+    {
+      "col": 8,
+      "row": 3,
+      "tile": "cobble"
+    },
+    {
+      "col": 9,
+      "row": 3,
+      "tile": "cobble"
+    },
+    {
+      "col": 10,
+      "row": 3,
+      "tile": "cobble"
+    },
+    {
+      "col": 11,
+      "row": 3,
+      "tile": "cobble"
+    },
+    {
+      "col": 12,
+      "row": 3,
+      "tile": "cobble"
+    },
+    {
+      "col": 13,
+      "row": 3,
+      "tile": "cobble"
+    },
+    {
+      "col": 14,
+      "row": 3,
+      "tile": "grass"
+    },
+    {
+      "col": 0,
+      "row": 4,
+      "tile": "grass"
+    },
+    {
+      "col": 1,
+      "row": 4,
+      "tile": "cobble"
+    },
+    {
+      "col": 2,
+      "row": 4,
+      "tile": "cobble"
+    },
+    {
+      "col": 3,
+      "row": 4,
+      "tile": "cobble"
+    },
+    {
+      "col": 4,
+      "row": 4,
+      "tile": "cobble"
+    },
+    {
+      "col": 5,
+      "row": 4,
+      "tile": "cobble"
+    },
+    {
+      "col": 6,
+      "row": 4,
+      "tile": "cobble"
+    },
+    {
+      "col": 7,
+      "row": 4,
+      "tile": "well_stone"
+    },
+    {
+      "col": 8,
+      "row": 4,
+      "tile": "cobble"
+    },
+    {
+      "col": 9,
+      "row": 4,
+      "tile": "cobble"
+    },
+    {
+      "col": 10,
+      "row": 4,
+      "tile": "cobble"
+    },
+    {
+      "col": 11,
+      "row": 4,
+      "tile": "cobble"
+    },
+    {
+      "col": 12,
+      "row": 4,
+      "tile": "cobble"
+    },
+    {
+      "col": 13,
+      "row": 4,
+      "tile": "cobble"
+    },
+    {
+      "col": 14,
+      "row": 4,
+      "tile": "grass"
+    },
+    {
+      "col": 0,
+      "row": 5,
+      "tile": "grass"
+    },
+    {
+      "col": 1,
+      "row": 5,
+      "tile": "cobble"
+    },
+    {
+      "col": 2,
+      "row": 5,
+      "tile": "cobble"
+    },
+    {
+      "col": 3,
+      "row": 5,
+      "tile": "cobble"
+    },
+    {
+      "col": 4,
+      "row": 5,
+      "tile": "cobble"
+    },
+    {
+      "col": 5,
+      "row": 5,
+      "tile": "cobble"
+    },
+    {
+      "col": 6,
+      "row": 5,
+      "tile": "cobble"
+    },
+    {
+      "col": 7,
+      "row": 5,
+      "tile": "well_water"
+    },
+    {
+      "col": 8,
+      "row": 5,
+      "tile": "cobble"
+    },
+    {
+      "col": 9,
+      "row": 5,
+      "tile": "cobble"
+    },
+    {
+      "col": 10,
+      "row": 5,
+      "tile": "cobble"
+    },
+    {
+      "col": 11,
+      "row": 5,
+      "tile": "cobble"
+    },
+    {
+      "col": 12,
+      "row": 5,
+      "tile": "cobble"
+    },
+    {
+      "col": 13,
+      "row": 5,
+      "tile": "cobble"
+    },
+    {
+      "col": 14,
+      "row": 5,
+      "tile": "grass"
+    },
+    {
+      "col": 0,
+      "row": 6,
+      "tile": "grass"
+    },
+    {
+      "col": 1,
+      "row": 6,
+      "tile": "cobble"
+    },
+    {
+      "col": 2,
+      "row": 6,
+      "tile": "cobble"
+    },
+    {
+      "col": 3,
+      "row": 6,
+      "tile": "cobble"
+    },
+    {
+      "col": 4,
+      "row": 6,
+      "tile": "notice_board"
+    },
+    {
+      "col": 5,
+      "row": 6,
+      "tile": "cobble"
+    },
+    {
+      "col": 6,
+      "row": 6,
+      "tile": "cobble"
+    },
+    {
+      "col": 7,
+      "row": 6,
+      "tile": "cobble"
+    },
+    {
+      "col": 8,
+      "row": 6,
+      "tile": "cobble"
+    },
+    {
+      "col": 9,
+      "row": 6,
+      "tile": "cobble"
+    },
+    {
+      "col": 10,
+      "row": 6,
+      "tile": "cobble"
+    },
+    {
+      "col": 11,
+      "row": 6,
+      "tile": "cobble"
+    },
+    {
+      "col": 12,
+      "row": 6,
+      "tile": "cobble"
+    },
+    {
+      "col": 13,
+      "row": 6,
+      "tile": "cobble"
+    },
+    {
+      "col": 14,
+      "row": 6,
+      "tile": "grass"
+    },
+    {
+      "col": 0,
+      "row": 7,
+      "tile": "grass"
+    },
+    {
+      "col": 1,
+      "row": 7,
+      "tile": "cobble"
+    },
+    {
+      "col": 2,
+      "row": 7,
+      "tile": "cobble"
+    },
+    {
+      "col": 3,
+      "row": 7,
+      "tile": "cobble"
+    },
+    {
+      "col": 4,
+      "row": 7,
+      "tile": "cobble"
+    },
+    {
+      "col": 5,
+      "row": 7,
+      "tile": "cobble"
+    },
+    {
+      "col": 6,
+      "row": 7,
+      "tile": "cobble"
+    },
+    {
+      "col": 7,
+      "row": 7,
+      "tile": "path"
+    },
+    {
+      "col": 8,
+      "row": 7,
+      "tile": "cobble"
+    },
+    {
+      "col": 9,
+      "row": 7,
+      "tile": "cobble"
+    },
+    {
+      "col": 10,
+      "row": 7,
+      "tile": "cobble"
+    },
+    {
+      "col": 11,
+      "row": 7,
+      "tile": "cobble"
+    },
+    {
+      "col": 12,
+      "row": 7,
+      "tile": "cobble"
+    },
+    {
+      "col": 13,
+      "row": 7,
+      "tile": "cobble"
+    },
+    {
+      "col": 14,
+      "row": 7,
+      "tile": "grass"
+    },
+    {
+      "col": 0,
+      "row": 8,
+      "tile": "grass"
+    },
+    {
+      "col": 1,
+      "row": 8,
+      "tile": "grass"
+    },
+    {
+      "col": 2,
+      "row": 8,
+      "tile": "grass"
+    },
+    {
+      "col": 3,
+      "row": 8,
+      "tile": "grass"
+    },
+    {
+      "col": 4,
+      "row": 8,
+      "tile": "grass"
+    },
+    {
+      "col": 5,
+      "row": 8,
+      "tile": "grass"
+    },
+    {
+      "col": 6,
+      "row": 8,
+      "tile": "grass"
+    },
+    {
+      "col": 7,
+      "row": 8,
+      "tile": "path"
+    },
+    {
+      "col": 8,
+      "row": 8,
+      "tile": "grass"
+    },
+    {
+      "col": 9,
+      "row": 8,
+      "tile": "grass"
+    },
+    {
+      "col": 10,
+      "row": 8,
+      "tile": "grass"
+    },
+    {
+      "col": 11,
+      "row": 8,
+      "tile": "grass"
+    },
+    {
+      "col": 12,
+      "row": 8,
+      "tile": "grass"
+    },
+    {
+      "col": 13,
+      "row": 8,
+      "tile": "grass"
+    },
+    {
+      "col": 14,
+      "row": 8,
+      "tile": "grass"
+    }
+  ],
+  "props": [
+    {
+      "col": 0,
+      "row": 1,
+      "prop": "tree"
+    },
+    {
+      "col": 14,
+      "row": 1,
+      "prop": "tree"
+    },
+    {
+      "col": 0,
+      "row": 6,
+      "prop": "tree"
+    },
+    {
+      "col": 14,
+      "row": 6,
+      "prop": "tree"
+    },
+    {
+      "col": 3,
+      "row": 1,
+      "prop": "tavern_sign"
+    },
+    {
+      "col": 5,
+      "row": 3,
+      "prop": "lantern"
+    },
+    {
+      "col": 8,
+      "row": 0,
+      "prop": "chimney"
+    },
+    {
+      "col": 10,
+      "row": 3,
+      "prop": "anvil"
+    },
+    {
+      "col": 12,
+      "row": 3,
+      "prop": "barrel"
+    },
+    {
+      "col": 1,
+      "row": 4,
+      "prop": "flower_patch"
+    },
+    {
+      "col": 13,
+      "row": 7,
+      "prop": "flower_patch"
+    }
+  ],
+  "npcs": [
+    {
+      "id": "toma_child",
+      "col": 6,
+      "row": 4
+    },
+    {
+      "id": "mara_blacksmith",
+      "col": 9,
+      "row": 3
+    },
+    {
+      "id": "orren_drunk",
+      "col": 4,
+      "row": 3
+    },
+    {
+      "id": "halden_reeve",
+      "col": 11,
+      "row": 7
+    },
+    {
+      "id": "edda_priest",
+      "col": 3,
+      "row": 7
+    }
+  ],
+  "objects": [
+    {
+      "id": "notice_board",
+      "type": "notice_board",
+      "col": 4,
+      "row": 6,
+      "label": "the notice"
+    }
+  ],
+  "exits": [
+    {
+      "col": 7,
+      "row": 8,
+      "direction": "south",
+      "target": "forest_edge"
+    }
+  ]
+}

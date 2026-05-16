@@ -1,0 +1,14 @@
+{
+  "id": "bandit_camp",
+  "tier": "full",
+  "type": "location",
+  "title": "The bandit camp on the forest path",
+  "topic_tags": [
+    "bandits",
+    "forest",
+    "gold_eyed_one"
+  ],
+  "facts_unlocked_on_reveal": [],
+  "contradicts": [],
+  "body": "A camp set up off the path between two leaning pines and a fall of\nlarge stones, perhaps half a day's walk into the Forest Edge. Four\nmen hold it: three regulars and one named Drust who carries a sword\nwith a notched guard and gives the orders.\n\nThe camp is not a robbing camp. The men do not seem to want\ntravelers; when they hear footsteps they hide. They are paid to be\nthere. They keep one cage near the cooking fire. The cage has a\nhatchling drake inside, kept quiet and kept fed. The cage has a bone\ntag tied to it.\n\nThe men have been there for at least a week. They are waiting for a\ndelivery. Their notes mention \"the gold-eyed one\" who pays on arrival.\n\nDrust does not know his employer's face. He knows the coin he was paid\nin advance, and he has a small sample of it, which is unlike any\ncurrency in Vael."
+}

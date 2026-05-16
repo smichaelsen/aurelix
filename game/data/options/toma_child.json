@@ -1,0 +1,60 @@
+{
+  "options": {
+    "default": [
+      {
+        "label": "Hello.",
+        "topic_id": "greeting"
+      },
+      {
+        "label": "What do you know about the tower?",
+        "topic_id": "the_tower"
+      },
+      {
+        "label": "Have you seen the dragon?",
+        "topic_id": "the_dragon"
+      },
+      {
+        "label": "Bye.",
+        "topic_id": "__close"
+      }
+    ],
+    "the_tower": [
+      {
+        "label": "Where did you hear that?",
+        "topic_id": "the_tower"
+      },
+      {
+        "label": "Anything else?",
+        "topic_id": "the_dragon"
+      },
+      {
+        "label": "Bye.",
+        "topic_id": "__close"
+      }
+    ],
+    "the_dragon": [
+      {
+        "label": "What did it look like?",
+        "topic_id": "the_dragon"
+      },
+      {
+        "label": "Back to the tower.",
+        "topic_id": "the_tower"
+      },
+      {
+        "label": "Bye.",
+        "topic_id": "__close"
+      }
+    ],
+    "greeting": [
+      {
+        "label": "What do you know about the tower?",
+        "topic_id": "the_tower"
+      },
+      {
+        "label": "Bye.",
+        "topic_id": "__close"
+      }
+    ]
+  }
+}

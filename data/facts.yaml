@@ -1,0 +1,112 @@
+# Atomic fact registry for the demo.
+#
+# A fact is a boolean truth tracked by the engine. Facts are unlocked into
+# the player's known_facts via validated briefing reveals (or by the engine
+# directly, for world-state events).
+#
+# Quest state machines check facts. The model cannot create facts by speaking;
+# only the engine can.
+#
+# Fields:
+#   type:        knowledge | world_state
+#   canon:       true if this is real in the world; false marks a rumor-tagged
+#                fact (a thing the world tracks as believed-but-unverified)
+#   description: developer-facing one-liner
+
+facts:
+
+  # --- The bounty quest ------------------------------------------------------
+
+  dragon_seen_near_old_tower:
+    type: knowledge
+    canon: true
+    description: A dragon was actually seen near the old tower on a recent night.
+
+  dragon_rumor_well_sheep:
+    type: knowledge
+    canon: false
+    description: Toma's false rumor that a dragon ate a sheep at the well.
+
+  smoke_seen_near_old_tower:
+    type: knowledge
+    canon: true
+    description: Mara's customer reported smoke near the tower (true fragment).
+
+  edda_warned_kael:
+    type: knowledge
+    canon: true
+    description: Edda warned Kael against pursuing the bounty.
+
+  # --- The bandit camp -------------------------------------------------------
+
+  bandits_present_in_marlow_region:
+    type: knowledge
+    canon: true
+    description: A bandit camp existed on the forest path north of the village.
+
+  bandit_camp_cleared:
+    type: world_state
+    description: The bandit camp's combatants have been defeated.
+
+  drust_dead:
+    type: world_state
+    description: The bandit leader Drust has been killed.
+
+  bandit_note_recovered:
+    type: world_state
+    description: Kael has the note Drust dropped.
+
+  # --- The gold-eyed one (foreshadow) ---------------------------------------
+
+  gold_eyed_one_named:
+    type: knowledge
+    canon: true
+    description: |
+      The phrase "the gold-eyed one" exists in the world (per bandit note).
+      Does not identify Aurelix until the full game.
+
+  strange_coin_recovered:
+    type: world_state
+    description: Kael has the strange coin from the bandit camp.
+
+  mara_recognized_coin:
+    type: knowledge
+    canon: true
+    description: Mara has been shown the strange coin and reacted to it.
+
+  # --- Iskar -----------------------------------------------------------------
+
+  iskar_bonded:
+    type: world_state
+    description: Iskar follows Kael as a companion.
+
+  iskar_named:
+    type: knowledge
+    canon: true
+    description: Kael has read the bone tag and learned Iskar's name.
+
+  iskar_visible_in_village:
+    type: world_state
+    description: |
+      Iskar has appeared at Kael's side in Marlow's Hollow. Village NPC
+      dossiers get the witness briefing for kael_has_drake on this event.
+
+  # --- Other flavor ----------------------------------------------------------
+
+  jorin_lost_coin_box:
+    type: knowledge
+    canon: true
+    description: The farmer Jorin actually lost his coin box to bandits.
+
+  someone_robbed_jorin:
+    type: knowledge
+    canon: false
+    description: The vague rumor version of the theft (less detail, no names).
+
+  notice_board_read:
+    type: world_state
+    description: Kael has read the notice board posting about the bounty.
+
+  small_charm_found:
+    type: world_state
+    description: Kael found the small charm hidden in the chapel.

@@ -1,0 +1,13 @@
+{
+  "id": "tower_smoke",
+  "tier": "rumor",
+  "type": "event",
+  "title": "Strange light near the old tower",
+  "topic_tags": [
+    "the_tower",
+    "gossip"
+  ],
+  "facts_unlocked_on_reveal": [],
+  "contradicts": [],
+  "body": "Someone saw lights at the old tower one night. Maybe smoke. Maybe\nthe moon catching something. Different people tell it different\nways. Stories get bigger every time they are told, and shorter every\ntime a sober man tells them.\n\nA traveler said something to Mara at the smithy; Mara did not press.\nA child at the well says the dragon ate a sheep, but the well has\nno sheep. The reeve has heard enough versions to post a notice."
+}

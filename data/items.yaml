@@ -1,0 +1,123 @@
+# Demo item catalog. Source of truth; built into /game/data/items.json by
+# tools/yaml_to_json.py.
+#
+# Each item:
+#   name      display name
+#   category  weapon | armor | trinket | consumable | key_item
+#   stats     stat block (atk, def, spd, heal, cures, ...)
+#   value     coin cost when bought from a shop
+#   on_offer  optional per-NPC lever descriptor:
+#               <npc_id>:
+#                 flag:          NPC memory flag to flip true
+#                 memory_update: optional override for the recent_summary
+#                 consume:       true (default) to remove item from inventory
+
+items:
+
+  # --- starting kit -------------------------------------------------------
+  rusty_sword:
+    name: "Rusty sword"
+    category: weapon
+    stats:    { atk: 5 }
+    value:    5
+
+  traveler_cloak:
+    name: "Traveler's cloak"
+    category: armor
+    stats:    { def: 1 }
+    value:    4
+
+  apple:
+    name: "Apple"
+    category: consumable
+    stats:    { heal: 5 }
+    value:    2
+    on_offer:
+      toma_child:
+        flag: fed
+        memory_update: "Player gave Toma an apple. He brightened."
+        apology: true
+
+  # --- buyable at Mara ----------------------------------------------------
+  iron_sword:
+    name: "Iron sword"
+    category: weapon
+    stats:    { atk: 8 }
+    value:    30
+
+  jerkin:
+    name: "Jerkin"
+    category: armor
+    stats:    { def: 3 }
+    value:    25
+
+  ration:
+    name: "Ration"
+    category: consumable
+    stats:    { heal: 10 }
+    value:    4
+    on_offer:
+      toma_child:
+        flag: fed
+        memory_update: "Player gave Toma a ration. He ate it all at once."
+        apology: true
+
+  bandage:
+    name: "Bandage"
+    category: consumable
+    stats:    { cures: [burn] }
+    value:    6
+
+  ale:
+    name: "Ale"
+    category: consumable
+    value:    5
+    on_offer:
+      orren_drunk:
+        flag: drunk
+        memory_update: "Player bought Orren another ale. He drank it fast."
+        apology: true
+
+  # --- findable -----------------------------------------------------------
+  throwing_knives:
+    name: "Throwing knives"
+    category: consumable
+    stats:    { ranged_atk: 4 }
+    value:    4
+
+  strange_coin:
+    name: "Strange coin"
+    category: key_item
+    value:    0
+    on_offer:
+      mara_blacksmith:
+        flag: saw_strange_coin
+        memory_update: "Mara studied the coin and her face went still."
+        consume: false
+        adds_briefing:
+          id: gold_eyed_one
+          tier: rumor
+
+  bandit_note:
+    name: "Bandit note"
+    category: key_item
+    value:    0
+    on_offer:
+      edda_priest:
+        flag: saw_dark_note
+        memory_update: "Edda read the note slowly and prayed quietly."
+        consume: false
+        adds_briefing:
+          id: gold_eyed_one
+          tier: rumor
+
+  bone_tag:
+    name: "Bone tag"
+    category: key_item
+    value:    0
+
+  small_charm:
+    name: "Small chapel charm"
+    category: trinket
+    stats:    { spd: 1 }
+    value:    0

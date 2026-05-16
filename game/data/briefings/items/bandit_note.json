@@ -1,0 +1,15 @@
+{
+  "id": "bandit_note",
+  "tier": "full",
+  "type": "item",
+  "title": "A folded note from the bandit camp",
+  "topic_tags": [
+    "gold_eyed_one",
+    "bandits"
+  ],
+  "facts_unlocked_on_reveal": [
+    "gold_eyed_one_named"
+  ],
+  "contradicts": [],
+  "body": "A small folded scrap of paper. It was on Drust's person. The hand\nthat wrote it is steady and unhurried.\n\n  Three days more. Cargo stays in the cage. The gold-eyed one\n  pays on delivery, not before. No fires after dark.\n\nThere is no name signed and no seal stamped. The paper is good paper,\nnot common to the road; it has not travelled long before reaching\nDrust. The phrase \"the gold-eyed one\" appears nowhere in Vael's\ncommon idiom."
+}

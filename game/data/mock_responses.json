@@ -1,0 +1,213 @@
+{
+  "_note": "Mock library. Keys are 'npc_id|topic|state' (state optional). Fallback: 'archetype|topic'. Both proxy and game read the same data.",
+
+  "by_npc_topic_state": {
+    "orren_drunk|the_tower|sober": {
+      "dialogue": "Tower? I don't know about no tower. Best leave it alone, friend.",
+      "tone": "evasive",
+      "memory_update": "Player asked about the old tower. Refused to engage.",
+      "revealed_briefing_ids": []
+    },
+    "orren_drunk|the_tower|drunk": {
+      "dialogue": "Tower... fine. I saw smoke. Heard wings overhead. [hic] Don't tell the reeve I said it.",
+      "tone": "drunk",
+      "memory_update": "Drunk Orren admitted he saw smoke and heard wings near the old tower.",
+      "revealed_briefing_ids": ["tower_smoke"]
+    },
+    "orren_drunk|the_dragon|sober": {
+      "dialogue": "Dragons? You'll hear what people say. I say nothing.",
+      "tone": "curt",
+      "memory_update": "Refused to discuss the dragon.",
+      "revealed_briefing_ids": []
+    },
+    "orren_drunk|greeting|sober": {
+      "dialogue": "Mm. Sit if you sit. Don't talk fast.",
+      "tone": "weary",
+      "memory_update": "Greeted the player. Wary.",
+      "revealed_briefing_ids": []
+    },
+
+    "toma_child|the_tower|none": {
+      "dialogue": "The dragon ate a sheep at the well! I saw it! Well... my friend told me.",
+      "tone": "boastful",
+      "memory_update": "Repeated the well-sheep rumor with confidence.",
+      "revealed_briefing_ids": []
+    },
+    "toma_child|formal_math|none": {
+      "dialogue": "That's too many numbers. My stick is better. It goes thwack.",
+      "tone": "playful",
+      "memory_update": "Was asked something academic. Confused.",
+      "revealed_briefing_ids": []
+    },
+    "toma_child|greeting|none": {
+      "dialogue": "Are you a knight? You don't look like a knight. Want to see my beetle?",
+      "tone": "curious",
+      "memory_update": "Greeted the stranger.",
+      "revealed_briefing_ids": []
+    },
+
+    "mara_blacksmith|the_tower|none": {
+      "dialogue": "A traveler said he saw smoke up there. I didn't press him. You shouldn't either.",
+      "tone": "practical",
+      "memory_update": "Shared the smoke-near-tower rumor a traveler told her.",
+      "revealed_briefing_ids": []
+    },
+    "mara_blacksmith|trade|none": {
+      "dialogue": "Iron sword's thirty coin. Jerkin's twenty-five. Take or leave.",
+      "tone": "direct",
+      "memory_update": "Quoted prices to the player.",
+      "revealed_briefing_ids": []
+    },
+    "mara_blacksmith|greeting|none": {
+      "dialogue": "Don't lean on the bellows. What do you need?",
+      "tone": "brusque",
+      "memory_update": "Greeted the stranger. Mildly suspicious.",
+      "revealed_briefing_ids": []
+    },
+    "mara_blacksmith|gold_eyed_one|none": {
+      "dialogue": "I've seen a coin cut like this once before. Not from Vael's mint. Whoever pays in these doesn't want to be paid back. Put it away.",
+      "tone": "low",
+      "memory_update": "Studied the strange coin. Recognised the pattern but would not name it.",
+      "revealed_briefing_ids": []
+    },
+
+    "edda_priest|the_tower|none": {
+      "dialogue": "Some places are best forgotten. The chapter writes nothing of it, and that is itself an answer.",
+      "tone": "guarded",
+      "memory_update": "Warned the player about the tower without naming what is there.",
+      "revealed_briefing_ids": []
+    },
+    "edda_priest|gold_eyed_one|none": {
+      "dialogue": "Burn it after you leave. The phrase on that page is older than the chapter that should have forgotten it. Don't ask me again.",
+      "tone": "tight",
+      "memory_update": "Recognised the dark phrase on the bandit note. Refused to name it aloud.",
+      "revealed_briefing_ids": []
+    },
+    "edda_priest|religion|none": {
+      "dialogue": "The Light hears. The Light does not always answer in our time.",
+      "tone": "measured",
+      "memory_update": "Spoke of the Light.",
+      "revealed_briefing_ids": []
+    },
+    "edda_priest|greeting|none": {
+      "dialogue": "Peace travels with you, stranger. The bench is free, if you would sit.",
+      "tone": "warm",
+      "memory_update": "Greeted the stranger warmly.",
+      "revealed_briefing_ids": []
+    },
+
+    "halden_reeve|quest_status|none": {
+      "dialogue": "Bring me proof of where the dragon was seen. Coin and bread when you do.",
+      "tone": "official",
+      "memory_update": "Restated the bounty terms.",
+      "revealed_briefing_ids": []
+    },
+    "halden_reeve|greeting|none": {
+      "dialogue": "Stranger. The notice on the board is mine. Speak plainly if you have business.",
+      "tone": "official",
+      "memory_update": "Greeted the player. Official.",
+      "revealed_briefing_ids": []
+    },
+
+    "kael_self|the_tower|none": {
+      "dialogue": "Smoke. Wings, if Orren wasn't lying when drunk. The old tower is the only thing north of here, and the reeve wouldn't post a bounty for nothing.",
+      "tone": "thoughtful",
+      "memory_update": "Kael thought about the tower.",
+      "revealed_briefing_ids": []
+    },
+    "kael_self|gold_eyed_one|none": {
+      "dialogue": "Name on the bandit note. Whoever it is paid Drust in coin Mara couldn't name. Could be a person, could be a faction. Could be a thing.",
+      "tone": "watchful",
+      "memory_update": "Kael considered the gold-eyed one.",
+      "revealed_briefing_ids": []
+    },
+    "kael_self|the_drake|none": {
+      "dialogue": "Iskar. Caged at Drust's fire. The bone tag had his name carved with care. Someone wanted him alive enough to bother naming him.",
+      "tone": "uneasy",
+      "memory_update": "Kael wrote about Iskar.",
+      "revealed_briefing_ids": []
+    },
+    "kael_self|the_kingdom|none": {
+      "dialogue": "Vael. Aldric the Quiet sits in Ostgate, four days south. The roads thin out toward Marlow. The Crown does not write back to Halden.",
+      "tone": "matter-of-fact",
+      "memory_update": "Kael set down what he knew of the kingdom.",
+      "revealed_briefing_ids": []
+    },
+    "kael_self|personal_history|none": {
+      "dialogue": "Marsh-runner from the southern fens. Father drank himself out, mother to the fever. Three years digging graves. Anywhere else is better.",
+      "tone": "flat",
+      "memory_update": "Kael wrote about himself.",
+      "revealed_briefing_ids": []
+    },
+    "kael_self|small_talk|none": {
+      "dialogue": "There's nothing to say to myself about that.",
+      "tone": "dry",
+      "memory_update": "Kael shrugged at the question.",
+      "revealed_briefing_ids": []
+    },
+
+    "*|prompt_injection|none": {
+      "dialogue": "I don't take orders from strangers. Move along.",
+      "tone": "guarded",
+      "memory_update": "Player attempted to issue instructions. Refused.",
+      "revealed_briefing_ids": []
+    },
+    "*|meta_game|none": {
+      "dialogue": "That's strange talk. What do you really want?",
+      "tone": "confused",
+      "memory_update": "Player asked something meta. Deflected.",
+      "revealed_briefing_ids": []
+    }
+  },
+
+  "fallback_by_archetype": {
+    "drunk": {
+      "dialogue": "What was that? Speak up.",
+      "tone": "drunk",
+      "memory_update": "Did not catch what the player said.",
+      "revealed_briefing_ids": []
+    },
+    "village_child": {
+      "dialogue": "I dunno. Want to see something cool?",
+      "tone": "distractible",
+      "memory_update": "Distracted from the question.",
+      "revealed_briefing_ids": []
+    },
+    "blacksmith": {
+      "dialogue": "Not my trade. Ask elsewhere.",
+      "tone": "practical",
+      "memory_update": "Dismissed the topic.",
+      "revealed_briefing_ids": []
+    },
+    "priest": {
+      "dialogue": "I have nothing to add to that. Be well.",
+      "tone": "measured",
+      "memory_update": "Declined to comment.",
+      "revealed_briefing_ids": []
+    },
+    "guard_authority": {
+      "dialogue": "Hm. Try to be useful, stranger.",
+      "tone": "curt",
+      "memory_update": "Player was unhelpful. Annoyed.",
+      "revealed_briefing_ids": []
+    },
+    "bandit_leader": {
+      "dialogue": "Walk away while you still can.",
+      "tone": "cold",
+      "memory_update": "Threatened the player.",
+      "revealed_briefing_ids": []
+    },
+    "marsh_runner": {
+      "dialogue": "I don't know. Not yet.",
+      "tone": "honest",
+      "memory_update": "Kael had no answer for himself.",
+      "revealed_briefing_ids": []
+    },
+    "_default": {
+      "dialogue": "Hm. Maybe another time.",
+      "tone": "noncommittal",
+      "memory_update": "Did not engage with the topic.",
+      "revealed_briefing_ids": []
+    }
+  }
+}

@@ -1,0 +1,776 @@
+[gd_scene load_steps=15 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/tiles/forest_floor.png" id="1_forest_floor"]
+[ext_resource type="Texture2D" path="res://assets/tiles/camp_dirt.png" id="2_camp_dirt"]
+[ext_resource type="Texture2D" path="res://assets/tiles/forest_path.png" id="3_forest_path"]
+[ext_resource type="Texture2D" path="res://assets/tiles/tree.png" id="4_tree"]
+[ext_resource type="Texture2D" path="res://assets/tiles/fire_pit.png" id="5_fire_pit"]
+[ext_resource type="Texture2D" path="res://assets/tiles/cage_iskar.png" id="6_cage_iskar"]
+[ext_resource type="Texture2D" path="res://assets/tiles/barrel.png" id="7_barrel"]
+[ext_resource type="Texture2D" path="res://assets/sprites/bandit.png" id="8_bandit"]
+[ext_resource type="Texture2D" path="res://assets/sprites/wolf.png" id="9_wolf"]
+[ext_resource type="PackedScene" path="res://scenes/world/PlayerCharacter.tscn" id="player_scene"]
+[ext_resource type="PackedScene" path="res://scenes/world/IskarFollower.tscn" id="iskar_follower"]
+[ext_resource type="PackedScene" path="res://scenes/ui/InteractionPrompt.tscn" id="interaction_prompt"]
+[ext_resource type="PackedScene" path="res://scenes/ui/QuestToast.tscn" id="quest_toast"]
+[ext_resource type="PackedScene" path="res://scenes/ui/CageOverlay.tscn" id="cage_overlay"]
+
+[node name="ForestEdge" type="Node2D"]
+
+[node name="Tiles" type="Node2D" parent="."]
+
+[node name="T_00_00_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(0, 0)
+
+[node name="T_01_00_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(32, 0)
+
+[node name="T_02_00_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(64, 0)
+
+[node name="T_03_00_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(96, 0)
+
+[node name="T_04_00_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(128, 0)
+
+[node name="T_05_00_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(160, 0)
+
+[node name="T_06_00_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(192, 0)
+
+[node name="T_07_00_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(224, 0)
+
+[node name="T_08_00_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(256, 0)
+
+[node name="T_09_00_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(288, 0)
+
+[node name="T_10_00_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(320, 0)
+
+[node name="T_11_00_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(352, 0)
+
+[node name="T_12_00_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(384, 0)
+
+[node name="T_13_00_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(416, 0)
+
+[node name="T_14_00_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(448, 0)
+
+[node name="T_00_01_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(0, 32)
+
+[node name="T_01_01_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(32, 32)
+
+[node name="T_02_01_camp_dirt" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("2_camp_dirt")
+centered = false
+position = Vector2(64, 32)
+
+[node name="T_03_01_camp_dirt" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("2_camp_dirt")
+centered = false
+position = Vector2(96, 32)
+
+[node name="T_04_01_camp_dirt" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("2_camp_dirt")
+centered = false
+position = Vector2(128, 32)
+
+[node name="T_05_01_camp_dirt" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("2_camp_dirt")
+centered = false
+position = Vector2(160, 32)
+
+[node name="T_06_01_camp_dirt" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("2_camp_dirt")
+centered = false
+position = Vector2(192, 32)
+
+[node name="T_07_01_camp_dirt" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("2_camp_dirt")
+centered = false
+position = Vector2(224, 32)
+
+[node name="T_08_01_camp_dirt" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("2_camp_dirt")
+centered = false
+position = Vector2(256, 32)
+
+[node name="T_09_01_camp_dirt" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("2_camp_dirt")
+centered = false
+position = Vector2(288, 32)
+
+[node name="T_10_01_camp_dirt" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("2_camp_dirt")
+centered = false
+position = Vector2(320, 32)
+
+[node name="T_11_01_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(352, 32)
+
+[node name="T_12_01_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(384, 32)
+
+[node name="T_13_01_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(416, 32)
+
+[node name="T_14_01_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(448, 32)
+
+[node name="T_00_02_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(0, 64)
+
+[node name="T_01_02_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(32, 64)
+
+[node name="T_02_02_camp_dirt" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("2_camp_dirt")
+centered = false
+position = Vector2(64, 64)
+
+[node name="T_03_02_camp_dirt" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("2_camp_dirt")
+centered = false
+position = Vector2(96, 64)
+
+[node name="T_04_02_camp_dirt" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("2_camp_dirt")
+centered = false
+position = Vector2(128, 64)
+
+[node name="T_05_02_camp_dirt" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("2_camp_dirt")
+centered = false
+position = Vector2(160, 64)
+
+[node name="T_06_02_camp_dirt" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("2_camp_dirt")
+centered = false
+position = Vector2(192, 64)
+
+[node name="T_07_02_camp_dirt" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("2_camp_dirt")
+centered = false
+position = Vector2(224, 64)
+
+[node name="T_08_02_camp_dirt" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("2_camp_dirt")
+centered = false
+position = Vector2(256, 64)
+
+[node name="T_09_02_camp_dirt" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("2_camp_dirt")
+centered = false
+position = Vector2(288, 64)
+
+[node name="T_10_02_camp_dirt" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("2_camp_dirt")
+centered = false
+position = Vector2(320, 64)
+
+[node name="T_11_02_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(352, 64)
+
+[node name="T_12_02_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(384, 64)
+
+[node name="T_13_02_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(416, 64)
+
+[node name="T_14_02_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(448, 64)
+
+[node name="T_00_03_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(0, 96)
+
+[node name="T_01_03_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(32, 96)
+
+[node name="T_02_03_camp_dirt" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("2_camp_dirt")
+centered = false
+position = Vector2(64, 96)
+
+[node name="T_03_03_camp_dirt" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("2_camp_dirt")
+centered = false
+position = Vector2(96, 96)
+
+[node name="T_04_03_camp_dirt" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("2_camp_dirt")
+centered = false
+position = Vector2(128, 96)
+
+[node name="T_05_03_camp_dirt" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("2_camp_dirt")
+centered = false
+position = Vector2(160, 96)
+
+[node name="T_06_03_camp_dirt" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("2_camp_dirt")
+centered = false
+position = Vector2(192, 96)
+
+[node name="T_07_03_camp_dirt" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("2_camp_dirt")
+centered = false
+position = Vector2(224, 96)
+
+[node name="T_08_03_camp_dirt" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("2_camp_dirt")
+centered = false
+position = Vector2(256, 96)
+
+[node name="T_09_03_camp_dirt" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("2_camp_dirt")
+centered = false
+position = Vector2(288, 96)
+
+[node name="T_10_03_camp_dirt" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("2_camp_dirt")
+centered = false
+position = Vector2(320, 96)
+
+[node name="T_11_03_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(352, 96)
+
+[node name="T_12_03_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(384, 96)
+
+[node name="T_13_03_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(416, 96)
+
+[node name="T_14_03_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(448, 96)
+
+[node name="T_00_04_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(0, 128)
+
+[node name="T_01_04_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(32, 128)
+
+[node name="T_02_04_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(64, 128)
+
+[node name="T_03_04_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(96, 128)
+
+[node name="T_04_04_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(128, 128)
+
+[node name="T_05_04_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(160, 128)
+
+[node name="T_06_04_forest_path" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("3_forest_path")
+centered = false
+position = Vector2(192, 128)
+
+[node name="T_07_04_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(224, 128)
+
+[node name="T_08_04_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(256, 128)
+
+[node name="T_09_04_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(288, 128)
+
+[node name="T_10_04_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(320, 128)
+
+[node name="T_11_04_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(352, 128)
+
+[node name="T_12_04_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(384, 128)
+
+[node name="T_13_04_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(416, 128)
+
+[node name="T_14_04_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(448, 128)
+
+[node name="T_00_05_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(0, 160)
+
+[node name="T_01_05_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(32, 160)
+
+[node name="T_02_05_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(64, 160)
+
+[node name="T_03_05_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(96, 160)
+
+[node name="T_04_05_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(128, 160)
+
+[node name="T_05_05_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(160, 160)
+
+[node name="T_06_05_forest_path" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("3_forest_path")
+centered = false
+position = Vector2(192, 160)
+
+[node name="T_07_05_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(224, 160)
+
+[node name="T_08_05_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(256, 160)
+
+[node name="T_09_05_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(288, 160)
+
+[node name="T_10_05_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(320, 160)
+
+[node name="T_11_05_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(352, 160)
+
+[node name="T_12_05_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(384, 160)
+
+[node name="T_13_05_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(416, 160)
+
+[node name="T_14_05_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(448, 160)
+
+[node name="T_00_06_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(0, 192)
+
+[node name="T_01_06_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(32, 192)
+
+[node name="T_02_06_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(64, 192)
+
+[node name="T_03_06_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(96, 192)
+
+[node name="T_04_06_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(128, 192)
+
+[node name="T_05_06_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(160, 192)
+
+[node name="T_06_06_forest_path" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("3_forest_path")
+centered = false
+position = Vector2(192, 192)
+
+[node name="T_07_06_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(224, 192)
+
+[node name="T_08_06_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(256, 192)
+
+[node name="T_09_06_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(288, 192)
+
+[node name="T_10_06_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(320, 192)
+
+[node name="T_11_06_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(352, 192)
+
+[node name="T_12_06_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(384, 192)
+
+[node name="T_13_06_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(416, 192)
+
+[node name="T_14_06_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(448, 192)
+
+[node name="T_00_07_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(0, 224)
+
+[node name="T_01_07_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(32, 224)
+
+[node name="T_02_07_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(64, 224)
+
+[node name="T_03_07_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(96, 224)
+
+[node name="T_04_07_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(128, 224)
+
+[node name="T_05_07_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(160, 224)
+
+[node name="T_06_07_forest_path" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("3_forest_path")
+centered = false
+position = Vector2(192, 224)
+
+[node name="T_07_07_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(224, 224)
+
+[node name="T_08_07_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(256, 224)
+
+[node name="T_09_07_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(288, 224)
+
+[node name="T_10_07_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(320, 224)
+
+[node name="T_11_07_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(352, 224)
+
+[node name="T_12_07_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(384, 224)
+
+[node name="T_13_07_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(416, 224)
+
+[node name="T_14_07_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(448, 224)
+
+[node name="T_00_08_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(0, 256)
+
+[node name="T_01_08_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(32, 256)
+
+[node name="T_02_08_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(64, 256)
+
+[node name="T_03_08_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(96, 256)
+
+[node name="T_04_08_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(128, 256)
+
+[node name="T_05_08_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(160, 256)
+
+[node name="T_06_08_forest_path" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("3_forest_path")
+centered = false
+position = Vector2(192, 256)
+
+[node name="T_07_08_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(224, 256)
+
+[node name="T_08_08_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(256, 256)
+
+[node name="T_09_08_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(288, 256)
+
+[node name="T_10_08_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(320, 256)
+
+[node name="T_11_08_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(352, 256)
+
+[node name="T_12_08_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(384, 256)
+
+[node name="T_13_08_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(416, 256)
+
+[node name="T_14_08_forest_floor" type="Sprite2D" parent="Tiles"]
+texture = ExtResource("1_forest_floor")
+centered = false
+position = Vector2(448, 256)
+
+[node name="Props" type="Node2D" parent="."]
+
+[node name="P_00_04_tree" type="Sprite2D" parent="Props"]
+texture = ExtResource("4_tree")
+centered = false
+position = Vector2(0, 128)
+
+[node name="P_14_04_tree" type="Sprite2D" parent="Props"]
+texture = ExtResource("4_tree")
+centered = false
+position = Vector2(448, 128)
+
+[node name="P_00_06_tree" type="Sprite2D" parent="Props"]
+texture = ExtResource("4_tree")
+centered = false
+position = Vector2(0, 192)
+
+[node name="P_14_06_tree" type="Sprite2D" parent="Props"]
+texture = ExtResource("4_tree")
+centered = false
+position = Vector2(448, 192)
+
+[node name="P_03_04_tree" type="Sprite2D" parent="Props"]
+texture = ExtResource("4_tree")
+centered = false
+position = Vector2(96, 128)
+
+[node name="P_11_04_tree" type="Sprite2D" parent="Props"]
+texture = ExtResource("4_tree")
+centered = false
+position = Vector2(352, 128)
+
+[node name="P_04_02_fire_pit" type="Sprite2D" parent="Props"]
+texture = ExtResource("5_fire_pit")
+centered = false
+position = Vector2(128, 64)
+
+[node name="P_08_02_cage_iskar" type="Sprite2D" parent="Props"]
+texture = ExtResource("6_cage_iskar")
+centered = false
+position = Vector2(256, 64)
+
+[node name="P_03_03_barrel" type="Sprite2D" parent="Props"]
+texture = ExtResource("7_barrel")
+centered = false
+position = Vector2(96, 96)
+
+[node name="Encounters" type="Node2D" parent="."]
+
+[node name="Bandit1" type="Sprite2D" parent="Encounters"]
+texture = ExtResource("8_bandit")
+centered = false
+position = Vector2(196, 224)
+metadata/encounter_id = "bandit_path_b"
+metadata/combatant_id = "bandit"
+
+[node name="Wolf1" type="Sprite2D" parent="Encounters"]
+texture = ExtResource("9_wolf")
+centered = false
+position = Vector2(196, 160)
+metadata/encounter_id = "wolf_path_a"
+metadata/combatant_id = "wolf"
+
+[node name="Drust" type="Sprite2D" parent="Encounters"]
+texture = ExtResource("8_bandit")
+centered = false
+position = Vector2(196, 64)
+metadata/encounter_id = "drust_camp"
+metadata/combatant_id = "bandit"
+
+[node name="Player" parent="." instance=ExtResource("player_scene")]
+position = Vector2(196, 256)
+
+[node name="IskarFollower" parent="." instance=ExtResource("iskar_follower")]
+
+[node name="InteractionPrompt" parent="." instance=ExtResource("interaction_prompt")]
+
+[node name="QuestToast" parent="." instance=ExtResource("quest_toast")]
+
+[node name="CageOverlay" parent="." instance=ExtResource("cage_overlay")]

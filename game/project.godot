@@ -1,0 +1,86 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=5
+
+[animation]
+
+compatibility/default_parent_skeleton_in_mesh_instance_3d=true
+
+[application]
+
+config/name="Aurelix"
+config/description="A small RPG about a charming dragon and the hero he uses."
+run/main_scene="res://scenes/village_square.tscn"
+config/features=PackedStringArray("4.6", "Forward Plus")
+
+[autoload]
+
+Config="*res://scripts/core/Config.gd"
+EventBus="*res://scripts/core/EventBus.gd"
+TopicRegistry="*res://scripts/core/TopicRegistry.gd"
+FactRegistry="*res://scripts/core/FactRegistry.gd"
+BriefingRegistry="*res://scripts/core/BriefingRegistry.gd"
+NpcProfileRegistry="*res://scripts/core/NpcProfileRegistry.gd"
+NpcDossierStore="*res://scripts/npc/NpcDossierStore.gd"
+AuthoredOptionLibrary="*res://scripts/dialogue/AuthoredOptionLibrary.gd"
+DataLoader="*res://scripts/core/DataLoader.gd"
+BootValidator="*res://scripts/core/BootValidator.gd"
+WorldState="*res://scripts/world/WorldState.gd"
+SceneRouter="*res://scripts/world/SceneRouter.gd"
+FallbackProvider="*res://scripts/ai/FallbackProvider.gd"
+AiService="*res://scripts/ai/AiService.gd"
+QuestState="*res://scripts/quests/QuestState.gd"
+FactLedger="*res://scripts/quests/FactLedger.gd"
+QuestRuleEngine="*res://scripts/quests/QuestRuleEngine.gd"
+NpcMemoryStore="*res://scripts/dialogue/NpcMemoryStore.gd"
+ItemRegistry="*res://scripts/core/ItemRegistry.gd"
+Inventory="*res://scripts/player/Inventory.gd"
+CombatantStats="*res://scripts/combat/CombatantStats.gd"
+IskarCompanion="*res://scripts/companion/IskarCompanion.gd"
+Journal="*res://scripts/journal/Journal.gd"
+CombatController="*res://scripts/combat/CombatController.gd"
+DialogueController="*res://scripts/dialogue/DialogueController.gd"
+JournalController="*res://scripts/journal/JournalController.gd"
+DossierMutator="*res://scripts/npc/DossierMutator.gd"
+AngerCooldownResolver="*res://scripts/dialogue/AngerCooldownResolver.gd"
+SaveBlocker="*res://scripts/core/SaveBlocker.gd"
+SaveManager="*res://scripts/core/SaveManager.gd"
+DebugOverlay="*res://scenes/ui/DebugOverlay.tscn"
+TitleCard="*res://scenes/ui/TitleCard.tscn"
+
+[display]
+
+window/size/viewport_width=480
+window/size/viewport_height=270
+window/size/window_width_override=1440
+window/size/window_height_override=810
+window/stretch/mode="viewport"
+
+[input]
+
+interact={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":69,"key_label":0,"unicode":101,"location":0,"echo":false,"script":null)
+, Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":4194309,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
+]
+}
+journal_toggle={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":74,"key_label":0,"unicode":106,"location":0,"echo":false,"script":null)
+]
+}
+debug_toggle={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":96,"key_label":0,"unicode":96,"location":0,"echo":false,"script":null)
+]
+}
+
+[rendering]
+
+textures/canvas_textures/default_texture_filter=0

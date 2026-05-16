@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/sprites/kael.png" id="1_kael"]
+[ext_resource type="Script" path="res://scripts/player/PlayerController.gd" id="2_ctl"]
+
+[node name="Player" type="Node2D"]
+script = ExtResource("2_ctl")
+
+[node name="Sprite" type="Sprite2D" parent="."]
+texture = ExtResource("1_kael")
+centered = false

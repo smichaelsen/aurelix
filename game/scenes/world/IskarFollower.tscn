@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/sprites/iskar.png" id="1_iskar"]
+[ext_resource type="Script" path="res://scripts/companion/IskarFollower.gd" id="2_ctrl"]
+
+[node name="IskarFollower" type="Node2D"]
+script = ExtResource("2_ctrl")
+
+[node name="Sprite" type="Sprite2D" parent="."]
+texture = ExtResource("1_iskar")
+centered = false

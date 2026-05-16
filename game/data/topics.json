@@ -1,0 +1,104 @@
+{
+  "topics": {
+    "greeting": {
+      "label": "Greeting",
+      "description": "Hellos, goodbyes, how-are-yous. Almost every NPC engages.",
+      "capability_domain": "small_talk"
+    },
+    "small_talk": {
+      "label": "Small talk",
+      "description": "Weather, the harvest, road conditions, generic chatter.",
+      "capability_domain": "small_talk"
+    },
+    "gossip": {
+      "label": "Gossip",
+      "description": "Generic rumor exchange not tied to a specific topic below.",
+      "capability_domain": "local_gossip"
+    },
+    "the_tower": {
+      "label": "The old tower",
+      "description": "The ruin north of Marlow's Hollow. Many briefings cluster here.",
+      "capability_domain": "local_gossip"
+    },
+    "the_dragon": {
+      "label": "The dragon",
+      "description": "Sightings, rumors, fears, lore. The bounty's nominal subject.",
+      "capability_domain": "local_gossip"
+    },
+    "quest_status": {
+      "label": "The bounty",
+      "description": "Asking about the reeve's posted job, payment, terms.",
+      "capability_domain": "trade"
+    },
+    "bandits": {
+      "label": "Bandits",
+      "description": "The recent bandit presence north of the village.",
+      "capability_domain": "local_gossip"
+    },
+    "forest": {
+      "label": "The forest",
+      "description": "General questions about the woods, paths, dangers, wildlife.",
+      "capability_domain": "survival_advice"
+    },
+    "the_drake": {
+      "label": "The drake",
+      "description": "Iskar. What he is, whether he's safe, what villagers make of him.",
+      "capability_domain": "local_gossip"
+    },
+    "gold_eyed_one": {
+      "label": "The gold-eyed one",
+      "description": "The phrase from the bandit note. Almost no one knows it.",
+      "capability_domain": "secret_lore"
+    },
+    "the_reeve": {
+      "label": "Reeve Halden",
+      "description": "The village's representative of the Crown.",
+      "capability_domain": "local_gossip"
+    },
+    "personal_history": {
+      "label": "NPC's own past",
+      "description": "Asking the NPC about themselves: where they come from, what they did.",
+      "capability_domain": "personal_history"
+    },
+    "jorin_theft": {
+      "label": "Jorin's stolen coin box",
+      "description": "The vegetable-theft event in the square (flavor; not quest-critical).",
+      "capability_domain": "local_gossip"
+    },
+    "the_kingdom": {
+      "label": "The kingdom",
+      "description": "The Crown, the king, where Marlow sits in the larger map.",
+      "capability_domain": "politics"
+    },
+    "religion": {
+      "label": "Faith and the Order",
+      "description": "The chapel, the priests, prayers, omens.",
+      "capability_domain": "religion"
+    },
+    "trade": {
+      "label": "Trade and prices",
+      "description": "Buying, selling, haggling.",
+      "capability_domain": "trade"
+    },
+    "formal_math": {
+      "label": "Formal math",
+      "description": "Algebraic / arithmetic problems the player tries to have the NPC solve.",
+      "capability_domain": "formal_math"
+    },
+    "abstract_reasoning": {
+      "label": "Abstract reasoning",
+      "description": "Philosophical or analytical questions that test the NPC's reasoning.",
+      "capability_domain": "abstract_reasoning"
+    },
+    "prompt_injection": {
+      "label": "Prompt-injection attempt",
+      "description": "Player input that tries to break character, request system prompts,\ncommand the NPC out of role, etc. Engine-side classification, never\nsurfaced to the player.\n",
+      "capability_domain": "prompt_injection"
+    },
+    "meta_game": {
+      "label": "Meta-game question",
+      "description": "Player asks about quest flags, game mechanics, AI, save state, etc.\nNPC dodges in character.\n",
+      "capability_domain": "meta_game"
+    }
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "id": "old_tower",
+  "tier": "full",
+  "type": "location",
+  "title": "The old tower",
+  "topic_tags": [
+    "the_tower",
+    "the_dragon",
+    "forest",
+    "gossip"
+  ],
+  "facts_unlocked_on_reveal": [],
+  "contradicts": [],
+  "body": "The old tower stands a half day's walk north of Marlow's Hollow, on a\nrise of bare stone above the tree line. It was already a ruin when\nMarlow was founded. Nobody alive remembers what it was for, who built\nit, or who broke it. The villagers do not go there. The forest folk\nsay it was once a watch and that something was watched.\n\nThe stones are dark and do not catch frost the way other stones do.\nChildren dare each other to walk to its base. Most do not. The few\nwho have come back say only that it was cold there, even in summer,\nand that they did not stay.\n\nIn recent weeks there has been smoke. Some say light. Some say wings.\nReeve Halden has posted a bounty for proof of what is there."
+}
