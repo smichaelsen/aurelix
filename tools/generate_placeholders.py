@@ -1117,15 +1117,11 @@ def sprite_iskar():
 
 
 def sprite_iskar_directional():
-    """Iskar in all four facings. Base is a west-facing profile (snout
-    left, tail right). North/south are 90° rotations of that profile;
-    east is west mirrored.
-
-    All four are emitted at a uniform 32x32, with the drake centered.
-    Uniform framing keeps the Sprite2D anchored consistently when the
-    texture swaps — no visual jump on facing change. Bespoke art later
-    can replace any single file at 32x32 (or smaller, padded). The
-    follower's _pixel_for accounts for the 32-tall sprite already."""
+    """Iskar in all four facings, all at a uniform 32x32. West and east
+    keep the existing side-profile artwork (mirrored). North and south
+    are bespoke top-down 3/4 views — drake walking toward / away from
+    the camera — drawn directly so the snout/back-of-skull reads at a
+    glance instead of a rotated profile."""
     base = Image.open(SPRITES / 'iskar.png').convert('RGBA')
 
     def framed(src):
@@ -1137,8 +1133,87 @@ def sprite_iskar_directional():
 
     framed(base).save(SPRITES / 'iskar_west.png')
     framed(base.transpose(Image.FLIP_LEFT_RIGHT)).save(SPRITES / 'iskar_east.png')
-    framed(base.rotate(90,  expand=True)).save(SPRITES / 'iskar_south.png')
-    framed(base.rotate(-90, expand=True)).save(SPRITES / 'iskar_north.png')
+    _iskar_south().save(SPRITES / 'iskar_south.png')
+    _iskar_north().save(SPRITES / 'iskar_north.png')
+
+
+def _iskar_south():
+    """Top-down 3/4 view, drake facing south (toward the camera). Tail
+    at top; head + snout + ember eyes at the bottom edge."""
+    img = Image.new('RGBA', (32, 32), TRANSPARENT)
+    # Tail spike at top
+    rect(img, 14, 5, 18, 10, P['iskar_dark'])      # tail base
+    rect(img, 15, 2,  17, 6,  P['iskar_dark'])     # spike pointing up
+    # Rear legs (near tail)
+    rect(img, 7,  9,  10, 13, P['iskar_dark'])
+    rect(img, 22, 9,  25, 13, P['iskar_dark'])
+    # Folded wings along the upper torso
+    rect(img, 7,  12, 12, 19, P['iskar_dark'])
+    rect(img, 20, 12, 25, 19, P['iskar_dark'])
+    # Main body oval
+    rect(img, 11, 10, 21, 24, P['iskar_dark'])
+    # Spine ridges down the middle (slightly darker)
+    img.putpixel((15, 12), P['gray_darkest'])
+    img.putpixel((16, 12), P['gray_darkest'])
+    img.putpixel((15, 16), P['gray_darkest'])
+    img.putpixel((16, 16), P['gray_darkest'])
+    img.putpixel((15, 20), P['gray_darkest'])
+    img.putpixel((16, 20), P['gray_darkest'])
+    # Front legs (near head)
+    rect(img, 8,  20, 11, 24, P['iskar_dark'])
+    rect(img, 21, 20, 24, 24, P['iskar_dark'])
+    # Head bulge protruding south
+    rect(img, 12, 23, 20, 28, P['iskar_dark'])
+    # Snout tapering toward the camera
+    rect(img, 13, 27, 19, 30, P['iskar_dark'])
+    rect(img, 14, 29, 18, 31, P['iskar_dark'])
+    # Horn nubs where the head meets the body
+    img.putpixel((13, 23), P['iskar_dark'])
+    img.putpixel((19, 23), P['iskar_dark'])
+    # Ember eyes
+    img.putpixel((14, 25), P['ember_orange'])
+    img.putpixel((17, 25), P['ember_orange'])
+    img.putpixel((14, 26), P['ember_orange'])
+    img.putpixel((17, 26), P['ember_orange'])
+    # Teeth at the snout tip
+    img.putpixel((15, 30), P['bone_white'])
+    img.putpixel((16, 30), P['bone_white'])
+    return img
+
+
+def _iskar_north():
+    """Top-down 3/4 view, drake facing north (away from camera). Head
+    at the top — back of skull, no face — and tail at the bottom."""
+    img = Image.new('RGBA', (32, 32), TRANSPARENT)
+    # Back of head / skull at top (no eyes, no snout)
+    rect(img, 12, 4,  20, 9,  P['iskar_dark'])
+    # Horn nubs sticking up
+    img.putpixel((13, 2), P['iskar_dark'])
+    img.putpixel((14, 3), P['iskar_dark'])
+    img.putpixel((18, 3), P['iskar_dark'])
+    img.putpixel((19, 2), P['iskar_dark'])
+    # Front legs (near head)
+    rect(img, 8,  8,  11, 12, P['iskar_dark'])
+    rect(img, 21, 8,  24, 12, P['iskar_dark'])
+    # Folded wings along the mid-torso
+    rect(img, 7,  13, 12, 20, P['iskar_dark'])
+    rect(img, 20, 13, 25, 20, P['iskar_dark'])
+    # Main body oval
+    rect(img, 11, 8,  21, 23, P['iskar_dark'])
+    # Spine ridges (visible from behind)
+    img.putpixel((15, 11), P['gray_darkest'])
+    img.putpixel((16, 11), P['gray_darkest'])
+    img.putpixel((15, 15), P['gray_darkest'])
+    img.putpixel((16, 15), P['gray_darkest'])
+    img.putpixel((15, 19), P['gray_darkest'])
+    img.putpixel((16, 19), P['gray_darkest'])
+    # Rear legs (near tail)
+    rect(img, 7,  19, 10, 23, P['iskar_dark'])
+    rect(img, 22, 19, 25, 23, P['iskar_dark'])
+    # Tail base + spike pointing south
+    rect(img, 14, 22, 18, 27, P['iskar_dark'])
+    rect(img, 15, 26, 17, 30, P['iskar_dark'])
+    return img
 
 
 # ---------------------------------------------------------------------------
