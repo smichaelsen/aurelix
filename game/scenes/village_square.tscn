@@ -1,4 +1,4 @@
-[gd_scene load_steps=28 format=3]
+[gd_scene load_steps=44 format=3]
 
 [ext_resource type="Texture2D" path="res://assets/tiles/grass.png" id="1_grass"]
 [ext_resource type="Texture2D" path="res://assets/tiles/thatched_roof.png" id="2_thatched_roof"]
@@ -22,6 +22,22 @@
 [ext_resource type="Texture2D" path="res://assets/sprites/orren.png" id="20_orren"]
 [ext_resource type="Texture2D" path="res://assets/sprites/halden.png" id="21_halden"]
 [ext_resource type="Texture2D" path="res://assets/sprites/edda.png" id="22_edda"]
+[ext_resource type="Script" path="res://scripts/world/FacingSprite.gd" id="23_facing"]
+[ext_resource type="Texture2D" path="res://assets/sprites/toma_north.png" id="24_toma_n"]
+[ext_resource type="Texture2D" path="res://assets/sprites/toma_east.png" id="25_toma_e"]
+[ext_resource type="Texture2D" path="res://assets/sprites/toma_west.png" id="26_toma_w"]
+[ext_resource type="Texture2D" path="res://assets/sprites/mara_north.png" id="27_mara_n"]
+[ext_resource type="Texture2D" path="res://assets/sprites/mara_east.png" id="28_mara_e"]
+[ext_resource type="Texture2D" path="res://assets/sprites/mara_west.png" id="29_mara_w"]
+[ext_resource type="Texture2D" path="res://assets/sprites/orren_north.png" id="30_orren_n"]
+[ext_resource type="Texture2D" path="res://assets/sprites/orren_east.png" id="31_orren_e"]
+[ext_resource type="Texture2D" path="res://assets/sprites/orren_west.png" id="32_orren_w"]
+[ext_resource type="Texture2D" path="res://assets/sprites/halden_north.png" id="33_halden_n"]
+[ext_resource type="Texture2D" path="res://assets/sprites/halden_east.png" id="34_halden_e"]
+[ext_resource type="Texture2D" path="res://assets/sprites/halden_west.png" id="35_halden_w"]
+[ext_resource type="Texture2D" path="res://assets/sprites/edda_north.png" id="36_edda_n"]
+[ext_resource type="Texture2D" path="res://assets/sprites/edda_east.png" id="37_edda_e"]
+[ext_resource type="Texture2D" path="res://assets/sprites/edda_west.png" id="38_edda_w"]
 [ext_resource type="PackedScene" path="res://scenes/world/PlayerCharacter.tscn" id="player_scene"]
 [ext_resource type="PackedScene" path="res://scenes/world/IskarFollower.tscn" id="iskar_follower"]
 [ext_resource type="PackedScene" path="res://scenes/ui/InteractionPrompt.tscn" id="interaction_prompt"]
@@ -766,30 +782,95 @@ position = Vector2(416, 224)
 
 [node name="Characters" type="Node2D" parent="."]
 
-[node name="Toma" type="Sprite2D" parent="Characters"]
-texture = ExtResource("18_toma")
-centered = false
+[node name="Toma" type="Node2D" parent="Characters"]
 position = Vector2(196, 128)
 
-[node name="Mara" type="Sprite2D" parent="Characters"]
-texture = ExtResource("19_mara")
+[node name="Sprite" type="Sprite2D" parent="Characters/Toma"]
+texture = ExtResource("18_toma")
 centered = false
+
+[node name="FacingSprite" type="Node" parent="Characters/Toma"]
+script = ExtResource("23_facing")
+subject = "npc:toma_child"
+sprite_path = NodePath("../Sprite")
+textures = {
+"north": ExtResource("24_toma_n"),
+"south": ExtResource("18_toma"),
+"east": ExtResource("25_toma_e"),
+"west": ExtResource("26_toma_w")
+}
+
+[node name="Mara" type="Node2D" parent="Characters"]
 position = Vector2(292, 96)
 
-[node name="Orren" type="Sprite2D" parent="Characters"]
-texture = ExtResource("20_orren")
+[node name="Sprite" type="Sprite2D" parent="Characters/Mara"]
+texture = ExtResource("19_mara")
 centered = false
+
+[node name="FacingSprite" type="Node" parent="Characters/Mara"]
+script = ExtResource("23_facing")
+subject = "npc:mara_blacksmith"
+sprite_path = NodePath("../Sprite")
+textures = {
+"north": ExtResource("27_mara_n"),
+"south": ExtResource("19_mara"),
+"east": ExtResource("28_mara_e"),
+"west": ExtResource("29_mara_w")
+}
+
+[node name="Orren" type="Node2D" parent="Characters"]
 position = Vector2(132, 96)
 
-[node name="Halden" type="Sprite2D" parent="Characters"]
-texture = ExtResource("21_halden")
+[node name="Sprite" type="Sprite2D" parent="Characters/Orren"]
+texture = ExtResource("20_orren")
 centered = false
+
+[node name="FacingSprite" type="Node" parent="Characters/Orren"]
+script = ExtResource("23_facing")
+subject = "npc:orren_drunk"
+sprite_path = NodePath("../Sprite")
+textures = {
+"north": ExtResource("30_orren_n"),
+"south": ExtResource("20_orren"),
+"east": ExtResource("31_orren_e"),
+"west": ExtResource("32_orren_w")
+}
+
+[node name="Halden" type="Node2D" parent="Characters"]
 position = Vector2(356, 224)
 
-[node name="Edda" type="Sprite2D" parent="Characters"]
-texture = ExtResource("22_edda")
+[node name="Sprite" type="Sprite2D" parent="Characters/Halden"]
+texture = ExtResource("35_halden_w")
 centered = false
+
+[node name="FacingSprite" type="Node" parent="Characters/Halden"]
+script = ExtResource("23_facing")
+subject = "npc:halden_reeve"
+sprite_path = NodePath("../Sprite")
+textures = {
+"north": ExtResource("33_halden_n"),
+"south": ExtResource("21_halden"),
+"east": ExtResource("34_halden_e"),
+"west": ExtResource("35_halden_w")
+}
+
+[node name="Edda" type="Node2D" parent="Characters"]
 position = Vector2(100, 224)
+
+[node name="Sprite" type="Sprite2D" parent="Characters/Edda"]
+texture = ExtResource("37_edda_e")
+centered = false
+
+[node name="FacingSprite" type="Node" parent="Characters/Edda"]
+script = ExtResource("23_facing")
+subject = "npc:edda_priest"
+sprite_path = NodePath("../Sprite")
+textures = {
+"north": ExtResource("36_edda_n"),
+"south": ExtResource("22_edda"),
+"east": ExtResource("37_edda_e"),
+"west": ExtResource("38_edda_w")
+}
 
 [node name="Player" parent="." instance=ExtResource("player_scene")]
 position = Vector2(228, 192)

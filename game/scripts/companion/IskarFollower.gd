@@ -23,11 +23,14 @@ func _ready() -> void:
 	visible = IskarCompanion.bonded
 	EventBus.iskar_bonded.connect(_on_iskar_bonded)
 	EventBus.player_moved.connect(_on_player_moved)
+	tree_exiting.connect(_on_tree_exiting)
 	# Wait one frame so WorldState is populated by Player._ready.
 	await get_tree().process_frame
 	_kael_pos = WorldState.player_start
 	_own_tile = _kael_pos
 	position = _pixel_for(_kael_pos)
+	if IskarCompanion.bonded:
+		_publish_tile()
 	# Announce Iskar's presence on scene-load so DossierMutator can update
 	# any village NPCs who can see him.
 	if IskarCompanion.bonded and not WorldState.current_scene_id.is_empty():
@@ -44,6 +47,7 @@ func _on_iskar_bonded() -> void:
 		_kael_pos = player.grid_pos
 	_own_tile = _kael_pos
 	position = _pixel_for(_kael_pos)
+	_publish_tile()
 	# Bonding-on-the-spot also fires the "drake entered this scene" event.
 	if not WorldState.current_scene_id.is_empty():
 		EventBus.iskar_entered_location.emit(WorldState.current_scene_id)
@@ -64,8 +68,20 @@ func _on_player_moved(col: int, row: int) -> void:
 		_facing = dir
 		EventBus.iskar_facing_changed.emit(_facing)
 	_own_tile = dest
+	_publish_tile()
 	var tween := create_tween()
 	tween.tween_property(self, "position", _pixel_for(dest), MOVE_DURATION)
+
+
+func _publish_tile() -> void:
+	IskarCompanion.current_tile = _own_tile
+	IskarCompanion.present_in_scene = true
+
+
+func _on_tree_exiting() -> void:
+	# Scene-change tear-down. Iskar isn't standing anywhere until the next
+	# scene's follower wakes up and republishes.
+	IskarCompanion.present_in_scene = false
 
 
 # Collapse a 2D delta to a single cardinal. Dominant axis wins; ties

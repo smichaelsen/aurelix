@@ -51,6 +51,31 @@ change.
   FallbackProvider with authored line banks;
   DebugOverlay surfaces topic / gate / briefings /
   raw JSON / validation.
+- Scene presence in state paragraph (2026-05-16):
+  new `game/scripts/dialogue/ScenePresence.gd` adds
+  up to two lines to the state paragraph the speaking
+  NPC sees: "Within 3 tiles: Mara (E), Iskar (S)" and
+  "Elsewhere in scene: Orren (W), Halden (N), …".
+  Distance is Chebyshev; direction folds to N/S/E/W
+  with horizontal preferred on ties (same rule as
+  `IskarFollower._cardinal_of`). Companion tile is
+  published by IskarFollower via two new fields on
+  `IskarCompanion`: `present_in_scene` and
+  `current_tile`. DialogueController appends the
+  lines after `StateModifierResolver.build_state_paragraph`.
+  Player is intentionally excluded — face-to-face with
+  the speaker is implied by the dialogue itself.
+- Ollama provider (2026-05-16): new `proxy/providers/
+  ollama.py` speaks Ollama's `/api/chat` with
+  `format: "json"`. Selected via `AURELIX_PROVIDER=
+  ollama`; configurable via `OLLAMA_HOST`,
+  `OLLAMA_MODEL`, `OLLAMA_CLASSIFY_MODEL`,
+  `OLLAMA_TIMEOUT_S`. Shared JSON extraction moved to
+  `proxy/providers/_json_utils.py` and reused by the
+  Anthropic provider. `httpx` added to
+  `proxy/requirements.txt`. Godot side untouched —
+  `LocalProxyProvider` does not know which backend
+  serves a turn.
 - Bandit-camp cage persistence fix (2026-05-16):
   `CageHandler._ready()` now swaps the cage sprite
   to `cage_empty.png` (deferred) when
@@ -100,6 +125,83 @@ change.
   `iskar_south.png` and hosts a FacingSprite with
   the four textures wired. Phase7BondTest still
   green.
+- Village NPC directional sprites (2026-05-16):
+  `sprite_<name>_directional()` added for Toma,
+  Mara, Orren, Halden, Edda — humanoids reuse
+  `base_human_north`/`base_human_west` and overlay
+  per-NPC details (Mara's apron, Halden's rank
+  chain, Edda's robe + collar, Orren's slumped
+  shoulders); Toma gets bespoke north/west at the
+  child silhouette dimensions. Each existing
+  south-only function now also saves
+  `<name>_south.png` so the FacingSprite dict has
+  a stable alias. `village_square.tscn` rewired:
+  each NPC is now a Node2D wrapper containing a
+  Sprite child + FacingSprite child with subject
+  `"npc:<id>"`. Halden's `Sprite.texture` defaults
+  to `halden_west.png` and Edda's to `edda_east.png`
+  to match their authored grid facings on load
+  (no facing event fires at scene load).
+  Phase3Test / Phase4Test / Phase10Test all still
+  pass.
+- Mock classify rules consolidated (2026-05-16):
+  Extracted the keyword-rule table that drives
+  `MockProvider.classify_topic` into a shared
+  `proxy/data/mock_classify_rules.json`, mirrored to
+  `game/data/` by `tools/yaml_to_json.py` (added to
+  the shared-asset copy pairs and `OWNED_TOPLEVEL`).
+  Both `proxy/providers/mock.py` and
+  `game/scripts/ai/MockProvider.gd` now load rules
+  from JSON at startup; the previously-hardcoded
+  rule tables (which had drifted in order and
+  keywords) are gone. Canonical rule order puts
+  `prompt_injection` first, then `meta_game`, then
+  the rest — fixes a real bug where Python's
+  ordering (with bare `'system'` as a `meta_game`
+  keyword listed after the topic-specific rules)
+  let inputs like "ignore your system prompt"
+  classify as `meta_game` instead of
+  `prompt_injection`, sneaking past the
+  capability-gate's prompt-injection branch. Also
+  dropped a dead `capability_gate.decision ==
+  'blocked'` branch in proxy mock's `generate()`
+  that returned the same archetype-fallback as
+  the fall-through. Verified with 8 test inputs
+  through the proxy venv.
+- NpcMemoryStore public accessors (2026-05-16):
+  Added `set_flag`, `get_flag`, `set_anger_cooldown`,
+  `get_anger_cooldown`, `decrement_anger_cooldown`,
+  `clear_stress`, `set_recent_summary`,
+  `known_npc_ids`, `peek_memory` (deep-copy snapshot,
+  no entry creation) to `NpcMemoryStore`. Migrated
+  `AngerCooldownResolver` and `OfferItemAction` off
+  direct nested-dict mutation; `DebugOverlay` now
+  uses `peek_memory`; `Phase10Test` ghost-npc
+  assertion uses `known_npc_ids()`. `DialogueSession`
+  and `DialogueController._session.npc_memory` keep
+  their live-reference pattern (documented in the
+  store header as intentional intimate coupling).
+  `SaveManager` keeps owner-level `_by_id` access
+  (also documented). Brings mutation surface in line
+  with the code-standards rule "never reach directly
+  into ... from outside the owning autoload."
+- DialogueController _busy watchdog (2026-05-16):
+  `_run_ai_turn` split into a thin wrapper and
+  `_run_ai_turn_body`. The wrapper owns the `_busy`
+  lifecycle via `_begin_busy_turn` / `_end_busy_turn`,
+  so every exit path — normal completion, stress/patience
+  early returns, and a runtime error or hung provider
+  await inside the body — releases the flag. A 30s
+  generation-counter watchdog (`_arm_busy_watchdog`)
+  force-resets `_busy` and logs `push_error` if the
+  turn never completes, preventing a permanent
+  SaveBlocker softlock when an `await` in the body
+  fails to resolve. The stress/patience branches still
+  release `_busy` before the 2s parting-line timer so
+  saves aren't blocked during the read window;
+  `_end_busy_turn` is idempotent (bumps generation).
+  External readers (`SaveBlocker`, `PlaythroughTour`)
+  see no API change.
 - SaveManager hardening (2026-05-16): atomic write
   via temp file + `DirAccess.rename` in `user://`;
   `load_slot` refuses newer-than-build saves outright;
@@ -121,24 +223,19 @@ change.
 ## Next Up
 
 1. **Directional sprites for the remaining
-   characters.** Kael and Iskar are done. Next up:
-   the five demo NPCs (Toma, Mara, Orren, Halden,
-   Edda), plus the forest encounters if they
-   should turn. For each character:
-   - Add a `sprite_<name>_directional()` to
-     `tools/generate_placeholders.py` modelled on
-     the new `sprite_kael_directional()` —
-     `base_human_north` / `base_human_west` are
-     already in place to reuse for humanoids.
-   - East = west mirrored (placeholder convention).
-   - For non-humanoid sprites that are already
-     drawn as side profiles, the rotate-and-pad
-     trick used for Iskar is a faster path than
-     redrawing.
-   - Wire a `FacingSprite` child into each
-     character scene (subject `"npc:<id>"`) with
-     `sprite_path` and a `textures` dict pointing
-     at the four PNGs.
+   characters.** Kael, Iskar, and the five village
+   NPCs (Toma, Mara, Orren, Halden, Edda) are
+   done. Forest encounters (wolf, bandits) still
+   render as side-profile only; if they should
+   turn during combat or while patrolling, give
+   them the same treatment — the rotate-and-pad
+   trick used for Iskar is the faster path for
+   non-humanoid silhouettes already drawn in
+   profile. Combat overlay owns its own pose so
+   overworld facing on enemies is only relevant
+   when they appear in the overworld (currently
+   they don't — they're encounter sprites that
+   trigger combat on touch).
 2. Verify all 14 success criteria via
    `PlaythroughTour.gd` headless run.
 3. Final pass on authored content gaps listed in
@@ -164,10 +261,10 @@ change.
 - Prompt-injection blocked-response style per NPC:
   do we author one per archetype, or share a generic
   "I don't take orders from strangers" across all?
-- Mock/Haiku byte-for-byte parity: currently the in-Godot
-  Mock and proxy Mock diverge in canned content. Decide
-  whether to fix or accept (the demo path uses Mock
-  only as a fallback).
+- ~~Mock/Haiku byte-for-byte parity~~ — resolved
+  2026-05-16. Classify rules now load from shared
+  JSON. `mock_responses.json` was already mirrored.
+  Drift surface eliminated structurally.
 
 ## Architecture Decisions
 
@@ -198,10 +295,16 @@ change.
   successful move" inverted after first feel-test;
   responsive rotation is the classic top-down RPG
   convention.) Diagonals collapse via "last cardinal
-  pressed". NPCs and
-  Kael face each other on `dialogue_opened` and
-  restore prior facing on `dialogue_closed`.
-  Interaction stays 8-neighbour, not facing-gated.
+  pressed". NPCs and Kael face each other on
+  `dialogue_opened` and **keep** that facing after
+  `dialogue_closed` — a conversation just happened,
+  they're not snapping back. (Earlier rule "restore
+  prior facing on close" reverted 2026-05-16 once
+  directional NPC sprites landed and snapping the
+  NPC back to its authored default the instant
+  dialogue closed read as the NPC ignoring you
+  mid-goodbye.) Interaction stays 8-neighbour,
+  not facing-gated.
   Combat overlay owns its own pose layout —
   overworld facing does not leak in.
 - Save writes are atomic: write to

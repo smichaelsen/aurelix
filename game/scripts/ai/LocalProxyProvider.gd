@@ -8,7 +8,10 @@ extends "res://scripts/ai/AiProvider.gd"
 ##
 
 const DEFAULT_HOST    := "http://127.0.0.1:8421"
-const TIMEOUT_SECONDS := 5.0
+# Long enough to cover local Ollama cold-loads (first call after model swap
+# can take 20-30s on M-series). Anthropic Haiku responses come back in 1-3s,
+# so this only matters as a worst-case ceiling, not a per-turn wait.
+const TIMEOUT_SECONDS := 60.0
 
 
 var host: String = DEFAULT_HOST

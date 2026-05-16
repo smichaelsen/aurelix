@@ -196,7 +196,8 @@ def copy_shared_assets() -> None:
     """Copy files that the proxy and the game both consume."""
     proxy_data = ROOT / 'proxy' / 'data'
     pairs = [
-        (proxy_data / 'mock_responses.json', DST / 'mock_responses.json'),
+        (proxy_data / 'mock_responses.json',       DST / 'mock_responses.json'),
+        (proxy_data / 'mock_classify_rules.json',  DST / 'mock_classify_rules.json'),
     ]
     for src, dst in pairs:
         if not src.exists():
@@ -219,7 +220,7 @@ def main() -> int:
     OWNED_SUBDIRS  = ['npc', 'briefings', 'options', 'fallback_lines']
     OWNED_TOPLEVEL = ['topics.json', 'facts.json', 'tile_collision.json',
                       'items.json', 'combatants.json', 'mock_responses.json',
-                      '_index.json']
+                      'mock_classify_rules.json', '_index.json']
     for sub in OWNED_SUBDIRS:
         d = DST / sub
         if d.exists():

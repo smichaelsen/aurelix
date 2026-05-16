@@ -150,7 +150,7 @@ func _refresh_npc() -> void:
 		_npc_view.text = "(no NPCs)"
 		return
 	var npc_id: String = _npc_picker.get_item_text(_npc_picker.selected if _npc_picker.selected >= 0 else 0)
-	var mem: Dictionary = NpcMemoryStore._by_id.get(npc_id, {})
+	var mem: Dictionary = NpcMemoryStore.peek_memory(npc_id)
 	var dossier: Array = NpcDossierStore.dossier_for(npc_id)
 	var lines: Array = ["[%s]" % npc_id]
 	lines.append("memory:")

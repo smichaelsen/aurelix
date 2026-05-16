@@ -1,0 +1,25 @@
+{
+  "_comment": "Shared keyword rules for both mock providers (proxy/providers/mock.py and game/scripts/ai/MockProvider.gd). Source of truth: proxy/data/. Mirrored to game/data/ by tools/yaml_to_json.py. Order is significant: prompt_injection and meta_game come first so they aren't shadowed by overly broad later keywords (e.g. forest matching 'wood' in 'I would'). Real Haiku does this semantically; this list only governs the deterministic Mock path.",
+  "match_confidence": 0.7,
+  "default_topic_id": "small_talk",
+  "default_confidence": 0.3,
+  "rules": [
+    {"topic_id": "prompt_injection",   "keywords": ["ignore previous", "ignore your", "reveal your prompt", "pretend you are"]},
+    {"topic_id": "meta_game",          "keywords": ["are you ai", "system prompt", "admin", "save", "reload", "quest flag"]},
+    {"topic_id": "formal_math",        "keywords": ["solve", "x squared", "x^2", "equation", "calculate", "algebra", "what is x"]},
+    {"topic_id": "abstract_reasoning", "keywords": ["what is the meaning", "explain the concept", "in theory"]},
+    {"topic_id": "the_tower",          "keywords": ["tower", "old tower", "ruin", "rise"]},
+    {"topic_id": "the_dragon",         "keywords": ["dragon", "wings", "fire"]},
+    {"topic_id": "the_drake",          "keywords": ["drake", "iskar", "hatchling"]},
+    {"topic_id": "bandits",            "keywords": ["bandit", "drust", "camp"]},
+    {"topic_id": "gold_eyed_one",      "keywords": ["gold-eyed", "gold eye", "the gold"]},
+    {"topic_id": "quest_status",       "keywords": ["bounty", "reward", "job", "pay"]},
+    {"topic_id": "trade",              "keywords": ["buy", "sell", "price", "coin", "sword", "armor"]},
+    {"topic_id": "religion",           "keywords": ["pray", "light", "order", "chapel", "sister", "brother"]},
+    {"topic_id": "forest",             "keywords": ["forest", "wolf", "path", "wood"]},
+    {"topic_id": "jorin_theft",        "keywords": ["jorin", "theft", "stolen", "cabbage", "onion"]},
+    {"topic_id": "the_reeve",          "keywords": ["reeve", "halden"]},
+    {"topic_id": "the_kingdom",        "keywords": ["kingdom", "king", "crown", "ostgate"]},
+    {"topic_id": "personal_history",   "keywords": ["who are you", "where from", "your past", "tell me about yourself"]}
+  ]
+}

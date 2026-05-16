@@ -22,6 +22,12 @@ var affinity_points: int = 0
 var unlocked_tier: int = 0
 var stance: String = STANCE_AGGRESSIVE
 
+# Tile presence published by IskarFollower so dialogue / AI prompts can ask
+# "is Iskar in the scene and where is he?" without scene-tree probing.
+# `present` is false until a follower is in the active scene.
+var present_in_scene: bool = false
+var current_tile: Vector2i = Vector2i.ZERO
+
 
 func _ready() -> void:
 	# CombatController awards affinity directly on win; we listen for the

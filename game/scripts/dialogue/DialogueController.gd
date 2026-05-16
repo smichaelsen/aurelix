@@ -24,6 +24,7 @@ const ResponseValidatorScript  = preload("res://scripts/dialogue/ResponseValidat
 const PromptBuilderScript      = preload("res://scripts/ai/PromptBuilder.gd")
 const CapabilityGateScript     = preload("res://scripts/ai/CapabilityGate.gd")
 const StateModifierScript      = preload("res://scripts/dialogue/StateModifierResolver.gd")
+const ScenePresenceScript      = preload("res://scripts/dialogue/ScenePresence.gd")
 const DialogueSessionScript    = preload("res://scripts/dialogue/DialogueSession.gd")
 const HaldenScript             = preload("res://scripts/npc/HaldenScript.gd")
 const OfferItemScript          = preload("res://scripts/dialogue/OfferItemAction.gd")
@@ -50,13 +51,18 @@ const ANGER_OUT_LINES := {
 ## (default 3 village interactions). An apology-item offer clears it.
 
 
+## If `_busy` stays true longer than this (e.g. provider await hangs, runtime
+## error mid-turn), the watchdog logs and force-clears it so SaveBlocker and
+## the input guards don't lock the player out permanently.
+const _BUSY_WATCHDOG_SECONDS := 30.0
+
 var _box: Node = null
 var _session: RefCounted = null
 var _busy: bool = false
-# Facing snapshots so close() can restore both speakers.
-var _pre_dialogue_player_facing: String = ""
-var _pre_dialogue_npc_facing: String = ""
-var _pre_dialogue_npc_id: String = ""
+# Bumped on every begin/end. A watchdog only fires if the generation it
+# captured at arm-time is still current — so legitimate completions
+# invalidate their own watchdog without needing to cancel a timer.
+var _busy_gen: int = 0
 
 
 func _ready() -> void:
@@ -133,16 +139,16 @@ func _open(npc_id: String) -> void:
 
 func _on_box_closed() -> void:
 	if _session != null:
-		_restore_pre_dialogue_facings()
 		EventBus.dialogue_closed.emit()
 	_session = null
 	if _box != null:
 		_box.hide_box()
 
 
-# Rotate Kael and the NPC to face each other. Stash their prior facings so
-# _on_box_closed can restore them. Dominant-axis collapse; ties favour
-# horizontal (one shared rule across follower + dialogue).
+# Rotate Kael and the NPC to face each other. Both keep this facing after
+# the dialogue closes — a conversation just happened, they're not snapping
+# back to wherever they were looking before. Dominant-axis collapse; ties
+# favour horizontal (one shared rule across follower + dialogue).
 func _apply_face_each_other(npc_id: String) -> void:
 	var player := get_tree().get_first_node_in_group("player_grid")
 	if player == null or not ("grid_pos" in player) or not ("facing" in player):
@@ -151,28 +157,12 @@ func _apply_face_each_other(npc_id: String) -> void:
 		return
 	var kael_pos: Vector2i = player.grid_pos
 	var npc_pos:  Vector2i = WorldState.npc_locations[npc_id]
-	_pre_dialogue_player_facing = String(player.facing)
-	_pre_dialogue_npc_facing    = WorldState.npc_facing(npc_id)
-	_pre_dialogue_npc_id        = npc_id
 	var to_npc:  String = _cardinal(npc_pos - kael_pos)
 	var to_kael: String = _cardinal(kael_pos - npc_pos)
 	if to_npc != "" and player.has_method("_set_facing"):
 		player._set_facing(to_npc)
 	if to_kael != "":
 		WorldState.set_npc_facing(npc_id, to_kael)
-
-
-func _restore_pre_dialogue_facings() -> void:
-	if _pre_dialogue_npc_id.is_empty():
-		return
-	var player := get_tree().get_first_node_in_group("player_grid")
-	if player != null and player.has_method("_set_facing") and not _pre_dialogue_player_facing.is_empty():
-		player._set_facing(_pre_dialogue_player_facing)
-	if not _pre_dialogue_npc_facing.is_empty():
-		WorldState.set_npc_facing(_pre_dialogue_npc_id, _pre_dialogue_npc_facing)
-	_pre_dialogue_player_facing = ""
-	_pre_dialogue_npc_facing    = ""
-	_pre_dialogue_npc_id        = ""
 
 
 func _cardinal(delta: Vector2i) -> String:
@@ -257,7 +247,16 @@ func _on_text_submitted(text: String) -> void:
 # ---------------------------------------------------------------------------
 
 func _run_ai_turn(player_input: String, verb: String, topic: String, press_angle: String) -> void:
-	_busy = true
+	# Single _busy lifecycle owner. The body has multiple early-return
+	# paths and a long await chain; routing through this wrapper means a
+	# runtime error or hung provider await never leaves _busy stuck true
+	# (which would brick SaveBlocker and every input guard).
+	_begin_busy_turn()
+	await _run_ai_turn_body(player_input, verb, topic, press_angle)
+	_end_busy_turn()
+
+
+func _run_ai_turn_body(player_input: String, verb: String, topic: String, press_angle: String) -> void:
 	_box.set_pending()
 
 	var profile := NpcProfileRegistry.get_profile(_session.npc_id)
@@ -278,22 +277,27 @@ func _run_ai_turn(player_input: String, verb: String, topic: String, press_angle
 		AngerCooldownResolver.set_anger_cooldown(_session.npc_id)
 		_box.set_dialogue(line, "hostile")
 		_box.set_options([])
-		_busy = false
-		# Hold the parting line so the player can read it before the
-		# dialog box closes itself.
+		# Release the turn lock before the read-window timer so saves
+		# aren't blocked during the 2s parting line. The wrapper's
+		# _end_busy_turn() is idempotent.
+		_end_busy_turn()
 		await get_tree().create_timer(2.0).timeout
 		_on_box_closed()
 		return
 	if _session.patience_empty():
 		_box.set_dialogue(_anger_out_line(profile.get("archetype", "")), "annoyed")
 		_box.set_options([])
-		_busy = false
+		_end_busy_turn()
 		await get_tree().create_timer(2.0).timeout
 		_on_box_closed()
 		return
 
 	# Assemble the prompt and call the provider.
 	var state_para := StateModifierScript.build_state_paragraph(_session.npc_memory, resolved)
+	var presence_lines: Array = ScenePresenceScript.build_lines(_session.npc_id)
+	if not presence_lines.is_empty():
+		var prefix := "" if state_para.is_empty() else state_para + "\n  "
+		state_para = prefix + "\n  ".join(presence_lines)
 	var request := PromptBuilderScript.build(
 		_session.npc_id, player_input, verb, topic,
 		state_para,
@@ -329,7 +333,6 @@ func _run_ai_turn(player_input: String, verb: String, topic: String, press_angle
 	# Render + refresh options (surface Press entries when applicable).
 	_box.set_dialogue(response.get("dialogue", "..."), response.get("tone", resolved.get("tone_default", "neutral")))
 	_set_options(_session.npc_id, topic)
-	_busy = false
 
 	# Publish turn info for the debug overlay.
 	EventBus.debug_turn_recorded.emit({
@@ -348,6 +351,31 @@ func _run_ai_turn(player_input: String, verb: String, topic: String, press_angle
 
 	if response.get("request_end_conversation", false):
 		_on_box_closed()
+
+
+# ---------------------------------------------------------------------------
+# _busy lifecycle + watchdog
+# ---------------------------------------------------------------------------
+
+func _begin_busy_turn() -> void:
+	_busy = true
+	_busy_gen += 1
+	_arm_busy_watchdog(_busy_gen)
+
+
+func _end_busy_turn() -> void:
+	# Bumping the generation invalidates any in-flight watchdog from this
+	# turn; subsequent calls within the same turn are idempotent.
+	_busy_gen += 1
+	_busy = false
+
+
+func _arm_busy_watchdog(gen: int) -> void:
+	await get_tree().create_timer(_BUSY_WATCHDOG_SECONDS).timeout
+	if _busy and _busy_gen == gen:
+		push_error("[DialogueController] _busy stuck after %.0fs; force-resetting" % _BUSY_WATCHDOG_SECONDS)
+		_busy = false
+		_busy_gen += 1
 
 
 func _render_templated(turn: Dictionary) -> void:

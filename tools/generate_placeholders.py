@@ -946,6 +946,39 @@ def sprite_mara():
     img.putpixel((10, 14), P['brown_bark'])
     img.putpixel((14, 14), P['brown_bark'])
     img.save(SPRITES / 'mara.png')
+    img.save(SPRITES / 'mara_south.png')
+
+
+def sprite_mara_directional():
+    """Emit mara_north.png, mara_east.png, mara_west.png.
+
+    South is written by sprite_mara() as both mara.png and mara_south.png."""
+    img_n = base_human_north(
+        hair=P['brown_bark'],
+        skin=P['flesh_pale'],
+        shirt=P['red_rust'],
+        pants=P['brown_bark'],
+    )
+    # apron tied at the back: leather rectangle with a knot strap
+    rect(img_n, 7, 16, 17, 26, P['brown_leather'])
+    img_n.putpixel((11, 15), P['brown_bark'])
+    img_n.putpixel((12, 15), P['brown_bark'])
+    img_n.putpixel((13, 15), P['brown_bark'])
+    img_n.save(SPRITES / 'mara_north.png')
+
+    img_w = base_human_west(
+        hair=P['brown_bark'],
+        skin=P['flesh_pale'],
+        shirt=P['red_rust'],
+        pants=P['brown_bark'],
+    )
+    # apron in profile: one panel down the front of the torso
+    rect(img_w, 8, 16, 13, 26, P['brown_leather'])
+    img_w.putpixel((11, 14), P['brown_bark'])
+    img_w.save(SPRITES / 'mara_west.png')
+
+    img_e = img_w.transpose(Image.FLIP_LEFT_RIGHT)
+    img_e.save(SPRITES / 'mara_east.png')
 
 
 def sprite_orren():
@@ -964,6 +997,35 @@ def sprite_orren():
     img.putpixel((6, 13), TRANSPARENT)
     img.putpixel((17, 13), TRANSPARENT)
     img.save(SPRITES / 'orren.png')
+    img.save(SPRITES / 'orren_south.png')
+
+
+def sprite_orren_directional():
+    """Emit orren_north.png, orren_east.png, orren_west.png."""
+    img_n = base_human_north(
+        hair=P['gray_mid'],
+        skin=P['flesh_ruddy'],
+        shirt=P['brown_dirt'],
+        pants=P['gray_dark'],
+    )
+    # slumped shoulders from behind too
+    img_n.putpixel((6, 13), TRANSPARENT)
+    img_n.putpixel((17, 13), TRANSPARENT)
+    img_n.save(SPRITES / 'orren_north.png')
+
+    img_w = base_human_west(
+        hair=P['gray_mid'],
+        skin=P['flesh_ruddy'],
+        shirt=P['brown_dirt'],
+        pants=P['gray_dark'],
+    )
+    # stubble in profile (one cheek visible)
+    img_w.putpixel((10, 10), P['gray_dark'])
+    img_w.putpixel((11, 11), P['gray_dark'])
+    img_w.save(SPRITES / 'orren_west.png')
+
+    img_e = img_w.transpose(Image.FLIP_LEFT_RIGHT)
+    img_e.save(SPRITES / 'orren_east.png')
 
 
 def sprite_toma():
@@ -997,6 +1059,57 @@ def sprite_toma():
     # stick "sword" in his right hand
     vline(img, 4, P['brown_bark'], 14, 22)
     img.save(SPRITES / 'toma.png')
+    img.save(SPRITES / 'toma_south.png')
+
+
+def sprite_toma_directional():
+    """Toma is a smaller child silhouette (head 4-12, body 14-22, legs 22-28),
+    so we can't reuse base_human_north/west. Bespoke views drawn at the
+    same dimensions as sprite_toma()."""
+    skin  = P['flesh_pale']
+    hair  = P['brown_leather']
+    shirt = P['green_grass']
+    pants = P['brown_dirt']
+
+    # North (back of head, no face, hair covers crown)
+    img_n = new_tile(24, 32)
+    rect(img_n, 9, 6, 15, 12, hair)
+    rect(img_n, 8, 4, 16, 7, hair)
+    rect(img_n, 10, 12, 14, 14, skin)
+    rect(img_n, 7, 14, 17, 22, shirt)
+    vline(img_n, 7,  P['gray_darkest'], 14, 22)
+    vline(img_n, 16, P['gray_darkest'], 14, 22)
+    rect(img_n, 9,  22, 12, 28, pants)
+    rect(img_n, 13, 22, 16, 28, pants)
+    vline(img_n, 12, P['gray_darkest'], 22, 28)
+    rect(img_n, 9,  28, 12, 30, P['gray_darkest'])
+    rect(img_n, 13, 28, 16, 30, P['gray_darkest'])
+    # stick held overhead from behind
+    vline(img_n, 19, P['brown_bark'], 14, 22)
+    img_n.save(SPRITES / 'toma_north.png')
+
+    # West (profile facing left, one eye visible, stick in front hand)
+    img_w = new_tile(24, 32)
+    # head with hair weighted on the right (back of skull)
+    rect(img_w, 9, 6, 15, 12, skin)
+    rect(img_w, 9, 4, 15, 7, hair)
+    rect(img_w, 13, 7, 15, 11, hair)
+    img_w.putpixel((10, 9), P['gray_darkest'])
+    rect(img_w, 10, 12, 14, 14, skin)
+    rect(img_w, 8, 14, 16, 22, shirt)
+    # one arm dropped in front
+    rect(img_w, 9, 15, 11, 21, P['gray_darkest'])
+    rect(img_w, 9,  22, 12, 28, pants)
+    rect(img_w, 12, 22, 15, 28, pants)
+    vline(img_w, 12, P['gray_darkest'], 22, 28)
+    rect(img_w, 7,  28, 12, 30, P['gray_darkest'])
+    rect(img_w, 13, 28, 15, 30, P['gray_darkest'])
+    # stick in front of him pointing forward
+    vline(img_w, 5, P['brown_bark'], 16, 22)
+    img_w.save(SPRITES / 'toma_west.png')
+
+    img_e = img_w.transpose(Image.FLIP_LEFT_RIGHT)
+    img_e.save(SPRITES / 'toma_east.png')
 
 
 def sprite_halden():
@@ -1012,6 +1125,40 @@ def sprite_halden():
     img.putpixel((13, 17), P['gold_dull'])
     img.putpixel((12, 18), P['gold_dull'])
     img.save(SPRITES / 'halden.png')
+    img.save(SPRITES / 'halden_south.png')
+
+
+def sprite_halden_directional():
+    """Emit halden_north.png, halden_east.png, halden_west.png.
+
+    Halden's authored default facing is west, so this is the file that
+    actually shows up first in village_square."""
+    img_n = base_human_north(
+        hair=P['gray_light'],
+        skin=P['flesh_mid'],
+        shirt=P['brown_bark'],
+        pants=P['gray_darkest'],
+    )
+    # no chain from behind, but a sash knot at the small of the back
+    img_n.putpixel((11, 19), P['gold_dull'])
+    img_n.putpixel((12, 19), P['gold_dull'])
+    img_n.putpixel((13, 19), P['gold_dull'])
+    img_n.save(SPRITES / 'halden_north.png')
+
+    img_w = base_human_west(
+        hair=P['gray_light'],
+        skin=P['flesh_mid'],
+        shirt=P['brown_bark'],
+        pants=P['gray_darkest'],
+    )
+    # rank chain visible in profile (front of chest)
+    img_w.putpixel((11, 17), P['gold_dull'])
+    img_w.putpixel((12, 17), P['gold_dull'])
+    img_w.putpixel((11, 18), P['gold_dull'])
+    img_w.save(SPRITES / 'halden_west.png')
+
+    img_e = img_w.transpose(Image.FLIP_LEFT_RIGHT)
+    img_e.save(SPRITES / 'halden_east.png')
 
 
 def sprite_edda():
@@ -1029,6 +1176,43 @@ def sprite_edda():
     rect(img, 8, 30, 12, 32, P['gray_darkest'])
     rect(img, 13, 30, 16, 32, P['gray_darkest'])
     img.save(SPRITES / 'edda.png')
+    img.save(SPRITES / 'edda_south.png')
+
+
+def sprite_edda_directional():
+    """Emit edda_north.png, edda_east.png, edda_west.png.
+
+    Edda's authored default facing is east, so this is the file that
+    actually shows up first in village_square."""
+    img_n = base_human_north(
+        hair=P['gray_light'],
+        skin=P['flesh_pale'],
+        shirt=P['gray_dark'],
+        pants=P['gray_dark'],
+    )
+    rect(img_n, 6, 13, 18, 30, P['gray_dark'])
+    # cowl ridge across the back of the head where the collar would peek
+    rect(img_n, 8, 12, 16, 14, P['gray_mid'])
+    rect(img_n, 8, 30, 12, 32, P['gray_darkest'])
+    rect(img_n, 13, 30, 16, 32, P['gray_darkest'])
+    img_n.save(SPRITES / 'edda_north.png')
+
+    img_w = base_human_west(
+        hair=P['gray_light'],
+        skin=P['flesh_pale'],
+        shirt=P['gray_dark'],
+        pants=P['gray_dark'],
+    )
+    # robe in profile: narrower than south, drape from shoulder to ground
+    rect(img_w, 7, 13, 17, 30, P['gray_dark'])
+    # collar peek at the front (left side, since facing west)
+    rect(img_w, 9, 13, 12, 15, P['bone_white'])
+    # foot trailing under the robe
+    rect(img_w, 8, 30, 13, 32, P['gray_darkest'])
+    img_w.save(SPRITES / 'edda_west.png')
+
+    img_e = img_w.transpose(Image.FLIP_LEFT_RIGHT)
+    img_e.save(SPRITES / 'edda_east.png')
 
 
 def sprite_iskar():
@@ -1293,10 +1477,15 @@ def main():
     sprite_kael()
     sprite_kael_directional()
     sprite_mara()
+    sprite_mara_directional()
     sprite_orren()
+    sprite_orren_directional()
     sprite_toma()
+    sprite_toma_directional()
     sprite_halden()
+    sprite_halden_directional()
     sprite_edda()
+    sprite_edda_directional()
     sprite_iskar()
     sprite_iskar_directional()
     sprite_wolf()

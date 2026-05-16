@@ -7,9 +7,9 @@
 | Engine        | Godot 4.6 (Forward+, 480×270 viewport) | Game runtime; renders, runs scripts, owns the scene tree.            |
 | Game scripts  | GDScript                            | All gameplay, dialogue orchestration, combat, save/load.               |
 | AI proxy      | Python 3 + FastAPI + Uvicorn (localhost:8421) | Single backend hiding the Anthropic SDK from Godot.          |
-| AI provider   | Anthropic Claude Haiku 4.5          | Villager dialogue + free-text topic classification. Swappable via env. |
+| AI provider   | Anthropic Claude Haiku 4.5 (default cloud) or local Ollama daemon | Villager dialogue + free-text topic classification. Selected via `AURELIX_PROVIDER` (`anthropic` / `ollama` / `mock`). |
 | Mock provider | In-process GDScript + in-proxy Python | Deterministic offline fallback. Identical inputs → identical outputs in both. |
-| Authored data | YAML + Markdown-frontmatter under `data/` | Briefings, NPC profiles, topics, facts, items, options, fallback lines, briefing pairs. |
+| Authored data | YAML + Markdown-frontmatter under `data/` | Briefings, NPC profiles, topics, facts, items, options, fallback lines, briefing pairs. Plus `proxy/data/mock_responses.json` and `proxy/data/mock_classify_rules.json`, both mirrored into `game/data/` by `yaml_to_json.py` so the in-Godot and in-proxy mocks share one rule table. |
 | Runtime data  | JSON, single slot at `user://save_slot_1.json` | Player state, world state, quest state, NPC memory, dossier mutations, journal. |
 | Build tooling | Python scripts under `tools/`       | `yaml_to_json.py` converts authored YAML to JSON Godot reads natively. Preview generators. |
 
@@ -61,9 +61,11 @@
 - `proxy/` — FastAPI app. `main.py` exposes
   `/v1/generate`, `/v1/classify_topic`, `/health`.
   `providers/` holds `base.py` (protocol), `mock.py`,
-  `anthropic_haiku.py`. `schema.py` defines the
-  pydantic request/response shapes that GDScript
-  dataclasses mirror.
+  `anthropic_haiku.py`, `ollama.py`, and the shared
+  `_json_utils.py` (fenced-block + balanced-brace JSON
+  extraction). `schema.py` defines the pydantic
+  request/response shapes that GDScript dataclasses
+  mirror.
 - `data/` — Authored content tree (YAML +
   Markdown). Mirrored into `game/data/` at build
   via `tools/yaml_to_json.py`.

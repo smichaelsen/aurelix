@@ -202,7 +202,7 @@ func _test_save_hardening() -> void:
 	NpcMemoryStore.reset_all()
 	_expect(SaveManager.load_slot(),
 		"hardening: load succeeds with unknown NPC in blob")
-	_expect(not NpcMemoryStore._by_id.has("ghost_npc"),
+	_expect(not NpcMemoryStore.known_npc_ids().has("ghost_npc"),
 		"hardening: unknown NPC dropped from memory store")
 
 	SaveManager.delete_slot()

@@ -53,15 +53,11 @@ static func apply(item_id: String, npc_id: String) -> Dictionary:
 			result["topic"] = String(tags[0])
 
 	if not result["flag"].is_empty():
-		var mem: Dictionary = NpcMemoryStore.memory_for(npc_id)
-		var flags: Dictionary = mem.get("flags", {})
-		flags[result["flag"]] = true
-		mem["flags"] = flags
+		NpcMemoryStore.set_flag(npc_id, result["flag"], true)
 		print("[OfferItemAction] %s -> %s.flags.%s = true" % [item_id, npc_id, result["flag"]])
 
 	if not result["memory_update"].is_empty():
-		var mem2: Dictionary = NpcMemoryStore.memory_for(npc_id)
-		mem2["recent_summary"] = result["memory_update"]
+		NpcMemoryStore.set_recent_summary(npc_id, result["memory_update"])
 
 	if result["consumed"]:
 		Inventory.remove(item_id, 1)

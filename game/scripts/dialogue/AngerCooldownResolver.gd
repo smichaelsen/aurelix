@@ -24,35 +24,30 @@ func _ready() -> void:
 
 
 func set_anger_cooldown(npc_id: String) -> void:
-	var mem := NpcMemoryStore.memory_for(npc_id)
-	mem["anger_cooldown_turns"] = COOLDOWN_TURNS
+	NpcMemoryStore.set_anger_cooldown(npc_id, COOLDOWN_TURNS)
 
 
 func _on_dialogue_opened(npc_id: String) -> void:
 	# Tick every OTHER NPC's cooldown. When it falls to 0, also clear
 	# their stress so the next conversation isn't an immediate re-anger.
-	for other in NpcMemoryStore._by_id.keys():
+	for other in NpcMemoryStore.known_npc_ids():
 		if other == npc_id:
 			continue
-		var mem: Dictionary = NpcMemoryStore._by_id[other]
-		var t: int = int(mem.get("anger_cooldown_turns", 0))
-		if t > 0:
-			t -= 1
-			mem["anger_cooldown_turns"] = t
-			if t == 0:
-				mem["stress"] = 0
-				print("[AngerCooldown] %s cooled off; stress reset" % other)
+		if NpcMemoryStore.get_anger_cooldown(other) <= 0:
+			continue
+		var t := NpcMemoryStore.decrement_anger_cooldown(other)
+		if t == 0:
+			NpcMemoryStore.clear_stress(other)
+			print("[AngerCooldown] %s cooled off; stress reset" % other)
 
 
 func _on_item_offered(npc_id: String, item_id: String) -> void:
 	var desc := ItemRegistry.offer_descriptor(item_id, npc_id)
 	if not bool(desc.get("apology", false)):
 		return
-	var mem := NpcMemoryStore.memory_for(npc_id)
-	if int(mem.get("anger_cooldown_turns", 0)) > 0:
-		mem["anger_cooldown_turns"] = 0
-		mem["stress"] = 0
-		var flags: Dictionary = mem.get("flags", {})
-		flags["forgave_player"] = true
-		mem["flags"] = flags
-		print("[AngerCooldown] %s forgave Kael (%s apology accepted)" % [npc_id, item_id])
+	if NpcMemoryStore.get_anger_cooldown(npc_id) <= 0:
+		return
+	NpcMemoryStore.set_anger_cooldown(npc_id, 0)
+	NpcMemoryStore.clear_stress(npc_id)
+	NpcMemoryStore.set_flag(npc_id, "forgave_player", true)
+	print("[AngerCooldown] %s forgave Kael (%s apology accepted)" % [npc_id, item_id])

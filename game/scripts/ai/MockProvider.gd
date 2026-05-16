@@ -1,40 +1,26 @@
 extends "res://scripts/ai/AiProvider.gd"
 ##
-## In-process mock that reads the same `mock_responses.json` as the proxy's
-## MockProvider. Behaviour is byte-identical so the game runs the same way
-## with or without the proxy / network.
+## In-process mock that reads the same `mock_responses.json` AND
+## `mock_classify_rules.json` as the proxy's MockProvider. Behaviour is
+## byte-identical so the game runs the same way with or without the proxy /
+## network. The classify rules used to be hardcoded in two places (here and
+## proxy/providers/mock.py) and drifted; both sides now load the shared JSON.
 ##
 
 const MOCK_RESPONSES_PATH := "res://data/mock_responses.json"
-
-# Lightweight keyword rules. Kept in sync with proxy/providers/mock.py.
-# Each tuple: (topic_id, list of substrings; first match wins).
-const TOPIC_RULES := [
-	["prompt_injection", ["ignore previous", "ignore your", "reveal your prompt", "pretend you are"]],
-	["meta_game",       ["are you ai", "system prompt", "admin", "save", "reload", "quest flag"]],
-	["formal_math",     ["solve", "x squared", "x^2", "equation", "calculate", "algebra", "what is x"]],
-	["abstract_reasoning", ["what is the meaning", "explain the concept", "in theory"]],
-	["the_tower",       ["tower", "old tower", "ruin", "rise"]],
-	["the_dragon",      ["dragon", "wings", "fire"]],
-	["the_drake",       ["drake", "iskar", "hatchling"]],
-	["bandits",         ["bandit", "drust", "camp"]],
-	["gold_eyed_one",   ["gold-eyed", "gold eye", "the gold"]],
-	["quest_status",    ["bounty", "reward", "job", "pay"]],
-	["trade",           ["buy", "sell", "price", "coin", "sword", "armor"]],
-	["religion",        ["pray", "light", "order", "chapel", "sister", "brother"]],
-	["forest",          ["forest", "wolf", "path", "wood"]],
-	["jorin_theft",     ["jorin", "theft", "stolen"]],
-	["the_reeve",       ["reeve", "halden"]],
-	["the_kingdom",     ["kingdom", "king", "crown", "ostgate"]],
-	["personal_history",["who are you", "where from", "your past"]],
-]
+const MOCK_CLASSIFY_PATH  := "res://data/mock_classify_rules.json"
 
 
 var _library: Dictionary = {}
+var _classify_rules: Array = []
+var _classify_match_confidence: float = 0.7
+var _classify_default_topic: String = "small_talk"
+var _classify_default_confidence: float = 0.3
 
 
 func _ready() -> void:
 	_load_library()
+	_load_classify_rules()
 
 
 func _load_library() -> void:
@@ -50,6 +36,24 @@ func _load_library() -> void:
 		push_error("[MockProvider] bad JSON")
 		return
 	_library = parsed
+
+
+func _load_classify_rules() -> void:
+	if not FileAccess.file_exists(MOCK_CLASSIFY_PATH):
+		push_error("[MockProvider] mock_classify_rules.json not found")
+		return
+	var f := FileAccess.open(MOCK_CLASSIFY_PATH, FileAccess.READ)
+	if f == null:
+		push_error("[MockProvider] cannot open mock_classify_rules.json")
+		return
+	var parsed = JSON.parse_string(f.get_as_text())
+	if not (parsed is Dictionary):
+		push_error("[MockProvider] bad classify JSON")
+		return
+	_classify_rules            = parsed.get("rules", [])
+	_classify_match_confidence = float(parsed.get("match_confidence", 0.7))
+	_classify_default_topic    = String(parsed.get("default_topic_id", "small_talk"))
+	_classify_default_confidence = float(parsed.get("default_confidence", 0.3))
 
 
 func generate(request: Dictionary) -> Dictionary:
@@ -87,15 +91,17 @@ func generate(request: Dictionary) -> Dictionary:
 
 
 func classify_topic(text: String, known_topics: Array) -> Dictionary:
+	if _classify_rules.is_empty():
+		_load_classify_rules()
 	var lower := text.to_lower()
-	for rule in TOPIC_RULES:
-		var topic_id: String = rule[0]
-		var kws: Array = rule[1]
+	for rule in _classify_rules:
+		var topic_id: String = String(rule.get("topic_id", ""))
+		var kws: Array = rule.get("keywords", [])
 		for k in kws:
-			if k in lower:
+			if String(k) in lower:
 				if known_topics.is_empty() or topic_id in known_topics:
-					return {"topic_id": topic_id, "confidence": 0.7}
-	return {"topic_id": "small_talk", "confidence": 0.3}
+					return {"topic_id": topic_id, "confidence": _classify_match_confidence}
+	return {"topic_id": _classify_default_topic, "confidence": _classify_default_confidence}
 
 
 # --------------------------------------------------------------------------

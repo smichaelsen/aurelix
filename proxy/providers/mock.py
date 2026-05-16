@@ -30,10 +30,17 @@ from ..schema import (
 
 
 _DATA_PATH = Path(__file__).resolve().parents[1] / 'data' / 'mock_responses.json'
+_CLASSIFY_RULES_PATH = (
+    Path(__file__).resolve().parents[1] / 'data' / 'mock_classify_rules.json'
+)
 
 
 def _load_library() -> dict:
     return json.loads(_DATA_PATH.read_text())
+
+
+def _load_classify_rules() -> dict:
+    return json.loads(_CLASSIFY_RULES_PATH.read_text())
 
 
 def _derive_state_key(state_paragraph: str, archetype: str) -> str:
@@ -62,6 +69,7 @@ class MockProvider:
 
     def __init__(self) -> None:
         self._lib = _load_library()
+        self._classify = _load_classify_rules()
 
     def generate(self, req: AiRequest) -> AiResponse:
         archetype = req.npc_profile.archetype
@@ -85,14 +93,8 @@ class MockProvider:
         if key in self._lib['by_npc_topic_state']:
             return self._build(req, self._lib['by_npc_topic_state'][key])
 
-        # Capability gate "blocked" should give an in-character failure.
-        if req.capability_gate_result.decision == 'blocked':
-            archetype_fallback = self._lib['fallback_by_archetype'].get(
-                archetype, self._lib['fallback_by_archetype']['_default']
-            )
-            return self._build(req, archetype_fallback)
-
-        # Archetype fallback.
+        # Archetype fallback (also covers capability_gate.decision == 'blocked';
+        # both end up at the same archetype-keyed canned line).
         canned = self._lib['fallback_by_archetype'].get(
             archetype, self._lib['fallback_by_archetype']['_default']
         )
@@ -100,34 +102,20 @@ class MockProvider:
 
     def classify_topic(self, req: ClassifyTopicRequest) -> ClassifyTopicResponse:
         """Cheap keyword-based topic classifier for the mock. Real Haiku
-        provider does it semantically."""
+        provider does it semantically. Rules are loaded from
+        proxy/data/mock_classify_rules.json so the Godot-side MockProvider
+        stays bit-identical without duplicating the table."""
         text = req.text.lower()
-        rules = [
-            ('formal_math',     ['solve', 'x squared', 'x^2', 'equation', 'calculate', 'algebra', 'what is x']),
-            ('abstract_reasoning', ['what is the meaning', 'explain the concept', 'in theory']),
-            ('the_tower',       ['tower', 'old tower', 'ruin', 'rise']),
-            ('the_dragon',      ['dragon', 'wings', 'fire']),
-            ('the_drake',       ['drake', 'iskar', 'hatchling']),
-            ('bandits',         ['bandit', 'drust', 'camp']),
-            ('gold_eyed_one',   ['gold-eyed', 'gold eye', 'the gold']),
-            ('quest_status',    ['bounty', 'reward', 'job', 'pay']),
-            ('trade',           ['buy', 'sell', 'price', 'coin', 'sword', 'armor']),
-            ('religion',        ['pray', 'light', 'order', 'chapel', 'sister', 'brother']),
-            ('forest',          ['forest', 'wolf', 'path', 'wood']),
-            ('jorin_theft',     ['jorin', 'theft', 'stolen', 'cabbage', 'onion']),
-            ('the_reeve',       ['reeve', 'halden']),
-            ('the_kingdom',     ['kingdom', 'king', 'crown', 'ostgate']),
-            ('personal_history',['who are you', 'where from', 'your past', 'tell me about yourself']),
-            ('meta_game',       ['game', 'flag', 'admin', 'system', 'save', 'reload', 'are you ai']),
-            ('prompt_injection',['ignore previous', 'ignore your', 'reveal your prompt', 'pretend you are']),
-        ]
-        # prompt_injection beats meta_game; check it first.
-        for topic_id, kws in rules:
-            for k in kws:
+        match_conf = float(self._classify.get('match_confidence', 0.7))
+        default_topic = str(self._classify.get('default_topic_id', 'small_talk'))
+        default_conf = float(self._classify.get('default_confidence', 0.3))
+        for rule in self._classify['rules']:
+            topic_id = rule['topic_id']
+            for k in rule['keywords']:
                 if k in text:
                     if topic_id in req.known_topics or not req.known_topics:
-                        return ClassifyTopicResponse(topic_id=topic_id, confidence=0.7)
-        return ClassifyTopicResponse(topic_id='small_talk', confidence=0.3)
+                        return ClassifyTopicResponse(topic_id=topic_id, confidence=match_conf)
+        return ClassifyTopicResponse(topic_id=default_topic, confidence=default_conf)
 
     # ----------------------------------------------------------------------
     # Helpers
