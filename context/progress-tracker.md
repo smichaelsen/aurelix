@@ -89,6 +89,17 @@ change.
   now hosts a FacingSprite child with the four
   textures wired in. Phase3Test verifies the sprite
   swaps to `kael_east.png` after an east move.
+- Iskar directional sprites (2026-05-16): the
+  existing west-profile drake gets rotated into all
+  four facings (east = west mirrored; south = 90°
+  CCW so snout points down; north = 90° CW so snout
+  points up). All four padded to a uniform 32×32
+  with the drake centered, so swapping textures
+  doesn't produce a visual jump from the original
+  32×24 sprite. `IskarFollower.tscn` defaults to
+  `iskar_south.png` and hosts a FacingSprite with
+  the four textures wired. Phase7BondTest still
+  green.
 - SaveManager hardening (2026-05-16): atomic write
   via temp file + `DirAccess.rename` in `user://`;
   `load_slot` refuses newer-than-build saves outright;
@@ -110,24 +121,24 @@ change.
 ## Next Up
 
 1. **Directional sprites for the remaining
-   characters.** Kael is done as a first-iteration
-   feel check. Next up: Iskar and the five demo
-   NPCs (Toma, Mara, Orren, Halden, Edda), plus
-   the forest encounters if they should turn.
-   For each character:
+   characters.** Kael and Iskar are done. Next up:
+   the five demo NPCs (Toma, Mara, Orren, Halden,
+   Edda), plus the forest encounters if they
+   should turn. For each character:
    - Add a `sprite_<name>_directional()` to
      `tools/generate_placeholders.py` modelled on
      the new `sprite_kael_directional()` —
      `base_human_north` / `base_human_west` are
-     already in place to reuse.
+     already in place to reuse for humanoids.
    - East = west mirrored (placeholder convention).
+   - For non-humanoid sprites that are already
+     drawn as side profiles, the rotate-and-pad
+     trick used for Iskar is a faster path than
+     redrawing.
    - Wire a `FacingSprite` child into each
-     character scene (subject `"iskar"` or
-     `"npc:<id>"`) with `sprite_path` and a
-     `textures` dict pointing at the four PNGs.
-   - Iskar's follower sprite already emits
-     `iskar_facing_changed`; only the texture
-     wiring is missing.
+     character scene (subject `"npc:<id>"`) with
+     `sprite_path` and a `textures` dict pointing
+     at the four PNGs.
 2. Verify all 14 success criteria via
    `PlaythroughTour.gd` headless run.
 3. Final pass on authored content gaps listed in

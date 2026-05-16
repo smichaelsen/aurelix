@@ -1,11 +1,26 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=7 format=3]
 
-[ext_resource type="Texture2D" path="res://assets/sprites/iskar.png" id="1_iskar"]
+[ext_resource type="Texture2D" path="res://assets/sprites/iskar_south.png" id="1_iskar_s"]
 [ext_resource type="Script" path="res://scripts/companion/IskarFollower.gd" id="2_ctrl"]
+[ext_resource type="Script" path="res://scripts/world/FacingSprite.gd" id="3_facing"]
+[ext_resource type="Texture2D" path="res://assets/sprites/iskar_north.png" id="4_iskar_n"]
+[ext_resource type="Texture2D" path="res://assets/sprites/iskar_east.png" id="5_iskar_e"]
+[ext_resource type="Texture2D" path="res://assets/sprites/iskar_west.png" id="6_iskar_w"]
 
 [node name="IskarFollower" type="Node2D"]
 script = ExtResource("2_ctrl")
 
 [node name="Sprite" type="Sprite2D" parent="."]
-texture = ExtResource("1_iskar")
+texture = ExtResource("1_iskar_s")
 centered = false
+
+[node name="FacingSprite" type="Node" parent="."]
+script = ExtResource("3_facing")
+subject = "iskar"
+sprite_path = NodePath("../Sprite")
+textures = {
+"north": ExtResource("4_iskar_n"),
+"south": ExtResource("1_iskar_s"),
+"east": ExtResource("5_iskar_e"),
+"west": ExtResource("6_iskar_w")
+}

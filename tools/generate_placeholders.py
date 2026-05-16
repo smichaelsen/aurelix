@@ -1116,6 +1116,31 @@ def sprite_iskar():
     img.save(SPRITES / 'iskar.png')
 
 
+def sprite_iskar_directional():
+    """Iskar in all four facings. Base is a west-facing profile (snout
+    left, tail right). North/south are 90° rotations of that profile;
+    east is west mirrored.
+
+    All four are emitted at a uniform 32x32, with the drake centered.
+    Uniform framing keeps the Sprite2D anchored consistently when the
+    texture swaps — no visual jump on facing change. Bespoke art later
+    can replace any single file at 32x32 (or smaller, padded). The
+    follower's _pixel_for accounts for the 32-tall sprite already."""
+    base = Image.open(SPRITES / 'iskar.png').convert('RGBA')
+
+    def framed(src):
+        frame = Image.new('RGBA', (32, 32), TRANSPARENT)
+        ox = (32 - src.width) // 2
+        oy = (32 - src.height) // 2
+        frame.paste(src, (ox, oy), src)
+        return frame
+
+    framed(base).save(SPRITES / 'iskar_west.png')
+    framed(base.transpose(Image.FLIP_LEFT_RIGHT)).save(SPRITES / 'iskar_east.png')
+    framed(base.rotate(90,  expand=True)).save(SPRITES / 'iskar_south.png')
+    framed(base.rotate(-90, expand=True)).save(SPRITES / 'iskar_north.png')
+
+
 # ---------------------------------------------------------------------------
 # UI placeholders
 # ---------------------------------------------------------------------------
@@ -1198,6 +1223,7 @@ def main():
     sprite_halden()
     sprite_edda()
     sprite_iskar()
+    sprite_iskar_directional()
     sprite_wolf()
     sprite_bandit()
 
