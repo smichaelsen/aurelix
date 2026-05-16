@@ -841,6 +841,96 @@ def sprite_kael():
     # hood hint
     rect(img, 7, 2, 17, 4, P['gray_mid'])
     img.save(SPRITES / 'kael.png')
+    img.save(SPRITES / 'kael_south.png')
+
+
+def base_human_north(hair, skin, shirt, pants):
+    """Back view: same silhouette as base_human, no face. Hair covers the
+    head where the face would be."""
+    img = new_tile(24, 32)
+    # head silhouette (back of head visible as hair)
+    rect(img, 8, 4, 16, 12, hair)
+    # crown highlight (slightly darker patch up top)
+    rect(img, 7, 2, 17, 5, hair)
+    # neck
+    rect(img, 10, 12, 14, 14, skin)
+    # torso (back of shirt)
+    rect(img, 6, 13, 18, 23, shirt)
+    # arm shadows
+    vline(img, 6,  P['gray_darkest'], 13, 23)
+    vline(img, 17, P['gray_darkest'], 13, 23)
+    # legs
+    rect(img, 8,  23, 12, 30, pants)
+    rect(img, 13, 23, 16, 30, pants)
+    vline(img, 12, P['gray_darkest'], 23, 30)
+    # feet
+    rect(img, 8,  30, 12, 32, P['gray_darkest'])
+    rect(img, 13, 30, 16, 32, P['gray_darkest'])
+    return img
+
+
+def base_human_west(hair, skin, shirt, pants, eye=P['gray_darkest']):
+    """Profile view facing left. One eye visible on the left side of the
+    head; one arm dropped in front of the torso to break the silhouette."""
+    img = new_tile(24, 32)
+    # head: same 8x8 cell, hair offset to the right (back-of-head side)
+    rect(img, 8, 4, 16, 12, skin)
+    # hair: top + heavy on the right (back of skull when facing left)
+    rect(img, 8, 2, 16, 5, hair)
+    rect(img, 13, 5, 16, 11, hair)
+    # one eye on the left
+    img.putpixel((10, 8), eye)
+    # neck
+    rect(img, 10, 12, 14, 14, skin)
+    # torso (slightly narrower silhouette in profile)
+    rect(img, 7, 13, 17, 23, shirt)
+    # arm draped in front (darker stripe down torso, left side)
+    rect(img, 9, 14, 11, 22, P['gray_darkest'])
+    # legs together in profile
+    rect(img, 8,  23, 12, 30, pants)
+    rect(img, 12, 23, 15, 30, pants)
+    vline(img, 12, P['gray_darkest'], 23, 30)
+    # feet: only one foot leads (left), the other trails behind
+    rect(img, 7,  30, 12, 32, P['gray_darkest'])
+    rect(img, 13, 30, 15, 32, P['gray_darkest'])
+    return img
+
+
+def sprite_kael_directional():
+    """Emit kael_north.png, kael_east.png, kael_west.png.
+
+    South already lives at kael.png + kael_south.png from sprite_kael()."""
+    # North (back view)
+    img_n = base_human_north(
+        hair=P['gray_dark'],
+        skin=P['flesh_mid'],
+        shirt=P['brown_leather'],
+        pants=P['gray_dark'],
+    )
+    # cloak on both shoulders, slightly wider from behind
+    rect(img_n, 5,  13, 7,  24, P['gray_mid'])
+    rect(img_n, 17, 13, 19, 24, P['gray_mid'])
+    # hood drape over the top of the head
+    rect(img_n, 7, 2, 17, 4, P['gray_mid'])
+    img_n.save(SPRITES / 'kael_north.png')
+
+    # West (profile, facing left)
+    img_w = base_human_west(
+        hair=P['gray_dark'],
+        skin=P['flesh_mid'],
+        shirt=P['brown_leather'],
+        pants=P['gray_dark'],
+    )
+    # cloak: one panel down the back side (right side of image)
+    rect(img_w, 16, 13, 18, 24, P['gray_mid'])
+    # hood ridge along the top of the head
+    rect(img_w, 8, 2, 16, 4, P['gray_mid'])
+    img_w.save(SPRITES / 'kael_west.png')
+
+    # East = west mirrored. Placeholder symmetry is fine; bespoke art can
+    # replace this file later without touching the generator.
+    img_e = img_w.transpose(Image.FLIP_LEFT_RIGHT)
+    img_e.save(SPRITES / 'kael_east.png')
 
 
 def sprite_mara():
@@ -1101,6 +1191,7 @@ def main():
 
     print('Generating sprites...')
     sprite_kael()
+    sprite_kael_directional()
     sprite_mara()
     sprite_orren()
     sprite_toma()

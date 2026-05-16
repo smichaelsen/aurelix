@@ -116,6 +116,12 @@ func _test_facing(player: Node2D) -> void:
 	_assert(player.facing == "east",
 		"facing: east after successful east move (got '%s')" % player.facing)
 
+	# Sprite swap: FacingSprite should have picked up the change.
+	var sprite := player.get_node_or_null("Sprite") as Sprite2D
+	if sprite != null and sprite.texture != null:
+		_assert(sprite.texture.resource_path.find("kael_east") >= 0,
+			"facing: sprite swapped to kael_east (got '%s')" % sprite.texture.resource_path)
+
 	# 2. Diagonal: last cardinal pressed wins. With _last_cardinal=north and
 	# the move target north-east, facing snaps to north.
 	player.set("_last_cardinal", "north")

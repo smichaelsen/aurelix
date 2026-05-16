@@ -80,6 +80,15 @@ change.
   artwork lands. Phase3Test + Phase10Test extended
   with facing assertions; all phase tests still
   pass.
+- Kael directional sprites (2026-05-16): placeholder
+  art for kael_north / kael_east / kael_west emitted
+  by `tools/generate_placeholders.py` via a new
+  `sprite_kael_directional()` (north = back/hooded
+  silhouette, west = profile with one eye + dropped
+  arm, east = west mirrored). `PlayerCharacter.tscn`
+  now hosts a FacingSprite child with the four
+  textures wired in. Phase3Test verifies the sprite
+  swaps to `kael_east.png` after an east move.
 - SaveManager hardening (2026-05-16): atomic write
   via temp file + `DirAccess.rename` in `user://`;
   `load_slot` refuses newer-than-build saves outright;
@@ -100,25 +109,25 @@ change.
 
 ## Next Up
 
-1. **Directional sprite art for the 4-facing system.**
-   Mechanics landed 2026-05-16 but each character is
-   still rendered with a single south-facing sprite.
-   Work needed:
-   - Author north/east/west variants for Kael,
-     Iskar, and the five demo NPCs (Toma, Mara,
-     Orren, Halden, Edda) — and the forest
-     encounters if they should turn too.
-   - Wire each character scene's sprite swap by
-     adding a `FacingSprite` child node (subject
-     `"player"`, `"iskar"`, or `"npc:<id>"`) with
-     its `sprite_path` and `textures` dict pointing
-     at the four PNGs.
-   - Decide whether east is mirrored from west or
-     authored separately. Mirror-from-west halves
-     the asset count but constrains the character
-     silhouette.
-   - Until then, `FacingSprite` is wired-in-spirit
-     but no-ops because `textures` is empty.
+1. **Directional sprites for the remaining
+   characters.** Kael is done as a first-iteration
+   feel check. Next up: Iskar and the five demo
+   NPCs (Toma, Mara, Orren, Halden, Edda), plus
+   the forest encounters if they should turn.
+   For each character:
+   - Add a `sprite_<name>_directional()` to
+     `tools/generate_placeholders.py` modelled on
+     the new `sprite_kael_directional()` —
+     `base_human_north` / `base_human_west` are
+     already in place to reuse.
+   - East = west mirrored (placeholder convention).
+   - Wire a `FacingSprite` child into each
+     character scene (subject `"iskar"` or
+     `"npc:<id>"`) with `sprite_path` and a
+     `textures` dict pointing at the four PNGs.
+   - Iskar's follower sprite already emits
+     `iskar_facing_changed`; only the texture
+     wiring is missing.
 2. Verify all 14 success criteria via
    `PlaythroughTour.gd` headless run.
 3. Final pass on authored content gaps listed in

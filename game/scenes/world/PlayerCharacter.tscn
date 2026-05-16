@@ -1,7 +1,11 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=7 format=3]
 
 [ext_resource type="Texture2D" path="res://assets/sprites/kael.png" id="1_kael"]
 [ext_resource type="Script" path="res://scripts/player/PlayerController.gd" id="2_ctl"]
+[ext_resource type="Script" path="res://scripts/world/FacingSprite.gd" id="3_facing"]
+[ext_resource type="Texture2D" path="res://assets/sprites/kael_north.png" id="4_kael_n"]
+[ext_resource type="Texture2D" path="res://assets/sprites/kael_east.png" id="5_kael_e"]
+[ext_resource type="Texture2D" path="res://assets/sprites/kael_west.png" id="6_kael_w"]
 
 [node name="Player" type="Node2D"]
 script = ExtResource("2_ctl")
@@ -9,3 +13,14 @@ script = ExtResource("2_ctl")
 [node name="Sprite" type="Sprite2D" parent="."]
 texture = ExtResource("1_kael")
 centered = false
+
+[node name="FacingSprite" type="Node" parent="."]
+script = ExtResource("3_facing")
+subject = "player"
+sprite_path = NodePath("../Sprite")
+textures = {
+"north": ExtResource("4_kael_n"),
+"south": ExtResource("1_kael"),
+"east": ExtResource("5_kael_e"),
+"west": ExtResource("6_kael_w")
+}
