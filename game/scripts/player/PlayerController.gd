@@ -87,6 +87,10 @@ func _intended_direction() -> Vector2i:
 
 func _try_move(dir: Vector2i) -> void:
 	var target := grid_pos + dir
+	# Rotation happens up-front so that *any* directional input updates
+	# facing — including blocked moves, edge-pushes, and exit/encounter
+	# triggers. Movement may or may not follow; facing always does.
+	_set_facing(_last_cardinal)
 	# Check if the player is stepping into an exit tile (or off-edge from
 	# one) -- WorldState knows the authored exit table per scene.
 	var exit_here := WorldState.exit_at(grid_pos)
@@ -120,8 +124,8 @@ func _try_move(dir: Vector2i) -> void:
 func _animate_to(target: Vector2i) -> void:
 	_moving = true
 	grid_pos = target
-	# Facing rotates only here, where the move is confirmed. Bumping into a
-	# wall or stepping into an exit/encounter does not rotate Kael.
+	# Facing is normally set up-front in _try_move. Setting it again here
+	# is idempotent and covers any code path that animates directly.
 	_set_facing(_last_cardinal)
 	var tween := create_tween()
 	tween.tween_property(self, "position", _pixel_for(target), MOVE_DURATION)

@@ -189,10 +189,13 @@ while a dialogue/journal turn is in flight (via
    (DebugOverlay, TitleCard) load last. Do not
    reorder without re-running `BootValidator`.
 10. **Facing is 4-cardinal; movement is 8-direction.**
-    Player facing rotates only on a successful move
-    — wall-bumps do not rotate. Diagonals collapse
-    to the last cardinal pressed. NPCs have a
-    per-scene authored facing in `WorldState.npc_facings`;
+    Player facing rotates on any directional input —
+    blocked moves, wall bumps, edge pushes, and
+    exit/encounter triggers all update facing even
+    when Kael does not move. Movement may or may not
+    follow; facing always does. Diagonals collapse to
+    the last cardinal pressed. NPCs have a per-scene
+    authored facing in `WorldState.npc_facings`;
     `DialogueController` rotates speakers face-to-face
-    on open and restores on close. Combat overlay
-    is exempt — it owns its own pose layout.
+    on open and restores on close. Combat overlay is
+    exempt — it owns its own pose layout.

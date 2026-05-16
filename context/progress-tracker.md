@@ -177,11 +177,17 @@ change.
 - Save format is a single JSON file at
   `user://save_slot_1.json` with a `version` field.
   Multi-slot is out of scope for the demo.
-- 4-direction facing rules (decided 2026-05-16):
-  movement remains 8-directional; facing is 4-cardinal
-  only. Facing rotates exclusively on a successful
-  move (bumping a wall does not rotate). Diagonals
-  collapse via "last cardinal pressed". NPCs and
+- 4-direction facing rules (decided 2026-05-16,
+  wall-bump rule revised same day): movement remains
+  8-directional; facing is 4-cardinal only. Facing
+  rotates on **any** directional input — including
+  blocked moves, edge-pushes, and exit/encounter
+  triggers. Movement may or may not follow; facing
+  always does. (Earlier rule "rotate only on
+  successful move" inverted after first feel-test;
+  responsive rotation is the classic top-down RPG
+  convention.) Diagonals collapse via "last cardinal
+  pressed". NPCs and
   Kael face each other on `dialogue_opened` and
   restore prior facing on `dialogue_closed`.
   Interaction stays 8-neighbour, not facing-gated.

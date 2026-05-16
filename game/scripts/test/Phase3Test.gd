@@ -129,7 +129,7 @@ func _test_facing(player: Node2D) -> void:
 	_assert(player.facing == "north",
 		"facing: north after NE move with last_cardinal=north (got '%s')" % player.facing)
 
-	# 3. Bumping into a wall does NOT rotate Kael (decision #2).
+	# 3. Bumping into a wall DOES rotate Kael to the attempted direction.
 	# From (7,6) the tile north (7,5) is well water — guaranteed solid.
 	_jump(player, Vector2i(7, 6))
 	player.set("_last_cardinal", "south")
@@ -140,8 +140,10 @@ func _test_facing(player: Node2D) -> void:
 	player.set("_last_cardinal", "north")
 	player._try_move(Vector2i(0, -1))   # bumps the well
 	await get_tree().process_frame
-	_assert(player.facing == "south",
-		"facing: wall bump does not rotate (still '%s')" % player.facing)
+	_assert(player.facing == "north",
+		"facing: wall bump rotates to attempted direction (got '%s')" % player.facing)
+	_assert(player.grid_pos == Vector2i(7, 6),
+		"facing: wall bump did not move Kael (still at %s)" % player.grid_pos)
 
 
 # ---------------------------------------------------------------------------
