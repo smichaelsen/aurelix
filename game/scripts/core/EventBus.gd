@@ -13,6 +13,9 @@ signal boot_validated(ok: bool, error_count: int)
 
 # --- Player / world (phase 3+) --------------------------------------------
 signal player_moved(col: int, row: int)
+signal player_facing_changed(facing: String)
+signal npc_facing_changed(npc_id: String, facing: String)
+signal iskar_facing_changed(facing: String)
 signal interaction_available(target_id: String, target_type: String, label: String)
 signal interaction_unavailable
 signal exit_attempted(direction: String, target: String)

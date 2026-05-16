@@ -81,6 +81,10 @@ func _test_round_trip() -> void:
 	# Seed unique state.
 	Inventory.coins = 99
 	Inventory.add("strange_coin", 1)
+	# Force a distinctive facing so we can assert it survives a round-trip.
+	var player_pre := get_tree().get_first_node_in_group("player_grid")
+	if player_pre != null and player_pre.has_method("_set_facing"):
+		player_pre._set_facing("east", true)
 	FactLedger.grant_fact("drust_dead", {"kind": "test"})
 	QuestState.set_state("dragon_sighting", "complete")
 	IskarCompanion.bonded = true
@@ -131,6 +135,11 @@ func _test_round_trip() -> void:
 		"round-trip: orren memory recent_summary preserved")
 	_expect(int(mem2.get("stress", 0)) == 4,
 		"round-trip: orren memory stress (got %d)" % int(mem2.get("stress", 0)))
+
+	var player_post := get_tree().get_first_node_in_group("player_grid")
+	if player_post != null and "facing" in player_post:
+		_expect(String(player_post.facing) == "east",
+			"round-trip: player facing restored (got '%s')" % String(player_post.facing))
 
 	# Clean up save file.
 	SaveManager.delete_slot()

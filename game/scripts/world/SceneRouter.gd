@@ -24,6 +24,7 @@ var previous_scene_id: String = ""
 # Set by SaveManager to force a specific spawn tile in the next scene load.
 # Cleared by spawn_for() once consumed.
 var pending_spawn_override: Vector2i = Vector2i(-999, -999)
+var pending_spawn_facing: String = "south"
 
 
 func _ready() -> void:
@@ -54,22 +55,29 @@ func _change_deferred(path: String) -> void:
 
 
 ## Called by PlayerController on its _ready to ask "where should I spawn?"
-## Returns Vector2i of the spawn tile in the freshly-loaded scene.
-func spawn_for(current_scene_id: String) -> Vector2i:
+## Returns {pos: Vector2i, facing: String}. SaveManager overrides win;
+## otherwise the entry-point's authored facing applies, defaulting to "south".
+func spawn_for(current_scene_id: String) -> Dictionary:
 	if pending_spawn_override != Vector2i(-999, -999):
 		var p := pending_spawn_override
 		pending_spawn_override = Vector2i(-999, -999)
-		return p
+		var facing: String = pending_spawn_facing
+		pending_spawn_facing = "south"
+		return {"pos": p, "facing": facing}
 	var entry_table: Dictionary = ENTRY_FROM.get(current_scene_id, {})
 	var entry_name: String = entry_table.get(previous_scene_id, "default")
 	if WorldState.entry_points.has(entry_name):
-		return WorldState.entry_points[entry_name]
-	return WorldState.player_start
+		return {
+			"pos":    WorldState.entry_point(entry_name),
+			"facing": WorldState.entry_point_facing(entry_name),
+		}
+	return {"pos": WorldState.player_start, "facing": "south"}
 
 
 ## Used by SaveManager to load a saved scene + place the player at a saved
-## tile. The new scene's PlayerController will call spawn_for(), which
-## returns the override.
-func go(target: String, pos: Vector2i) -> void:
+## tile + facing. The new scene's PlayerController will call spawn_for(),
+## which returns the override.
+func go(target: String, pos: Vector2i, facing: String = "south") -> void:
 	pending_spawn_override = pos
+	pending_spawn_facing = facing
 	change_scene_to(target)

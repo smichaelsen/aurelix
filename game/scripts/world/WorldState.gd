@@ -25,11 +25,12 @@ var tile_grid:          Dictionary = {}   # Vector2i -> tile name
 var prop_grid:          Dictionary = {}   # Vector2i -> prop name
 var npc_positions:      Dictionary = {}   # Vector2i -> npc_id
 var npc_locations:      Dictionary = {}   # npc_id   -> Vector2i
+var npc_facings:        Dictionary = {}   # npc_id   -> "north"|"south"|"east"|"west" (authored default)
 var object_positions:   Dictionary = {}   # Vector2i -> {id, type, label, ...}
 var exit_positions:     Dictionary = {}   # Vector2i -> {direction, target}
 var encounter_positions: Dictionary = {}  # Vector2i -> {id, sprite}
 var encounters_by_id:   Dictionary = {}   # encounter_id -> Vector2i
-var entry_points:       Dictionary = {}   # name -> Vector2i
+var entry_points:       Dictionary = {}   # name -> {pos: Vector2i, facing: String}
 
 var player_start: Vector2i = Vector2i(0, 0)
 
@@ -62,6 +63,7 @@ func load_scene(scene_id: String) -> void:
 	prop_grid.clear()
 	npc_positions.clear()
 	npc_locations.clear()
+	npc_facings.clear()
 	object_positions.clear()
 	exit_positions.clear()
 	encounter_positions.clear()
@@ -90,6 +92,7 @@ func load_scene(scene_id: String) -> void:
 		var pos := Vector2i(int(n["col"]), int(n["row"]))
 		npc_positions[pos] = n["id"]
 		npc_locations[n["id"]] = pos
+		npc_facings[n["id"]] = String(n.get("facing", "south"))
 	for o in data.get("objects", []):
 		var pos := Vector2i(int(o["col"]), int(o["row"]))
 		object_positions[pos] = {
@@ -113,7 +116,10 @@ func load_scene(scene_id: String) -> void:
 		encounters_by_id[enc.get("id", "")] = pos
 	for name in data.get("entry_points", {}).keys():
 		var p: Dictionary = data["entry_points"][name]
-		entry_points[name] = Vector2i(int(p.get("col", 0)), int(p.get("row", 0)))
+		entry_points[name] = {
+			"pos":    Vector2i(int(p.get("col", 0)), int(p.get("row", 0))),
+			"facing": String(p.get("facing", "south")),
+		}
 
 	print("[WorldState] loaded scene '%s' (%dx%d, tiles=%d props=%d npcs=%d objs=%d exits=%d encounters=%d)" % [
 		scene_id, cols, rows,
@@ -162,8 +168,25 @@ func remove_encounter(encounter_id: String) -> void:
 
 func entry_point(name: String) -> Vector2i:
 	if entry_points.has(name):
-		return entry_points[name]
+		return entry_points[name]["pos"]
 	return player_start
+
+
+func entry_point_facing(name: String) -> String:
+	if entry_points.has(name):
+		return entry_points[name]["facing"]
+	return "south"
+
+
+func npc_facing(npc_id: String) -> String:
+	return npc_facings.get(npc_id, "south")
+
+
+func set_npc_facing(npc_id: String, facing: String) -> void:
+	if npc_facings.get(npc_id, "") == facing:
+		return
+	npc_facings[npc_id] = facing
+	EventBus.npc_facing_changed.emit(npc_id, facing)
 
 
 func npc_at(pos: Vector2i) -> String:

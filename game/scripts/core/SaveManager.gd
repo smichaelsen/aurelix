@@ -137,13 +137,18 @@ func _deserialize(blob: Dictionary) -> void:
 
 func _scene_blob() -> Dictionary:
 	var pos: Vector2i = WorldState.player_start
+	var facing: String = "south"
 	var player := get_tree().get_first_node_in_group("player_grid")
-	if player != null and "grid_pos" in player:
-		pos = player.grid_pos
+	if player != null:
+		if "grid_pos" in player:
+			pos = player.grid_pos
+		if "facing" in player:
+			facing = String(player.facing)
 	return {
-		"id":  WorldState.current_scene_id,
-		"col": pos.x,
-		"row": pos.y,
+		"id":     WorldState.current_scene_id,
+		"col":    pos.x,
+		"row":    pos.y,
+		"facing": facing,
 	}
 
 
@@ -152,6 +157,8 @@ func _apply_scene(s: Dictionary) -> void:
 	if scene_id.is_empty():
 		return
 	var pos := Vector2i(int(s.get("col", 0)), int(s.get("row", 0)))
+	# Missing facing field (older saves) defaults south — defensive load.
+	var facing: String = String(s.get("facing", "south"))
 	# If we're already in the right scene, just teleport the player; avoid
 	# the full change_scene_to_file (which tears down the scene tree and
 	# kills any test driver instantiating this scene as a child).
@@ -161,8 +168,10 @@ func _apply_scene(s: Dictionary) -> void:
 			player.grid_pos = pos
 			if "position" in player:
 				player.position = Vector2(pos.x * 32 + 4, pos.y * 32)
+			if "facing" in player and player.has_method("_set_facing"):
+				player._set_facing(facing, true)
 		return
-	SceneRouter.go(scene_id, pos)
+	SceneRouter.go(scene_id, pos, facing)
 
 
 # ---------------------------------------------------------------------------

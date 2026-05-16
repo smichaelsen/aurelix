@@ -92,8 +92,10 @@ EXITS = [
 # Player arrives at the bottom of the forest path when coming from the
 # village; named entry point so SceneRouter can pick the right tile.
 ENTRY_POINTS = {
-    "default":          {"col": 6, "row": 8},   # from village (south)
-    "from_village":     {"col": 6, "row": 8},
+    # facing "north": arriving from the village edge, Kael is looking
+    # into the forest. Defaults to "south" if unset.
+    "default":          {"col": 6, "row": 8, "facing": "north"},
+    "from_village":     {"col": 6, "row": 8, "facing": "north"},
 }
 PLAYER_START = (6, 8)
 

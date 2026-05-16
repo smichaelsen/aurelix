@@ -53,6 +53,10 @@ const ANGER_OUT_LINES := {
 var _box: Node = null
 var _session: RefCounted = null
 var _busy: bool = false
+# Facing snapshots so close() can restore both speakers.
+var _pre_dialogue_player_facing: String = ""
+var _pre_dialogue_npc_facing: String = ""
+var _pre_dialogue_npc_id: String = ""
 
 
 func _ready() -> void:
@@ -108,12 +112,14 @@ func _open(npc_id: String) -> void:
 		_box.show_for(profile.get("display_name", npc_id), profile.get("archetype", ""))
 		_box.set_dialogue(_anger_out_line(profile.get("archetype", "")), "cold")
 		_box.set_options([{"label": "Leave.", "topic_id": "__close"}])
+		_apply_face_each_other(npc_id)
 		EventBus.dialogue_opened.emit(npc_id)
 		return
 
 	var display_name: String = profile.get("display_name", npc_id)
 	var archetype: String = profile.get("archetype", "")
 	_box.show_for(display_name, archetype)
+	_apply_face_each_other(npc_id)
 	EventBus.dialogue_opened.emit(npc_id)
 
 	var mode: String = profile.get("dialogue_mode", "full_ai")
@@ -127,10 +133,54 @@ func _open(npc_id: String) -> void:
 
 func _on_box_closed() -> void:
 	if _session != null:
+		_restore_pre_dialogue_facings()
 		EventBus.dialogue_closed.emit()
 	_session = null
 	if _box != null:
 		_box.hide_box()
+
+
+# Rotate Kael and the NPC to face each other. Stash their prior facings so
+# _on_box_closed can restore them. Dominant-axis collapse; ties favour
+# horizontal (one shared rule across follower + dialogue).
+func _apply_face_each_other(npc_id: String) -> void:
+	var player := get_tree().get_first_node_in_group("player_grid")
+	if player == null or not ("grid_pos" in player) or not ("facing" in player):
+		return
+	if not WorldState.npc_locations.has(npc_id):
+		return
+	var kael_pos: Vector2i = player.grid_pos
+	var npc_pos:  Vector2i = WorldState.npc_locations[npc_id]
+	_pre_dialogue_player_facing = String(player.facing)
+	_pre_dialogue_npc_facing    = WorldState.npc_facing(npc_id)
+	_pre_dialogue_npc_id        = npc_id
+	var to_npc:  String = _cardinal(npc_pos - kael_pos)
+	var to_kael: String = _cardinal(kael_pos - npc_pos)
+	if to_npc != "" and player.has_method("_set_facing"):
+		player._set_facing(to_npc)
+	if to_kael != "":
+		WorldState.set_npc_facing(npc_id, to_kael)
+
+
+func _restore_pre_dialogue_facings() -> void:
+	if _pre_dialogue_npc_id.is_empty():
+		return
+	var player := get_tree().get_first_node_in_group("player_grid")
+	if player != null and player.has_method("_set_facing") and not _pre_dialogue_player_facing.is_empty():
+		player._set_facing(_pre_dialogue_player_facing)
+	if not _pre_dialogue_npc_facing.is_empty():
+		WorldState.set_npc_facing(_pre_dialogue_npc_id, _pre_dialogue_npc_facing)
+	_pre_dialogue_player_facing = ""
+	_pre_dialogue_npc_facing    = ""
+	_pre_dialogue_npc_id        = ""
+
+
+func _cardinal(delta: Vector2i) -> String:
+	if delta == Vector2i.ZERO:
+		return ""
+	if abs(delta.x) >= abs(delta.y):
+		return "east" if delta.x > 0 else "west"
+	return "south" if delta.y > 0 else "north"
 
 
 # ---------------------------------------------------------------------------

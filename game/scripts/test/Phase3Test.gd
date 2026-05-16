@@ -97,7 +97,45 @@ func _ready() -> void:
 	_assert(exit_data.get("direction") == "south" and exit_data.get("target") == "forest_edge",
 		"expected south exit -> forest_edge, got %s" % exit_data)
 
+	# ----- facing --------------------------------------------------------------
+	await _test_facing(player)
+
 	_finish()
+
+
+func _test_facing(player: Node2D) -> void:
+	# Reset to a known passable tile with breathing room.
+	_jump(player, Vector2i(7, 6))
+	player.set("_last_cardinal", "south")
+	player._set_facing("south", true)
+	await get_tree().process_frame
+
+	# 1. Successful move updates facing to the last cardinal.
+	player.set("_last_cardinal", "east")
+	await player._animate_to(Vector2i(8, 6))
+	_assert(player.facing == "east",
+		"facing: east after successful east move (got '%s')" % player.facing)
+
+	# 2. Diagonal: last cardinal pressed wins. With _last_cardinal=north and
+	# the move target north-east, facing snaps to north.
+	player.set("_last_cardinal", "north")
+	await player._animate_to(Vector2i(9, 5))
+	_assert(player.facing == "north",
+		"facing: north after NE move with last_cardinal=north (got '%s')" % player.facing)
+
+	# 3. Bumping into a wall does NOT rotate Kael (decision #2).
+	# From (7,6) the tile north (7,5) is well water — guaranteed solid.
+	_jump(player, Vector2i(7, 6))
+	player.set("_last_cardinal", "south")
+	player._set_facing("south", true)
+	await get_tree().process_frame
+	_assert(WorldState.is_solid(Vector2i(7, 5)),
+		"facing: precondition — (7,5) is solid")
+	player.set("_last_cardinal", "north")
+	player._try_move(Vector2i(0, -1))   # bumps the well
+	await get_tree().process_frame
+	_assert(player.facing == "south",
+		"facing: wall bump does not rotate (still '%s')" % player.facing)
 
 
 # ---------------------------------------------------------------------------

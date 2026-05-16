@@ -13,8 +13,11 @@ const PIXEL_OFFSET_X   := 4      # match the visual offset used for static sprit
 @export var sprite_offset_y: int = 0   # set by the scene if Kael needs to sit a bit lower
 
 var grid_pos: Vector2i = Vector2i.ZERO
+var facing: String = "south"
 var _moving: bool = false
 var _last_interactable_id: String = ""
+# Most recent cardinal input. Diagonals collapse to this for facing.
+var _last_cardinal: String = "south"
 
 
 const SCENE_ID_BY_ROOT_NAME := {
@@ -35,8 +38,11 @@ func _ready() -> void:
 	if parent != null:
 		scene_id = SCENE_ID_BY_ROOT_NAME.get(parent.name, "village_square")
 	WorldState.load_scene(scene_id)
-	grid_pos = SceneRouter.spawn_for(scene_id)
+	var spawn: Dictionary = SceneRouter.spawn_for(scene_id)
+	grid_pos = spawn.get("pos", Vector2i.ZERO)
 	position = _pixel_for(grid_pos)
+	_set_facing(String(spawn.get("facing", "south")), true)
+	_last_cardinal = facing
 	_emit_interaction_state()
 
 
@@ -54,6 +60,12 @@ func _unhandled_input(event: InputEvent) -> void:
 		return
 	# Movement: any combination of 4 cardinal inputs becomes 8-direction.
 	if event is InputEventKey and not event.is_echo() and event.pressed:
+		# Track which cardinal was pressed most recently; diagonals collapse
+		# to this for facing. Order matches the action names.
+		if event.is_action_pressed("ui_up"):    _last_cardinal = "north"
+		elif event.is_action_pressed("ui_down"):  _last_cardinal = "south"
+		elif event.is_action_pressed("ui_left"):  _last_cardinal = "west"
+		elif event.is_action_pressed("ui_right"): _last_cardinal = "east"
 		var dir := _intended_direction()
 		if dir != Vector2i.ZERO:
 			_try_move(dir)
@@ -108,12 +120,22 @@ func _try_move(dir: Vector2i) -> void:
 func _animate_to(target: Vector2i) -> void:
 	_moving = true
 	grid_pos = target
+	# Facing rotates only here, where the move is confirmed. Bumping into a
+	# wall or stepping into an exit/encounter does not rotate Kael.
+	_set_facing(_last_cardinal)
 	var tween := create_tween()
 	tween.tween_property(self, "position", _pixel_for(target), MOVE_DURATION)
 	await tween.finished
 	_moving = false
 	EventBus.player_moved.emit(grid_pos.x, grid_pos.y)
 	_emit_interaction_state()
+
+
+func _set_facing(dir: String, force_emit: bool = false) -> void:
+	if dir == facing and not force_emit:
+		return
+	facing = dir
+	EventBus.player_facing_changed.emit(facing)
 
 
 func _pixel_for(p: Vector2i) -> Vector2:

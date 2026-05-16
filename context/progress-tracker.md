@@ -64,6 +64,22 @@ change.
   (replaced greedy `\{.*\}` regex with fenced-block +
   string-aware balanced-brace scan; iterate
   `msg.content` for first text block).
+- 4-direction facing system (2026-05-16): plumbing
+  only. `PlayerController.facing`, last-cardinal
+  tracking, diagonals collapse to last pressed,
+  rotation only on successful move (no rotate on
+  wall-bump). `WorldState.npc_facings` authored
+  per-scene with default `"south"`. Entry points
+  carry a facing. `DialogueController` rotates both
+  speakers face-to-face on open and restores on
+  close. `IskarFollower` derives facing from its
+  movement delta. `SaveManager` round-trips player
+  facing (no schema bump — missing field defaults
+  to `"south"`). `FacingSprite` helper is in place
+  but is a graceful no-op until directional
+  artwork lands. Phase3Test + Phase10Test extended
+  with facing assertions; all phase tests still
+  pass.
 - SaveManager hardening (2026-05-16): atomic write
   via temp file + `DirAccess.rename` in `user://`;
   `load_slot` refuses newer-than-build saves outright;
@@ -84,7 +100,26 @@ change.
 
 ## Next Up
 
-1. Verify all 14 success criteria via
+1. **Directional sprite art for the 4-facing system.**
+   Mechanics landed 2026-05-16 but each character is
+   still rendered with a single south-facing sprite.
+   Work needed:
+   - Author north/east/west variants for Kael,
+     Iskar, and the five demo NPCs (Toma, Mara,
+     Orren, Halden, Edda) — and the forest
+     encounters if they should turn too.
+   - Wire each character scene's sprite swap by
+     adding a `FacingSprite` child node (subject
+     `"player"`, `"iskar"`, or `"npc:<id>"`) with
+     its `sprite_path` and `textures` dict pointing
+     at the four PNGs.
+   - Decide whether east is mirrored from west or
+     authored separately. Mirror-from-west halves
+     the asset count but constrains the character
+     silhouette.
+   - Until then, `FacingSprite` is wired-in-spirit
+     but no-ops because `textures` is empty.
+2. Verify all 14 success criteria via
    `PlaythroughTour.gd` headless run.
 3. Final pass on authored content gaps listed in
    `BUILD-PLAN.md` — Halden quest lines, per-NPC
@@ -133,6 +168,16 @@ change.
 - Save format is a single JSON file at
   `user://save_slot_1.json` with a `version` field.
   Multi-slot is out of scope for the demo.
+- 4-direction facing rules (decided 2026-05-16):
+  movement remains 8-directional; facing is 4-cardinal
+  only. Facing rotates exclusively on a successful
+  move (bumping a wall does not rotate). Diagonals
+  collapse via "last cardinal pressed". NPCs and
+  Kael face each other on `dialogue_opened` and
+  restore prior facing on `dialogue_closed`.
+  Interaction stays 8-neighbour, not facing-gated.
+  Combat overlay owns its own pose layout —
+  overworld facing does not leak in.
 - Save writes are atomic: write to
   `save_slot_1.json.tmp`, then `DirAccess.rename`
   within `user://` (POSIX-atomic on macOS). Newer-

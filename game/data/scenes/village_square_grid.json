@@ -746,27 +746,32 @@
     {
       "id": "toma_child",
       "col": 6,
-      "row": 4
+      "row": 4,
+      "facing": "south"
     },
     {
       "id": "mara_blacksmith",
       "col": 9,
-      "row": 3
+      "row": 3,
+      "facing": "south"
     },
     {
       "id": "orren_drunk",
       "col": 4,
-      "row": 3
+      "row": 3,
+      "facing": "south"
     },
     {
       "id": "halden_reeve",
       "col": 11,
-      "row": 7
+      "row": 7,
+      "facing": "west"
     },
     {
       "id": "edda_priest",
       "col": 3,
-      "row": 7
+      "row": 7,
+      "facing": "east"
     }
   ],
   "objects": [

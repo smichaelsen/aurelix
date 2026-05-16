@@ -188,3 +188,11 @@ while a dialogue/journal turn is in flight (via
    stores load before controllers; UI overlays
    (DebugOverlay, TitleCard) load last. Do not
    reorder without re-running `BootValidator`.
+10. **Facing is 4-cardinal; movement is 8-direction.**
+    Player facing rotates only on a successful move
+    — wall-bumps do not rotate. Diagonals collapse
+    to the last cardinal pressed. NPCs have a
+    per-scene authored facing in `WorldState.npc_facings`;
+    `DialogueController` rotates speakers face-to-face
+    on open and restores on close. Combat overlay
+    is exempt — it owns its own pose layout.

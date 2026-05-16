@@ -85,11 +85,12 @@ PROPS = [
 # centres in a 32-wide tile. y_offset lets a character sit slightly higher
 # (e.g. Toma "perches" on the well rim).
 CHARACTERS = [
-    (6,  4, 4,  0, 'toma',   'Toma',   'toma_child'),         # next to the well, not on it
-    (9,  3, 4,  0, 'mara',   'Mara',   'mara_blacksmith'),    # outside smithy door
-    (4,  3, 4,  0, 'orren',  'Orren',  'orren_drunk'),        # outside tavern door
-    (11, 7, 4,  0, 'halden', 'Halden', 'halden_reeve'),       # in the square
-    (3,  7, 4,  0, 'edda',   'Edda',   'edda_priest'),        # walking near south path
+    # (col, row, ox, oy, sprite, name, id, facing)
+    (6,  4, 4,  0, 'toma',   'Toma',   'toma_child',      'south'),  # next to the well
+    (9,  3, 4,  0, 'mara',   'Mara',   'mara_blacksmith', 'south'),  # outside smithy door
+    (4,  3, 4,  0, 'orren',  'Orren',  'orren_drunk',     'south'),  # outside tavern door
+    (11, 7, 4,  0, 'halden', 'Halden', 'halden_reeve',    'west'),   # in the square, facing the path
+    (3,  7, 4,  0, 'edda',   'Edda',   'edda_priest',     'east'),   # walking near south path
 ]
 
 # World objects the player can interact with (tile, kind, id, label).
@@ -122,7 +123,7 @@ def emit_scene() -> None:
             res(tile_for(ch, r))
     for _col, _row, prop in PROPS:
         res(prop)
-    for _col, _row, _ox, _oy, sprite, _name, _id in CHARACTERS:
+    for _col, _row, _ox, _oy, sprite, _name, _id, _facing in CHARACTERS:
         res(sprite)
 
     # Sub-scenes that are instanced into the world.
@@ -180,7 +181,7 @@ def emit_scene() -> None:
     # Static NPCs (Kael is the player, handled separately).
     lines.append('[node name="Characters" type="Node2D" parent="."]')
     lines.append("")
-    for col, row, ox, oy, sprite, name, _id in CHARACTERS:
+    for col, row, ox, oy, sprite, name, _id, _facing in CHARACTERS:
         rid = resources[sprite]
         lines.append(f'[node name="{name}" type="Sprite2D" parent="Characters"]')
         lines.append(f'texture = ExtResource("{rid}")')
@@ -218,7 +219,7 @@ def emit_grid() -> None:
         for c, ch in enumerate(line):
             tiles.append({"col": c, "row": r, "tile": tile_for(ch, r)})
     props = [{"col": c, "row": r, "prop": p} for c, r, p in PROPS]
-    npcs  = [{"id": i, "col": c, "row": r} for c, r, _ox, _oy, _sp, _n, i in CHARACTERS]
+    npcs  = [{"id": i, "col": c, "row": r, "facing": f} for c, r, _ox, _oy, _sp, _n, i, f in CHARACTERS]
     objects = [{"id": i, "type": t, "col": c, "row": r, "label": lbl} for c, r, t, i, lbl in OBJECTS]
     exits = [{"col": c, "row": r, "direction": d, "target": t} for c, r, d, t in EXITS]
     grid = {

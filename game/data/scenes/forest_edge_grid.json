@@ -11,11 +11,13 @@
   "entry_points": {
     "default": {
       "col": 6,
-      "row": 8
+      "row": 8,
+      "facing": "north"
     },
     "from_village": {
       "col": 6,
-      "row": 8
+      "row": 8,
+      "facing": "north"
     }
   },
   "tiles": [
