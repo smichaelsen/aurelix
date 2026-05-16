@@ -10,6 +10,8 @@ options:
   active:
     - { label: "Still looking.",                       topic_id: __close }
     - { label: "Anything new on your end?",            topic_id: quest_status, action: tell_more }
+  accepted:
+    - { label: "Farewell.",                            topic_id: __close }
   complete:
     - { label: "Farewell.",                            topic_id: __close }
 
@@ -22,6 +24,10 @@ templated_lines:
     Talk to Orren the drunk if you can stand him. He sleeps near the tavern.
     Mara at the smithy heard something from a traveler. The chapel may know
     more, but Sister Edda has been quiet.
+  accepted_send_off: |
+    Good. The tower is two days' walk through the forest, north. Mind the
+    wolves on the path, and keep your wits about you near the camp. Come
+    back when you have something I can put my name to.
   active_progress: |
     Have you found anything?
   active_more: |

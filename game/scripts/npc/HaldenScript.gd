@@ -40,8 +40,12 @@ static func apply_option(option: Dictionary) -> Dictionary:
 		return {}
 	match action:
 		"accept_quest":
+			# One-shot send-off this turn. The "have you found anything?"
+			# follow-up is held back until the next time Kael opens a
+			# conversation with Halden — at that point start_turn() sees
+			# state=ACTIVE and serves `active_progress`.
 			QuestState.set_state(QUEST, QuestState.STATE_ACTIVE)
-			return _frame("active_progress", "active", "official")
+			return _frame("accepted_send_off", "accepted", "official")
 		"tell_more":
 			var state := QuestState.get_state(QUEST)
 			if state == QuestState.STATE_NOT_STARTED:
